@@ -1,6 +1,8 @@
 package com.example.vouchermanager.Model.Entity;
 
+import com.example.vouchermanager.Model.Enum.OrderStatus;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -8,6 +10,11 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -30,10 +37,11 @@ public class Order {
     @Column(name = "FinalAmount", nullable = false, precision = 10, scale = 2)
     private BigDecimal finalAmount;
 
+    @Enumerated(EnumType.STRING)
     @ColumnDefault("'PENDING'")
     @Lob
     @Column(name = "OrderStatus", nullable = false)
-    private String orderStatus;
+    private OrderStatus orderStatus;
 
     public Integer getId() {
         return id;
@@ -75,12 +83,5 @@ public class Order {
         this.finalAmount = finalAmount;
     }
 
-    public String getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(String orderStatus) {
-        this.orderStatus = orderStatus;
-    }
 
 }
