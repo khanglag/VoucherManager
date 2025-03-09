@@ -1,5 +1,6 @@
 package com.example.vouchermanager.Model.Entity;
 
+import com.example.vouchermanager.Model.Enum.VoucherStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
@@ -32,10 +33,11 @@ public class Voucher {
     @Column(name = "MinimumOrderValue", precision = 10, scale = 2)
     private BigDecimal minimumOrderValue;
 
+    @Enumerated(EnumType.STRING)
     @ColumnDefault("'ACTIVE'")
     @Lob
     @Column(name = "Status", nullable = false)
-    private String status;
+    private VoucherStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
@@ -104,14 +106,6 @@ public class Voucher {
 
     public void setMinimumOrderValue(BigDecimal minimumOrderValue) {
         this.minimumOrderValue = minimumOrderValue;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public User getCreatedBy() {
