@@ -168,7 +168,7 @@ BEGIN
 END $$
 DELIMITER ;
 
---Thêm cập nhật UsageCount tự động
+-- Thêm cập nhật UsageCount tự động
 
 DELIMITER $$
 CREATE TRIGGER trg_update_voucher_usage
