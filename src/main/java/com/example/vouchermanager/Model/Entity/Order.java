@@ -2,7 +2,10 @@ package com.example.vouchermanager.Model.Entity;
 
 import com.example.vouchermanager.Model.Enum.OrderStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -12,7 +15,6 @@ import java.time.Instant;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -42,46 +44,5 @@ public class Order {
     @Lob
     @Column(name = "OrderStatus", nullable = false)
     private OrderStatus orderStatus;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public User getUserID() {
-        return userID;
-    }
-
-    public void setUserID(User userID) {
-        this.userID = userID;
-    }
-
-    public Instant getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(Instant orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public BigDecimal getFinalAmount() {
-        return finalAmount;
-    }
-
-    public void setFinalAmount(BigDecimal finalAmount) {
-        this.finalAmount = finalAmount;
-    }
-
 
 }

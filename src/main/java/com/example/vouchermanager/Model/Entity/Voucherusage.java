@@ -1,12 +1,20 @@
 package com.example.vouchermanager.Model.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "voucherusage")
 public class Voucherusage {
@@ -27,37 +35,5 @@ public class Voucherusage {
     @ColumnDefault("current_timestamp()")
     @Column(name = "UsedDate")
     private Instant usedDate;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Order getOrderID() {
-        return orderID;
-    }
-
-    public void setOrderID(Order orderID) {
-        this.orderID = orderID;
-    }
-
-    public Voucher getVoucherCode() {
-        return voucherCode;
-    }
-
-    public void setVoucherCode(Voucher voucherCode) {
-        this.voucherCode = voucherCode;
-    }
-
-    public Instant getUsedDate() {
-        return usedDate;
-    }
-
-    public void setUsedDate(Instant usedDate) {
-        this.usedDate = usedDate;
-    }
 
 }
