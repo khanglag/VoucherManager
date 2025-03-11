@@ -1,4 +1,4 @@
-// Three.js Animation
+// ThreeJS animation cho background
 const container = document.getElementById("canvas-container");
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -93,7 +93,7 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     });
 });
 
-// Typing Animation
+// Viết, xóa chữ
 document.addEventListener("DOMContentLoaded", function () {
     const titleText = "Hệ thống voucher cho cửa hàng bán lẻ";
     const descText =
@@ -146,6 +146,28 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Bắt đầu hiệu ứng
     updateAnimation();
+});
+
+// Phần voucher
+document.addEventListener("DOMContentLoaded", function () {
+    const copyButtons = document.querySelectorAll(".voucher-copy-btn");
+
+    copyButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            const code = this.getAttribute("data-code");
+            navigator.clipboard.writeText(code).then(() => {
+                // Change button text temporarily
+                const originalText = this.textContent;
+                this.textContent = "Copied!";
+                this.classList.add("voucher-copy-btn-copied");
+
+                // Revert back after 2 seconds
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.classList.remove("voucher-copy-btn-copied");
+                }, 2000);
+            });
+        });
+    });
 });
