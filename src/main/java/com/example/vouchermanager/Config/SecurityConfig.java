@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import com.example.vouchermanager.Auth.CustomAuthenticationSuccessHandler;
-//import com.example.vouchermanager.Auth.CustomOAuth2SuccessHandler;
+import com.example.vouchermanager.Auth.CustomOAuth2SuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -25,15 +25,15 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-//    @Autowired
-//    private CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+    @Autowired
+    private CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
     public SecurityConfig(CustomUserDetailsService customUserDetailsService
-//            ,
-//                          CustomOAuth2SuccessHandler customOAuth2SuccessHandler
+            ,
+                          CustomOAuth2SuccessHandler customOAuth2SuccessHandler
     ) {
         this.customUserDetailsService = customUserDetailsService;
-//        this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
+        this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
     }
 
     @Bean
@@ -49,6 +49,11 @@ public class SecurityConfig {
                         .successHandler(customAuthenticationSuccessHandler)
                         .failureUrl("/signin?error")
                         .loginProcessingUrl("/j_spring_security_check")
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/signin") // Trang đăng nhập tùy chỉnh
+                        .successHandler(customOAuth2SuccessHandler)
+                        .failureUrl("/signin?error") // Trang đích khi đăng nhập thất bại
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
