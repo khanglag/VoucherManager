@@ -21,6 +21,7 @@ import java.time.Instant;
 @Table(name = "orders")
 public class Order {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "OrderID", nullable = false)
     private Integer id;
 
