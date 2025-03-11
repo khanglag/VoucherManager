@@ -19,6 +19,7 @@ import java.time.Instant;
 @Table(name = "voucherusage")
 public class Voucherusage {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "UsageID", nullable = false)
     private Integer id;
 
