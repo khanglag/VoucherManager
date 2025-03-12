@@ -204,7 +204,18 @@ body {
 }
 
 /* Voucher Section */
-.vouchers {
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.app-heading {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: #2c3e50;
+}
+.vouchers-section {
     background-color: transparent;
 }
 
@@ -223,6 +234,12 @@ body {
     overflow: hidden;
     background-color: white;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.voucher-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .voucher-title {
@@ -239,16 +256,70 @@ body {
     color: #e74c3c;
 }
 
+.voucher-code-container {
+    position: relative;
+    margin-bottom: 15px;
+}
+
 .voucher-code {
     background-color: #f8f9fa;
-    padding: 10px;
+    padding: 12px;
     border-radius: 5px;
     font-family: monospace;
     font-size: 1.2rem;
     font-weight: bold;
     letter-spacing: 2px;
-    margin-bottom: 15px;
     text-align: center;
+    border: 1px solid #e6e6e6;
+    padding-right: 50px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.voucher-copy-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.3s;
+}
+
+.voucher-copy-btn:hover {
+    background-color: #2980b9;
+}
+
+.voucher-copy-btn-copied {
+    background-color: #27ae60;
+}
+
+.voucher-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+}
+
+.voucher-info-item {
+    margin-bottom: 5px;
+}
+
+.voucher-info-label {
+    font-weight: bold;
+    color: #7f8c8d;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.voucher-info-value {
+    color: #2c3e50;
 }
 
 .voucher-expiry {
@@ -261,8 +332,75 @@ body {
     font-size: 0.8rem;
     color: #7f8c8d;
     margin-bottom: 15px;
+    line-height: 1.4;
 }
 
+.voucher-status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.voucher-status-active {
+    background-color: #e1f7e1;
+    color: #27ae60;
+}
+
+.voucher-status-expired {
+    background-color: #fceeee;
+    color: #e74c3c;
+}
+
+.voucher-status-limit {
+    background-color: #fff3e0;
+    color: #f39c12;
+}
+
+.voucher-action-btn {
+    display: block;
+    background-color: #3498db;
+    color: white;
+    text-align: center;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    margin-top: 15px;
+}
+
+.voucher-action-btn:hover {
+    background-color: #2980b9;
+}
+
+.voucher-usage-progress {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.voucher-progress-bar {
+    height: 6px;
+    background-color: #ecf0f1;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.voucher-progress-fill {
+    height: 100%;
+    background-color: #3498db;
+    border-radius: 3px;
+}
+
+.voucher-progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #7f8c8d;
+    margin-top: 5px;
+}
 .contact-section {
     background-color: white;
     border-radius: 20px;

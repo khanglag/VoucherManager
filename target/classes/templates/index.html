@@ -4,7 +4,7 @@
     <meta charset="UTF-8"
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Booking Care</title>
+    <title> Hệ thống quản lý voucher</title>
 
     <!-- Bootstrap CSS -->
     <link
@@ -24,7 +24,7 @@
 <div id="canvas-container"></div>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+<nav th:fragment="Navbar" class="navbar navbar-expand-lg navbar-light fixed-top">
     <div class="container">
         <a class="navbar-brand" href="#"
         >Xuân<span style="color: var(--secondary-color)"> Hoàng</span></a
@@ -43,16 +43,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#home">Trang chủ</a>
+                    <a class="nav-link" th:href="@{/index}">Trang chủ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#features">Đối tác thương hiệu</a>
+                    <a class="nav-link" th:href="@{/brands}">Đối tác thương hiệu</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#gallery">Danh sách voucher</a>
+                    <a class="nav-link"  th:href="@{/vouchers}">Danh sách voucher</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#contact">Mua sắm</a>
+                    <a class="nav-link"  th:href="@{/store}">Mua sắm</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#contact">Liên hệ</a>
@@ -173,47 +173,190 @@
     </div>
 </section>
 
+<!--&lt;!&ndash; Vouchers Section &ndash;&gt;-->
+<!--<section class="section vouchers">-->
+<!--    <div class="container">-->
+<!--        <h2 class="heading-2">Các mẫu voucher phổ biến</h2>-->
+<!--        <div class="voucher-list">-->
+<!--            <div class="voucher-card">-->
+<!--                <div class="voucher-title">Ưu đãi khách hàng mới</div>-->
+<!--                <div class="voucher-discount">Giảm 20%</div>-->
+<!--                <div class="voucher-code">WELCOME20</div>-->
+<!--                <div class="voucher-expiry">Hết hạn: 30/04/2025</div>-->
+<!--                <div class="voucher-conditions">-->
+<!--                    Áp dụng cho đơn hàng đầu tiên. Giá trị đơn hàng tối thiểu-->
+<!--                    500.000đ.-->
+<!--                </div>-->
+<!--                <a href="#" class="btn">Sử dụng ngay</a>-->
+<!--            </div>-->
+<!--            <div class="voucher-card">-->
+<!--                <div class="voucher-title">Giảm giá cuối tuần</div>-->
+<!--                <div class="voucher-discount">Giảm 100.000đ</div>-->
+<!--                <div class="voucher-code">WEEKEND100</div>-->
+<!--                <div class="voucher-expiry">Hết hạn: 31/03/2025</div>-->
+<!--                <div class="voucher-conditions">-->
+<!--                    Áp dụng cho đơn hàng từ 1.000.000đ. Chỉ sử dụng vào Thứ 7 và Chủ-->
+<!--                    nhật.-->
+<!--                </div>-->
+<!--                <a href="#" class="btn">Sử dụng ngay</a>-->
+<!--            </div>-->
+<!--            <div class="voucher-card">-->
+<!--                <div class="voucher-title">Sinh nhật vui vẻ</div>-->
+<!--                <div class="voucher-discount">Giảm 30%</div>-->
+<!--                <div class="voucher-code">BIRTHDAY30</div>-->
+<!--                <div class="voucher-expiry">Hết hạn: 7 ngày sau sinh nhật</div>-->
+<!--                <div class="voucher-conditions">-->
+<!--                    Áp dụng cho tất cả sản phẩm. Giá trị đơn hàng không giới hạn.-->
+<!--                </div>-->
+<!--                <a href="#" class="btn">Sử dụng ngay</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
 <!-- Vouchers Section -->
-<section class="section vouchers">
-    <div class="container">
-        <h2 class="heading-2">Các mẫu voucher phổ biến</h2>
+<section class="vouchers-section">
+    <div class="app-container">
+        <h2 class="app-heading">Các mẫu voucher phổ biến</h2>
         <div class="voucher-list">
             <div class="voucher-card">
+            <span class="voucher-status-badge voucher-status-active"
+            >Đang hoạt động</span
+            >
                 <div class="voucher-title">Ưu đãi khách hàng mới</div>
                 <div class="voucher-discount">Giảm 20%</div>
-                <div class="voucher-code">WELCOME20</div>
-                <div class="voucher-expiry">Hết hạn: 30/04/2025</div>
+                <div class="voucher-code-container">
+                    <div class="voucher-code" id="code1">WELCOME20</div>
+                    <button class="voucher-copy-btn" data-code="WELCOME20">
+                        Copy
+                    </button>
+                </div>
+                <div class="voucher-info-grid">
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Loại giảm giá</span>
+                        <span class="voucher-info-value">Phần trăm</span>
+                    </div>
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Giá trị</span>
+                        <span class="voucher-info-value">20%</span>
+                    </div>
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Ngày bắt đầu</span>
+                        <span class="voucher-info-value">01/01/2025</span>
+                    </div>
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Ngày kết thúc</span>
+                        <span class="voucher-info-value">30/04/2025</span>
+                    </div>
+                </div>
                 <div class="voucher-conditions">
                     Áp dụng cho đơn hàng đầu tiên. Giá trị đơn hàng tối thiểu
                     500.000đ.
                 </div>
-                <a href="#" class="btn">Sử dụng ngay</a>
+                <div class="voucher-usage-progress">
+                    <div class="voucher-progress-bar">
+                        <div class="voucher-progress-fill" style="width: 25%"></div>
+                    </div>
+                    <div class="voucher-progress-text">
+                        <span>Đã dùng: 50</span>
+                        <span>Tối đa: 200</span>
+                    </div>
+                </div>
+                <a href="#" class="voucher-action-btn">Sử dụng ngay</a>
             </div>
+
             <div class="voucher-card">
+            <span class="voucher-status-badge voucher-status-limit"
+            >Sắp hết hạn</span
+            >
                 <div class="voucher-title">Giảm giá cuối tuần</div>
                 <div class="voucher-discount">Giảm 100.000đ</div>
-                <div class="voucher-code">WEEKEND100</div>
-                <div class="voucher-expiry">Hết hạn: 31/03/2025</div>
+                <div class="voucher-code-container">
+                    <div class="voucher-code" id="code2">WEEKEND100</div>
+                    <button class="voucher-copy-btn" data-code="WEEKEND100">
+                        Copy
+                    </button>
+                </div>
+                <div class="voucher-info-grid">
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Loại giảm giá</span>
+                        <span class="voucher-info-value">Cố định</span>
+                    </div>
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Giá trị</span>
+                        <span class="voucher-info-value">100.000đ</span>
+                    </div>
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Ngày bắt đầu</span>
+                        <span class="voucher-info-value">01/03/2025</span>
+                    </div>
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Ngày kết thúc</span>
+                        <span class="voucher-info-value">31/03/2025</span>
+                    </div>
+                </div>
                 <div class="voucher-conditions">
                     Áp dụng cho đơn hàng từ 1.000.000đ. Chỉ sử dụng vào Thứ 7 và Chủ
                     nhật.
                 </div>
-                <a href="#" class="btn">Sử dụng ngay</a>
+                <div class="voucher-usage-progress">
+                    <div class="voucher-progress-bar">
+                        <div class="voucher-progress-fill" style="width: 65%"></div>
+                    </div>
+                    <div class="voucher-progress-text">
+                        <span>Đã dùng: 325</span>
+                        <span>Tối đa: 500</span>
+                    </div>
+                </div>
+                <a href="#" class="voucher-action-btn">Sử dụng ngay</a>
             </div>
+
             <div class="voucher-card">
+            <span class="voucher-status-badge voucher-status-expired"
+            >Hết hạn</span
+            >
                 <div class="voucher-title">Sinh nhật vui vẻ</div>
                 <div class="voucher-discount">Giảm 30%</div>
-                <div class="voucher-code">BIRTHDAY30</div>
-                <div class="voucher-expiry">Hết hạn: 7 ngày sau sinh nhật</div>
+                <div class="voucher-code-container">
+                    <div class="voucher-code" id="code3">BIRTHDAY30</div>
+                    <button class="voucher-copy-btn" data-code="BIRTHDAY30">
+                        Copy
+                    </button>
+                </div>
+                <div class="voucher-info-grid">
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Loại giảm giá</span>
+                        <span class="voucher-info-value">Phần trăm</span>
+                    </div>
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Giá trị</span>
+                        <span class="voucher-info-value">30%</span>
+                    </div>
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Ngày bắt đầu</span>
+                        <span class="voucher-info-value">Ngày sinh nhật</span>
+                    </div>
+                    <div class="voucher-info-item">
+                        <span class="voucher-info-label">Ngày kết thúc</span>
+                        <span class="voucher-info-value">7 ngày sau sinh nhật</span>
+                    </div>
+                </div>
                 <div class="voucher-conditions">
                     Áp dụng cho tất cả sản phẩm. Giá trị đơn hàng không giới hạn.
                 </div>
-                <a href="#" class="btn">Sử dụng ngay</a>
+                <div class="voucher-usage-progress">
+                    <div class="voucher-progress-bar">
+                        <div class="voucher-progress-fill" style="width: 90%"></div>
+                    </div>
+                    <div class="voucher-progress-text">
+                        <span>Đã dùng: 90</span>
+                        <span>Tối đa: 100</span>
+                    </div>
+                </div>
+                <a href="#" class="voucher-action-btn">Sử dụng ngay</a>
             </div>
         </div>
     </div>
 </section>
-
 <!-- Contact Section -->
 <section id="contact" class="py-5">
     <div class="container py-5">
@@ -292,7 +435,7 @@
 </section>
 
 <!-- Footer -->
-<footer>
+<footer th:fragment="Footer">
     <div class="container">
         <div class="row">
             <div class="col-lg-4 mb-4">

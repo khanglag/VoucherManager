@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Hệ thống quản lý voucher</title>
+  <!-- Bootstrap CSS -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet"
+  />
+  <!-- Font Awesome -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <!-- css -->
+  <link rel="stylesheet" th:href="@{/assets/css/index.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/brand_collaborations.css}" />
+</head>
+<body>
+<nav th:replace="index :: Navbar"></nav>
+  <div id="canvas-container"></div>
+
+  <header>
+    <div class="header-content">
+      <div class="logo">VoucherManager</div>
+      <div class="tagline">
+        Hệ thống quản lý voucher thông minh cho doanh nghiệp
+      </div>
+    </div>
+  </header>
+
+  <div class="container mb-5">
+    <section class="partners-section">
+      <h2 class="section-title">Hợp Tác cùng Các Top Thương Hiệu Trên Toàn Cầu</h2>
+
+      <div class="partners-grid">
+        <div class="partner-card">
+          <div class="partner-logo">
+            <img th:src="@{/assets/images/adidas.png}" alt="adidas"  />
+          </div>
+          <h3 class="partner-name">Adidas</h3>
+          <p class="partner-description">
+            Thương hiệu thể thao toàn cầu với hàng ngàn cửa hàng trên khắp
+            Việt Nam và hàng triệu khách hàng thân thiết.
+          </p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-logo">
+            <img th:src="@{/assets/images/uniqlo.png}" alt="uniqlo"  />
+          </div>
+          <h3 class="partner-name">Uniqlo</h3>
+          <p class="partner-description">
+            Thương hiệu thời trang Nhật Bản nổi tiếng với các sản phẩm chất
+            lượng cao và thiết kế tối giản.
+          </p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-logo">
+            <img th:src="@{/assets/images/starbucks.png}" alt="starbucks"  />
+          </div>
+          <h3 class="partner-name">Starbucks</h3>
+          <p class="partner-description">
+            Chuỗi cà phê lớn nhất thế giới với hơn 100 cửa hàng tại Việt Nam
+            và hệ thống khách hàng thân thiết rộng lớn.
+          </p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-logo">
+            <img th:src="@{/assets/images/nike.png}" alt="nike"  />
+          </div>
+          <h3 class="partner-name">Nike</h3>
+          <p class="partner-description">
+            Thương hiệu thể thao hàng đầu thế giới với mạng lưới phân phối
+            rộng khắp và chương trình khách hàng thân thiết.
+          </p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-logo">
+            <img th:src="@{/assets/images/samsung.png}" alt="samsung"  />
+          </div>
+          <h3 class="partner-name">Samsung</h3>
+          <p class="partner-description">
+            Tập đoàn điện tử hàng đầu với nhiều cửa hàng trải nghiệm và hệ
+            thống khách hàng thân thiết lớn mạnh.
+          </p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-logo">
+            <img th:src="@{/assets/images/highlands.png}" alt="highlands"  />
+          </div>
+          <h3 class="partner-name">Highlands Coffee</h3>
+          <p class="partner-description">
+            Chuỗi cà phê nổi tiếng Việt Nam với hơn 300 cửa hàng trên toàn
+            quốc và chương trình khách hàng thân thiết phổ biến.
+          </p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-logo">
+            <img th:src="@{/assets/images/lottemart.png}" alt="lottemart"  />
+          </div>
+          <h3 class="partner-name">LOTTE Mart</h3>
+          <p class="partner-description">
+            Chuỗi siêu thị Hàn Quốc với nhiều chi nhánh lớn tại các thành phố
+            lớn và chương trình khách hàng đa dạng.
+          </p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-logo">
+            <img th:src="@{/assets/images/thefaceshop.png}" alt="thefaceshop"  />
+          </div>
+          <h3 class="partner-name">The Face Shop</h3>
+          <p class="partner-description">
+            Thương hiệu mỹ phẩm Hàn Quốc với mạng lưới cửa hàng rộng khắp và
+            nhiều chương trình ưu đãi hấp dẫn.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="benefits-section">
+      <h2 class="section-title">Lợi Ích Khi Trở Thành Đối Tác</h2>
+
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon">📊</div>
+          <h3 class="benefit-title">Quản lý voucher hiệu quả</h3>
+          <p>
+            Hệ thống tự động hóa việc tạo, phân phối và theo dõi voucher giúp
+            tiết kiệm thời gian và nguồn lực.
+          </p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">📱</div>
+          <h3 class="benefit-title">Trải nghiệm đa nền tảng</h3>
+          <p>
+            Khách hàng có thể nhận và sử dụng voucher trên nhiều nền tảng khác
+            nhau: web, ứng dụng di động, email...
+          </p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">📈</div>
+          <h3 class="benefit-title">Phân tích dữ liệu chi tiết</h3>
+          <p>
+            Báo cáo chi tiết về hiệu quả chiến dịch, tỷ lệ sử dụng voucher và
+            hành vi khách hàng.
+          </p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">🔒</div>
+          <h3 class="benefit-title">Bảo mật cao</h3>
+          <p>
+            Hệ thống mã hóa và bảo vệ dữ liệu voucher, ngăn chặn gian lận và
+            sử dụng trái phép.
+          </p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">🤝</div>
+          <h3 class="benefit-title">Hỗ trợ tùy biến</h3>
+          <p>
+            Điều chỉnh hệ thống theo nhu cầu riêng của từng thương hiệu và
+            loại hình kinh doanh.
+          </p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">💰</div>
+          <h3 class="benefit-title">Tăng doanh thu</h3>
+          <p>
+            Các chiến dịch voucher thông minh giúp thu hút khách hàng mới và
+            tăng tỷ lệ khách hàng quay lại.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="join-section">
+      <h2 class="join-title">Trở Thành Đối Tác Ngay Hôm Nay</h2>
+      <p class="join-text">
+        Hãy tham gia cùng hàng trăm thương hiệu đang sử dụng hệ thống quản lý
+        voucher của chúng tôi để tối ưu hóa chiến lược marketing và tăng doanh
+        số bán hàng.
+      </p>
+      <button class="button">Đăng ký ngay</button>
+    </section>
+  </div>
+<footer th:replace="index :: Footer" ></footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script th:src="@{/assets/js/brand_collaborations.js}"></script>
+</body>
+</html>
