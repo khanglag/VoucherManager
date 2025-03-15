@@ -50,9 +50,11 @@
             <button type="submit" class="btn btn-info w-100 py-2 text-white">Đăng nhập</button>
         </form>
 
-        <div th:if="${param.error}" class="alert alert-danger text-center">
-            Tên đăng nhập hoặc mật khẩu không đúng!
+        <div th:if="${param.error}" class="alert alert-danger">
+            <span th:text="${param.error}"></span>
         </div>
+
+
         <div th:if="${param.logout}" class="alert alert-success text-center">
             Bạn đã đăng xuất thành công!
         </div>

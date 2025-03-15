@@ -37,4 +37,40 @@ public class UserServiceImpTest {
         user.setStatus(true);
         userServiceImp.createUser(user);
     }
+
+    @Test
+    public void testUpdateUser(){
+        User user = new User();
+        user.setFullName("Nguyen Ke Cuong");
+
+        int id = 2;
+
+        userServiceImp.updateUser(id, user);
+    }
+
+    @Test
+    public void testFindUserById(){
+        User user = userServiceImp.findById(1);
+        System.out.println(user.toString());
+    }
+    @Test
+    public void testChangePassword(){
+        System.out.println(userServiceImp.changPassword(7,"123456","123456"));
+
+    }
+    @Test
+    public void testFindByEmail(){
+        System.out.println(userServiceImp.findByEmail("admin@gmail.com"));
+    }
+    @Test
+    public void testFindByPhoneNumber(){
+        System.out.println(userServiceImp.findByPhoneNumber("0987654321"));
+    }
+    @Test
+    public void testFindByRoleID(){
+        Role role = new Role();
+        role.setId(1);
+        List<User> users = userServiceImp.findByRoleID(role);
+        users.forEach(System.out::println);
+    }
 }

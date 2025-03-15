@@ -1,5 +1,6 @@
 package com.example.vouchermanager.Config;
 
+import com.example.vouchermanager.Auth.CustomAuthenticationFailureHandler;
 import com.example.vouchermanager.Service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import com.example.vouchermanager.Auth.CustomAuthenticationSuccessHandler;
 import com.example.vouchermanager.Auth.CustomOAuth2SuccessHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -29,11 +31,14 @@ public class SecurityConfig {
     private CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
     public SecurityConfig(CustomUserDetailsService customUserDetailsService
-            ,
-                          CustomOAuth2SuccessHandler customOAuth2SuccessHandler
+            , CustomOAuth2SuccessHandler customOAuth2SuccessHandler
     ) {
         this.customUserDetailsService = customUserDetailsService;
         this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
+    }
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new CustomAuthenticationFailureHandler();
     }
 
     @Bean
@@ -47,7 +52,7 @@ public class SecurityConfig {
                         .loginPage("/signin") // Chỉ định trang đăng nhập
                         .permitAll()
                         .successHandler(customAuthenticationSuccessHandler)
-                        .failureUrl("/signin?error")
+                        .failureHandler(authenticationFailureHandler())
                         .loginProcessingUrl("/j_spring_security_check")
                 )
                 .oauth2Login(oauth2 -> oauth2
