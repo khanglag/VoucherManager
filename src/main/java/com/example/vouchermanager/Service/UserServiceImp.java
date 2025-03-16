@@ -26,20 +26,24 @@ public class UserServiceImp implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+//    @Override
+//    public List<UserDTO> findAll() {
+//        return userRepository.findAll().stream()
+//                .map(user -> new UserDTO(
+//                        user.getId(),
+//                        user.getUsername(),
+//                        user.getPassword(),
+//                        user.getFullName(),
+//                        user.getEmail(),
+//                        user.getPhoneNumber(),
+//                        user.getRoleID().getId(),
+//                        user.getStatus()
+//                ))
+//                .collect(Collectors.toList());
+//    }
     @Override
-    public List<UserDTO> findAll() {
-        return userRepository.findAll().stream()
-                .map(user -> new UserDTO(
-                        user.getId(),
-                        user.getUsername(),
-                        user.getPassword(),
-                        user.getFullName(),
-                        user.getEmail(),
-                        user.getPhoneNumber(),
-                        user.getRoleID().getId(),
-                        user.getStatus()
-                ))
-                .collect(Collectors.toList());
+    public List<User> findAll(){
+        return userRepository.findAll();
     }
 
     @Override

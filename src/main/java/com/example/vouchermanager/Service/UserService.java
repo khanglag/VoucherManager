@@ -9,7 +9,8 @@ import java.util.List;
 
 @Service
 public interface UserService {
-    List<UserDTO> findAll();
+//    List<UserDTO> findAll();
+    List<User> findAll();
     User findByUsername(String username);
     User findByEmail(String email);
     User findByPhoneNumber(String phone);

@@ -15,8 +15,11 @@ public class UserServiceImpTest {
     UserServiceImp userServiceImp;
     @Test
     public void testFindAll() {
-        List<UserDTO> users = userServiceImp.findAll();
-        users.forEach(System.out::println);
+        List<User> users = userServiceImp.findAll();
+//        users.forEach(System.out::println);
+        for(User user : users){
+            System.out.println(user.getRoleID().getRoleName());
+        }
     }
     @Test
     public void testFindByUsername(){
@@ -60,7 +63,8 @@ public class UserServiceImpTest {
     }
     @Test
     public void testFindByEmail(){
-        System.out.println(userServiceImp.findByEmail("admin@gmail.com"));
+        User user = userServiceImp.findByEmail("admin@gmail.com");
+        System.out.println(user.getRoleID().getId());
     }
     @Test
     public void testFindByPhoneNumber(){
