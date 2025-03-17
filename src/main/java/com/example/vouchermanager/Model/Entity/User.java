@@ -45,4 +45,18 @@ public class User {
     @Column(name = "Status", nullable = false)
     private Boolean status = false;
 
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "userId=" + id +
+                ", userName='" + username + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", passWord='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phoneNumber + '\'' +
+                ", roleId=" + roleID +
+                ", status=" + status +
+                '}';
+    }
 }

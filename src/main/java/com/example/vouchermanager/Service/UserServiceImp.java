@@ -1,6 +1,7 @@
 package com.example.vouchermanager.Service;
 
 import com.example.vouchermanager.Model.DTO.UserDTO;
+import com.example.vouchermanager.Model.Entity.Role;
 import com.example.vouchermanager.Model.Entity.User;
 import com.example.vouchermanager.Repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -47,9 +48,70 @@ public class UserServiceImp implements UserService {
         return userRepository.findByUsername(username);
     }
 
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User findByPhoneNumber(String phone) {
+        return userRepository.findByPhoneNumber(phone);
+    }
+
+    @Override
+    public List<User> findByRoleID(Role role) {
+        return userRepository.findByRoleID(role);
+    }
+
+    @Override
+    public User findById(int id) {
+        return userRepository.findById(id);
+    }
+
     @Transactional
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    @Transactional
+    public User changPassword(int id, String oldPassword, String newPassword) {
+        User user = userRepository.findById(id);
+        if(passwordEncoder.matches(oldPassword, user.getPassword())) {
+            System.out.println("Đúng");
+            user.setPassword(passwordEncoder.encode(newPassword));
+            return userRepository.save(user);
+        }
+        return null;
+    }
+
+    @Transactional
+    public User updateUser(int id, User user) {
+        User userExists = userRepository.findById(id);
+        System.out.println(userExists);
+        if(userExists == null) {
+            return null;
+        }else{
+            if(user.getUsername() != null ) {
+                userExists.setUsername(user.getUsername());
+            }
+            if (user.getFullName() != null ) {
+                userExists.setFullName(user.getFullName());
+            }
+            if (user.getPhoneNumber() != null ) {
+                userExists.setPhoneNumber(user.getPhoneNumber());
+            }
+            if (user.getEmail() != null ) {
+                userExists.setEmail(user.getEmail());
+            }
+            if (user.getRoleID() != null ) {
+                userExists.setRoleID(user.getRoleID());
+            }
+            if (user.getStatus() != null) {
+                userExists.setStatus(user.getStatus());
+            }
+        }
+
+        return userRepository.save(userExists);
     }
 }
