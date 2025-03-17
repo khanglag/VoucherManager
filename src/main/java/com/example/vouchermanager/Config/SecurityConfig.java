@@ -40,22 +40,23 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/signin","/", "/index", "/static/**","/assets/**","/templates/**","/user/**","/vouchers","/store","/brands").permitAll()
+                        .requestMatchers("/auth","/", "/index", "/static/**","/assets/**","/templates/**","/user/**","/vouchers","/store","/brands").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/signin") // Chỉ định trang đăng nhập
+                        .loginPage("/auth") // Chỉ định trang đăng nhập
                         .permitAll()
                         .successHandler(customAuthenticationSuccessHandler)
-                        .failureUrl("/signin?error")
+                        .failureUrl("/auth?error")
                         .loginProcessingUrl("/j_spring_security_check")
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/auth")
                         .permitAll()
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                 );
         return http.build();
     }
