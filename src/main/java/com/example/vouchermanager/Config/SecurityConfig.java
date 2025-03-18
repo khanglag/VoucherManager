@@ -30,12 +30,12 @@ public class SecurityConfig {
     @Autowired
     private CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService
-            , CustomOAuth2SuccessHandler customOAuth2SuccessHandler
-    ) {
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService,
+            CustomOAuth2SuccessHandler customOAuth2SuccessHandler) {
         this.customUserDetailsService = customUserDetailsService;
         this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
     }
+
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return new CustomAuthenticationFailureHandler();
@@ -45,16 +45,20 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/signin","/", "/index", "/static/**","/assets/**","/templates/**","/user/**","/vouchers","/store","/brands").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers("/auth", "/", "/index", "/static/**", "/assets/**", "/templates/**",
+                                "/user/**", "/vouchers", "/store", "/brands")
+                        .permitAll()
+                        .anyRequest().authenticated())
                 .formLogin(form -> form
-                        .loginPage("/signin") // Chỉ định trang đăng nhập
+                        .loginPage("/auth") // Chỉ định trang đăng nhập
                         .permitAll()
                         .successHandler(customAuthenticationSuccessHandler)
+
+                        .failureUrl("/auth?error")
+
                         .failureHandler(authenticationFailureHandler())
-                        .loginProcessingUrl("/j_spring_security_check")
-                )
+
+                        .loginProcessingUrl("/j_spring_security_check"))
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/signin") // Trang đăng nhập tùy chỉnh
                         .successHandler(customOAuth2SuccessHandler)
@@ -62,17 +66,19 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/auth")
                         .permitAll()
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
-                );
+                        .deleteCookies("JSESSIONID"));
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();

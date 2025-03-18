@@ -29,13 +29,14 @@ public class UserServiceImpTest {
     @Test
     public void testCreateUser(){
         Role role = new Role();
-        role.setId(1);
+        role.setId(2);
         User user = new User();
-        user.setUsername("admin2");
-        user.setPassword("123456");
-        user.setFullName("admin1");
-        user.setEmail("admin2@gmail.com");
-        user.setPhoneNumber("1234567891");
+
+        user.setUsername("abc");
+        user.setPassword("abc");
+        user.setFullName("abc");
+        user.setEmail("abc@gmail.com");
+        user.setPhoneNumber("0336065761");
         user.setRoleID(role);
         user.setStatus(true);
         userServiceImp.createUser(user);

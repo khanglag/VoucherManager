@@ -26,8 +26,8 @@
 <!-- Navbar -->
 <nav th:fragment="Navbar" class="navbar navbar-expand-lg navbar-light fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="#"
-        >Xuân<span style="color: var(--secondary-color)"> Hoàng</span></a
+        <a class="navbar-brand" th:href="@{/}"
+        ><img th:src="@{/assets/images/logo2.png}" alt="lottemart"  style="width: 100px;"/></a
         >
         <button
                 class="navbar-toggler"
@@ -43,7 +43,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/index}">Trang chủ</a>
+                    <a class="nav-link" th:href="@{/}">Trang chủ</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/brands}">Đối tác thương hiệu</a>
@@ -59,7 +59,28 @@
                 </li>
 
                 <li class="nav-item ms-lg-3">
-                    <a class="btn btn-primary" href="#contact">Đăng nhập</a>
+
+                    <div class="header_login">
+                        <div th:if="${user == null}">
+                            <a class="btn btn-primary" th:href="@{/auth}">Đăng nhập</a>
+                        </div>
+                        <div th:if="${user != null}">
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <span class="username">
+                                        Xin chào <span th:text="${name}" class="nameOfUser"></span>
+                                    </span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a href="#" class="dropdown-item">Hồ sơ cá nhân</a>
+                                    <a  href="#"  class="dropdown-item" onclick="document.getElementById('logout-form').submit(); return false;">Đăng xuất</a>
+                                </div>
+                                <form id="logout-form" th:action="@{/logout}" method="POST" style="display: none;">
+                                    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -173,46 +194,6 @@
     </div>
 </section>
 
-<!--&lt;!&ndash; Vouchers Section &ndash;&gt;-->
-<!--<section class="section vouchers">-->
-<!--    <div class="container">-->
-<!--        <h2 class="heading-2">Các mẫu voucher phổ biến</h2>-->
-<!--        <div class="voucher-list">-->
-<!--            <div class="voucher-card">-->
-<!--                <div class="voucher-title">Ưu đãi khách hàng mới</div>-->
-<!--                <div class="voucher-discount">Giảm 20%</div>-->
-<!--                <div class="voucher-code">WELCOME20</div>-->
-<!--                <div class="voucher-expiry">Hết hạn: 30/04/2025</div>-->
-<!--                <div class="voucher-conditions">-->
-<!--                    Áp dụng cho đơn hàng đầu tiên. Giá trị đơn hàng tối thiểu-->
-<!--                    500.000đ.-->
-<!--                </div>-->
-<!--                <a href="#" class="btn">Sử dụng ngay</a>-->
-<!--            </div>-->
-<!--            <div class="voucher-card">-->
-<!--                <div class="voucher-title">Giảm giá cuối tuần</div>-->
-<!--                <div class="voucher-discount">Giảm 100.000đ</div>-->
-<!--                <div class="voucher-code">WEEKEND100</div>-->
-<!--                <div class="voucher-expiry">Hết hạn: 31/03/2025</div>-->
-<!--                <div class="voucher-conditions">-->
-<!--                    Áp dụng cho đơn hàng từ 1.000.000đ. Chỉ sử dụng vào Thứ 7 và Chủ-->
-<!--                    nhật.-->
-<!--                </div>-->
-<!--                <a href="#" class="btn">Sử dụng ngay</a>-->
-<!--            </div>-->
-<!--            <div class="voucher-card">-->
-<!--                <div class="voucher-title">Sinh nhật vui vẻ</div>-->
-<!--                <div class="voucher-discount">Giảm 30%</div>-->
-<!--                <div class="voucher-code">BIRTHDAY30</div>-->
-<!--                <div class="voucher-expiry">Hết hạn: 7 ngày sau sinh nhật</div>-->
-<!--                <div class="voucher-conditions">-->
-<!--                    Áp dụng cho tất cả sản phẩm. Giá trị đơn hàng không giới hạn.-->
-<!--                </div>-->
-<!--                <a href="#" class="btn">Sử dụng ngay</a>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</section>-->
 <!-- Vouchers Section -->
 <section class="vouchers-section">
     <div class="app-container">
@@ -440,7 +421,7 @@
         <div class="row">
             <div class="col-lg-4 mb-4">
                 <h3 class="footer-heading">
-                    Xuân<span style="color: var(--secondary-color)"> Hoàng</span>
+                    TEAM<span style="color: var(--secondary-color)"> 8</span>
                 </h3>
                 <p>
                     "Hệ thống quản lý Voucher thông minh – Tiết kiệm hơn, mua sắm dễ
