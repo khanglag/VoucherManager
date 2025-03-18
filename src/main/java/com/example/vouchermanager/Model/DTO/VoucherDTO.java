@@ -24,7 +24,7 @@ public class VoucherDTO {
     private int usageCount;
     private int maxUsage;
     private LocalDateTime createdDate;
-    private boolean applycableForAllProducts;
+    private boolean applicableForAllProducts;
 
     @Override
     public String toString() {
@@ -36,11 +36,11 @@ public class VoucherDTO {
                 ", endDate=" + endDate +
                 ", minimumOrderValue=" + minimumOrderValue +
                 ", status=" + status +
-                ", createdBy=" + createBy +
+                ", createBy=" + createBy +
                 ", usageCount=" + usageCount +
                 ", maxUsage=" + maxUsage +
                 ", createdDate=" + createdDate +
-                ", applicableForAllProducts=" + applycableForAllProducts +
+                ", applicableForAllProducts=" + applicableForAllProducts +
                 '}';
     }
 
