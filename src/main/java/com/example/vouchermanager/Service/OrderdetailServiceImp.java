@@ -5,6 +5,8 @@ import com.example.vouchermanager.Model.Entity.Orderdetail;
 import com.example.vouchermanager.Repository.OrderdetailRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +18,23 @@ public class OrderdetailServiceImp implements OrderdetailService {
     @Autowired
     private OrderdetailRepository orderdetailRepository;
 
+//    @Override
+//    public List<OrderDetailDTO> findAll() {
+//        return orderdetailRepository.findAll().stream()
+//                .map(orderdetail -> new OrderDetailDTO(
+//                        orderdetail.getId(),
+//                        orderdetail.getOrderID().getId(),
+//                        orderdetail.getProductID().getId(),
+//                        orderdetail.getQuantity(),
+//                        orderdetail.getUnitPrice(),
+//                        orderdetail.getTotalPrice()
+//                ))
+//                .collect(Collectors.toList());
+//    }
+
     @Override
-    public List<OrderDetailDTO> findAll() {
-        return orderdetailRepository.findAll().stream()
+    public Page<OrderDetailDTO> findAll(Pageable pageable) {
+        return orderdetailRepository.findAll(pageable)
                 .map(orderdetail -> new OrderDetailDTO(
                         orderdetail.getId(),
                         orderdetail.getOrderID().getId(),
@@ -26,8 +42,7 @@ public class OrderdetailServiceImp implements OrderdetailService {
                         orderdetail.getQuantity(),
                         orderdetail.getUnitPrice(),
                         orderdetail.getTotalPrice()
-                ))
-                .collect(Collectors.toList());
+                ));
     }
 
     @Override
@@ -43,23 +58,23 @@ public class OrderdetailServiceImp implements OrderdetailService {
                 )).orElse(null);
     }
 
-    @Override
-    public List<OrderDetailDTO> findByOrderId(int id) {
-        return orderdetailRepository.findByOrderID_Id(id).stream()
-                .map(orderdetail -> new OrderDetailDTO(
-                        orderdetail.getId(),
-                        orderdetail.getOrderID().getId(),
-                        orderdetail.getProductID().getId(),
-                        orderdetail.getQuantity(),
-                        orderdetail.getUnitPrice(),
-                        orderdetail.getTotalPrice()
-                ))
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<OrderDetailDTO> findByOrderId(int id) {
+//        return orderdetailRepository.findByOrderID_Id(id).stream()
+//                .map(orderdetail -> new OrderDetailDTO(
+//                        orderdetail.getId(),
+//                        orderdetail.getOrderID().getId(),
+//                        orderdetail.getProductID().getId(),
+//                        orderdetail.getQuantity(),
+//                        orderdetail.getUnitPrice(),
+//                        orderdetail.getTotalPrice()
+//                ))
+//                .collect(Collectors.toList());
+//    }
 
     @Override
-    public List<OrderDetailDTO> findByProductId(int id) {
-        return orderdetailRepository.findByProductID_Id(id).stream()
+    public Page<OrderDetailDTO> findByOrderId(int id, Pageable pageable) {
+        return orderdetailRepository.findByOrderID_Id(id, pageable)
                 .map(orderdetail -> new OrderDetailDTO(
                         orderdetail.getId(),
                         orderdetail.getOrderID().getId(),
@@ -67,8 +82,34 @@ public class OrderdetailServiceImp implements OrderdetailService {
                         orderdetail.getQuantity(),
                         orderdetail.getUnitPrice(),
                         orderdetail.getTotalPrice()
-                ))
-                .collect(Collectors.toList());
+                ));
+    }
+
+//    @Override
+//    public List<OrderDetailDTO> findByProductId(int id) {
+//        return orderdetailRepository.findByProductID_Id(id).stream()
+//                .map(orderdetail -> new OrderDetailDTO(
+//                        orderdetail.getId(),
+//                        orderdetail.getOrderID().getId(),
+//                        orderdetail.getProductID().getId(),
+//                        orderdetail.getQuantity(),
+//                        orderdetail.getUnitPrice(),
+//                        orderdetail.getTotalPrice()
+//                ))
+//                .collect(Collectors.toList());
+//    }
+
+    @Override
+    public Page<OrderDetailDTO> findByProductId(int id, Pageable pageable) {
+        return orderdetailRepository.findByProductID_Id(id, pageable)
+                .map(orderdetail -> new OrderDetailDTO(
+                        orderdetail.getId(),
+                        orderdetail.getOrderID().getId(),
+                        orderdetail.getProductID().getId(),
+                        orderdetail.getQuantity(),
+                        orderdetail.getUnitPrice(),
+                        orderdetail.getTotalPrice()
+                ));
     }
 
     @Transactional

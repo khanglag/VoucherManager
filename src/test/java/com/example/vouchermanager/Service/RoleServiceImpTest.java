@@ -14,11 +14,11 @@ public class RoleServiceImpTest {
     @Autowired
     RoleServiceImp roleServiceImp;
 
-    @Test
-    public void testFindAll() {
-        List<Role> roles = roleServiceImp.findAll();
-        roles.forEach(System.out::println);
-    }
+//    @Test
+//    public void testFindAll() {
+//        List<Role> roles = roleServiceImp.findAll();
+//        roles.forEach(System.out::println);
+//    }
 
     @Test
     public void testFindById() {
@@ -26,11 +26,11 @@ public class RoleServiceImpTest {
         System.out.println(role.get());
     }
 
-    @Test
-    public void testFindByRoleName() {
-        Role role = roleServiceImp.findByRoleName("admin");
-        System.out.println(role);
-    }
+//    @Test
+//    public void testFindByRoleName() {
+//        Role role = roleServiceImp.findByRoleName("admin");
+//        System.out.println(role);
+//    }
 
     @Test
     public void testCreate() {

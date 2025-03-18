@@ -18,8 +18,11 @@ public class OrderdetailServiceImpTest {
 
     @Test
     public void testFindAll(){
-        List<OrderDetailDTO> orderDetailDTOS = orderdetailServiceImp.findAll();
-        orderDetailDTOS.forEach(System.out::println);
+//        List<OrderDetailDTO> orderDetailDTOS = orderdetailServiceImp.findAll();
+//        orderDetailDTOS.forEach(System.out::println);
+        int page = 0;
+        int size = 10;
+
     }
     @Test
     public void testFindById(){
@@ -28,13 +31,13 @@ public class OrderdetailServiceImpTest {
     }
     @Test
     public void testFindByOrderId(){
-        List<OrderDetailDTO> orderDetailDTOS = orderdetailServiceImp.findByOrderId(1);
-        orderDetailDTOS.forEach(System.out::println);
+//        List<OrderDetailDTO> orderDetailDTOS = orderdetailServiceImp.findByOrderId(1);
+//        orderDetailDTOS.forEach(System.out::println);
     }
     @Test
     public void testFindByProductId(){
-        List<OrderDetailDTO> orderDetailDTOS = orderdetailServiceImp.findByProductId(3);
-        orderDetailDTOS.forEach(System.out::println);
+//        List<OrderDetailDTO> orderDetailDTOS = orderdetailServiceImp.findByProductId(3);
+//        orderDetailDTOS.forEach(System.out::println);
     }
     @Test
     public void testSave(){

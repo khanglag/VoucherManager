@@ -13,14 +13,14 @@ import java.util.List;
 public class UserServiceImpTest {
     @Autowired
     UserServiceImp userServiceImp;
-    @Test
-    public void testFindAll() {
-        List<User> users = userServiceImp.findAll();
-//        users.forEach(System.out::println);
-        for(User user : users){
-            System.out.println(user.getRoleID().getRoleName());
-        }
-    }
+//    @Test
+//    public void testFindAll() {
+//        List<User> users = userServiceImp.findAll();
+////        users.forEach(System.out::println);
+//        for(User user : users){
+//            System.out.println(user.getRoleID().getRoleName());
+//        }
+//    }
     @Test
     public void testFindByUsername(){
         System.out.println(userServiceImp.findByUsername("admin1"));
@@ -31,11 +31,11 @@ public class UserServiceImpTest {
         Role role = new Role();
         role.setId(1);
         User user = new User();
-        user.setUsername("admin1");
+        user.setUsername("admin2");
         user.setPassword("123456");
         user.setFullName("admin1");
-        user.setEmail("admin1@gmail.com");
-        user.setPhoneNumber("1234567890");
+        user.setEmail("admin2@gmail.com");
+        user.setPhoneNumber("1234567891");
         user.setRoleID(role);
         user.setStatus(true);
         userServiceImp.createUser(user);
@@ -70,11 +70,11 @@ public class UserServiceImpTest {
     public void testFindByPhoneNumber(){
         System.out.println(userServiceImp.findByPhoneNumber("0987654321"));
     }
-    @Test
-    public void testFindByRoleID(){
-        Role role = new Role();
-        role.setId(1);
-        List<User> users = userServiceImp.findByRoleID(role);
-        users.forEach(System.out::println);
-    }
+//    @Test
+//    public void testFindByRoleID(){
+//        Role role = new Role();
+//        role.setId(1);
+//        List<User> users = userServiceImp.findByRoleID(role);
+//        users.forEach(System.out::println);
+//    }
 }

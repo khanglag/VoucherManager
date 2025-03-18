@@ -10,6 +10,8 @@ import com.example.vouchermanager.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -21,19 +23,31 @@ public class OrderServiceImp implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Override
-    public List<OrderDTO> findAll() {
-        return orderRepository.findAll().stream()
-                .map(order -> new OrderDTO(
-                        order.getId(),
-                        order.getUserID() != null ? order.getUserID().getId() : 0, // Kiểm tra null tránh lỗi
-                        order.getOrderDate() != null ? order.getOrderDate().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null,
-                        order.getTotalAmount(),
-                        order.getFinalAmount(),
-                        order.getOrderStatus()
-                ))
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<OrderDTO> findAll() {
+//        return orderRepository.findAll().stream()
+//                .map(order -> new OrderDTO(
+//                        order.getId(),
+//                        order.getUserID() != null ? order.getUserID().getId() : 0, // Kiểm tra null tránh lỗi
+//                        order.getOrderDate() != null ? order.getOrderDate().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null,
+//                        order.getTotalAmount(),
+//                        order.getFinalAmount(),
+//                        order.getOrderStatus()
+//                ))
+//                .collect(Collectors.toList());
+//    }
+@Override
+public Page<OrderDTO> findAll(Pageable pageable) {
+    return orderRepository.findAll(pageable)
+            .map(order -> new OrderDTO(
+                    order.getId(),
+                    order.getUserID() != null ? order.getUserID().getId() : 0, // Kiểm tra null tránh lỗi
+                    order.getOrderDate() != null ? order.getOrderDate().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null,
+                    order.getTotalAmount(),
+                    order.getFinalAmount(),
+                    order.getOrderStatus()
+            ));
+}
 
     @Override
     public OrderDTO findById(int id) {
@@ -49,11 +63,30 @@ public class OrderServiceImp implements OrderService {
                 .orElse(null);
     }
 
+//    @Override
+//    public List<OrderDTO> findByStatus(String status) {
+//        try {
+//            OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
+//            return orderRepository.findByOrderStatus(orderStatus).stream()
+//                    .map(order -> new OrderDTO(
+//                            order.getId(),
+//                            order.getUserID().getId(),
+//                            order.getOrderDate().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime(),
+//                            order.getTotalAmount(),
+//                            order.getFinalAmount(),
+//                            order.getOrderStatus()
+//                    ))
+//                    .collect(Collectors.toList());
+//        } catch (IllegalArgumentException e) {
+//            throw new IllegalArgumentException("Trạng thái đơn hàng không hợp lệ: " + status);
+//        }
+//    }
+
     @Override
-    public List<OrderDTO> findByStatus(String status) {
+    public Page<OrderDTO> findByStatus(String status, Pageable pageable) {
         try {
             OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
-            return orderRepository.findByOrderStatus(orderStatus).stream()
+            return orderRepository.findByOrderStatus(orderStatus, pageable)
                     .map(order -> new OrderDTO(
                             order.getId(),
                             order.getUserID().getId(),
@@ -61,20 +94,31 @@ public class OrderServiceImp implements OrderService {
                             order.getTotalAmount(),
                             order.getFinalAmount(),
                             order.getOrderStatus()
-                    ))
-                    .collect(Collectors.toList());
+                    ));
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Trạng thái đơn hàng không hợp lệ: " + status);
         }
     }
-
     // Nho doc cmt
 //    // Chuyển LocalDate -> Instant (bắt đầu và kết thúc ngày)
 //    Instant startInstant = startDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
 //    Instant endInstant = endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant();
+//    @Override
+//    public List<OrderDTO> getOrdersByDateRange(Instant startDate, Instant endDate) {
+//        return orderRepository.findByOrderDateBetween(startDate, endDate).stream()
+//                .map(order -> new OrderDTO(
+//                        order.getId(),
+//                        order.getUserID().getId(),
+//                        order.getOrderDate().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime(),
+//                        order.getTotalAmount(),
+//                        order.getFinalAmount(),
+//                        order.getOrderStatus()
+//                ))
+//                .collect(Collectors.toList());
+//    }
     @Override
-    public List<OrderDTO> getOrdersByDateRange(Instant startDate, Instant endDate) {
-        return orderRepository.findByOrderDateBetween(startDate, endDate).stream()
+    public Page<OrderDTO> getOrdersByDateRange(Instant startDate, Instant endDate, Pageable pageable) {
+        return orderRepository.findByOrderDateBetween(startDate, endDate, pageable)
                 .map(order -> new OrderDTO(
                         order.getId(),
                         order.getUserID().getId(),
@@ -82,14 +126,28 @@ public class OrderServiceImp implements OrderService {
                         order.getTotalAmount(),
                         order.getFinalAmount(),
                         order.getOrderStatus()
-                ))
-                .collect(Collectors.toList());
+                ));
     }
+
+//    @Transactional
+//    @Override
+//    public List<OrderDTO> findByUserId(int userId) {
+//        return orderRepository.findByUserId(userId).stream()
+//                .map(order -> new OrderDTO(
+//                        order.getId(),
+//                        order.getUserID().getId(),
+//                        order.getOrderDate().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime(),
+//                        order.getTotalAmount(),
+//                        order.getFinalAmount(),
+//                        order.getOrderStatus()
+//                ))
+//                .collect(Collectors.toList());
+//    }
 
     @Transactional
     @Override
-    public List<OrderDTO> findByUserId(int userId) {
-        return orderRepository.findByUserId(userId).stream()
+    public Page<OrderDTO> findByUserId(int userId, Pageable pageable) {
+        return orderRepository.findByUserId(userId, pageable)
                 .map(order -> new OrderDTO(
                         order.getId(),
                         order.getUserID().getId(),
@@ -97,10 +155,8 @@ public class OrderServiceImp implements OrderService {
                         order.getTotalAmount(),
                         order.getFinalAmount(),
                         order.getOrderStatus()
-                ))
-                .collect(Collectors.toList());
+                ));
     }
-
     @Transactional
     public Order createOrder(Order order) {
         return orderRepository.save(order);

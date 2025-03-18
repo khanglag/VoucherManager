@@ -5,6 +5,8 @@ import com.example.vouchermanager.Model.Entity.Role;
 import com.example.vouchermanager.Repository.RoleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +18,15 @@ public class RoleServiceImp implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
+//    @Override
+//    public List<Role> findAll() {
+//        return roleRepository.findAll();
+//    }
+
     @Override
-    public List<Role> findAll() {
-        return roleRepository.findAll();
+    public Page<RoleDTO> findAll(Pageable pageable) {
+        return roleRepository.findAll(pageable)
+                .map(role -> new RoleDTO(role.getId(), role.getRoleName()));
     }
 
     @Override
@@ -26,9 +34,15 @@ public class RoleServiceImp implements RoleService {
         return roleRepository.findById(id);
     }
 
+//    @Override
+//    public Role findByRoleName(String name) {
+//        return roleRepository.findByRoleName(name);
+//    }
+
     @Override
-    public Role findByRoleName(String name) {
-        return roleRepository.findByRoleName(name);
+    public Page<RoleDTO> findByRoleName(String roleName, Pageable pageable) {
+        return roleRepository.findByRoleName(roleName, pageable)
+                .map(role -> new RoleDTO(role.getId(), role.getRoleName()));
     }
 
     @Transactional

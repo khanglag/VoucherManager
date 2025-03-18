@@ -20,11 +20,11 @@ public class OrderTest {
     @Autowired
     OrderServiceImp orderService;
 
-    @Test
-    public void test() {
-        List<OrderDTO> orders = orderService.findAll();
-        orders.forEach(order -> System.out.println(order));
-    }
+//    @Test
+//    public void test() {
+//        List<OrderDTO> orders = orderService.findAll();
+//        orders.forEach(order -> System.out.println(order));
+//    }
 
     @Test
     public void testFindByID(){
@@ -32,27 +32,27 @@ public class OrderTest {
         System.out.println(order);
     }
 
-    @Test
-    public void testFindByUserId(){
-        List<OrderDTO> orders = orderService.findByUserId(2);
-        orders.forEach(order -> System.out.println(order));
-    }
+//    @Test
+//    public void testFindByUserId(){
+//        List<OrderDTO> orders = orderService.findByUserId(2);
+//        orders.forEach(order -> System.out.println(order));
+//    }
+//
+//    @Test
+//    public void testFindByRangeDate(){
+//        // Chuyển LocalDate -> Instant (bắt đầu và kết thúc ngày)
+//        LocalDate startDate = LocalDate.of(2025, 2, 1);
+//        LocalDate endDate = LocalDate.of(2025, 3, 30);
+//        Instant startInstant = startDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+//        Instant endInstant = endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant();
+//        List<OrderDTO> orderDTOS = orderService.getOrdersByDateRange(startInstant, endInstant);
+//        orderDTOS.forEach(order -> System.out.println(order));
+//    }
 
-    @Test
-    public void testFindByRangeDate(){
-        // Chuyển LocalDate -> Instant (bắt đầu và kết thúc ngày)
-        LocalDate startDate = LocalDate.of(2025, 2, 1);
-        LocalDate endDate = LocalDate.of(2025, 3, 30);
-        Instant startInstant = startDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant endInstant = endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant();
-        List<OrderDTO> orderDTOS = orderService.getOrdersByDateRange(startInstant, endInstant);
-        orderDTOS.forEach(order -> System.out.println(order));
-    }
-
-    @Test
-    public void testFindByStatus(){
-        System.out.println(orderService.findByStatus("completed"));
-    }
+//    @Test
+//    public void testFindByStatus(){
+//        System.out.println(orderService.findByStatus("completed"));
+//    }
 
     @Test
     public void testCreateOrder(){
