@@ -21,7 +21,7 @@ import java.time.Instant;
 @Table(name = "orders")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "OrderID", nullable = false)
     private Integer id;
 
@@ -46,4 +46,16 @@ public class Order {
     @Column(name = "OrderStatus", nullable = false)
     private OrderStatus orderStatus;
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "Order ID:" + id + '\''+
+                "User ID:" + userID + '\''+
+                "Order date:" + orderDate + '\''+
+                "Total Amount:" + totalAmount + '\''+
+                "Final Amount:" + finalAmount + '\''+
+                "Order status:" + orderStatus + '\''+
+                '}';
+
+    }
 }
