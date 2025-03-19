@@ -1,16 +1,23 @@
 package com.example.vouchermanager.Model.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID", nullable = false)
     private Integer id;
 
@@ -29,7 +36,7 @@ public class User {
     @Column(name = "PhoneNumber", length = 15)
     private String phoneNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "RoleID")
     private Role roleID;
@@ -38,36 +45,18 @@ public class User {
     @Column(name = "Status", nullable = false)
     private Boolean status = false;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "userId=" + id +
+                ", userName='" + username + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", passWord='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phoneNumber + '\'' +
+                ", roleId=" + roleID +
+                ", status=" + status +
+                '}';
     }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setRoleID(Role roleID) {
-        this.roleID = roleID;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
-
 }

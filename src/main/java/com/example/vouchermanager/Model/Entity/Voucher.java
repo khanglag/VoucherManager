@@ -1,6 +1,11 @@
 package com.example.vouchermanager.Model.Entity;
 
+import com.example.vouchermanager.Model.Enum.VoucherStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -9,6 +14,10 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "voucher")
 public class Voucher {
@@ -32,10 +41,11 @@ public class Voucher {
     @Column(name = "MinimumOrderValue", precision = 10, scale = 2)
     private BigDecimal minimumOrderValue;
 
+    @Enumerated(EnumType.STRING)
     @ColumnDefault("'ACTIVE'")
     @Lob
     @Column(name = "Status", nullable = false)
-    private String status;
+    private VoucherStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
@@ -57,101 +67,5 @@ public class Voucher {
     @ColumnDefault("0")
     @Column(name = "ApplicableForAllProducts", nullable = false)
     private Boolean applicableForAllProducts = false;
-
-    public String getVoucherCode() {
-        return voucherCode;
-    }
-
-    public void setVoucherCode(String voucherCode) {
-        this.voucherCode = voucherCode;
-    }
-
-    public String getDiscountType() {
-        return discountType;
-    }
-
-    public void setDiscountType(String discountType) {
-        this.discountType = discountType;
-    }
-
-    public BigDecimal getDiscountValue() {
-        return discountValue;
-    }
-
-    public void setDiscountValue(BigDecimal discountValue) {
-        this.discountValue = discountValue;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public BigDecimal getMinimumOrderValue() {
-        return minimumOrderValue;
-    }
-
-    public void setMinimumOrderValue(BigDecimal minimumOrderValue) {
-        this.minimumOrderValue = minimumOrderValue;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Integer getUsageCount() {
-        return usageCount;
-    }
-
-    public void setUsageCount(Integer usageCount) {
-        this.usageCount = usageCount;
-    }
-
-    public Integer getMaxUsage() {
-        return maxUsage;
-    }
-
-    public void setMaxUsage(Integer maxUsage) {
-        this.maxUsage = maxUsage;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Boolean getApplicableForAllProducts() {
-        return applicableForAllProducts;
-    }
-
-    public void setApplicableForAllProducts(Boolean applicableForAllProducts) {
-        this.applicableForAllProducts = applicableForAllProducts;
-    }
 
 }

@@ -1,15 +1,24 @@
 package com.example.vouchermanager.Model.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "orderdetails")
 public class Orderdetail {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "OrderDetailID", nullable = false)
     private Integer id;
 
@@ -30,53 +39,5 @@ public class Orderdetail {
 
     @Column(name = "TotalPrice", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Order getOrderID() {
-        return orderID;
-    }
-
-    public void setOrderID(Order orderID) {
-        this.orderID = orderID;
-    }
-
-    public Product getProductID() {
-        return productID;
-    }
-
-    public void setProductID(Product productID) {
-        this.productID = productID;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
 
 }
