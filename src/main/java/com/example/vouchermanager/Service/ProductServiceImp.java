@@ -20,6 +20,7 @@ public class ProductServiceImp implements ProductService {
                         product.getId(),
                         product.getProductName(),
                         product.getPrice(),
+                        product.getImageUrl(),
                         product.getStatus()
                 ))
                 .collect(Collectors.toList());
