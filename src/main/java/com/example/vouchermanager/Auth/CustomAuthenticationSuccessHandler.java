@@ -18,8 +18,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : authorities) {
             String role = authority.getAuthority();
-            System.out.println("==================");
-            System.out.println(role);
             if (role.equals("ROLE_Admin")) {
                 response.sendRedirect("/userManagement");
                 return;

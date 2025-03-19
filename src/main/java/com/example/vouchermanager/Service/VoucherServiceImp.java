@@ -21,6 +21,9 @@ public class VoucherServiceImp implements VoucherService {
         return voucherRepository.findAll().stream()
                 .map(voucher -> new VoucherDTO(
                         voucher.getVoucherCode(),
+                        voucher.getTitle(),
+                        voucher.getLogoUrl(),
+                        voucher.getDescription(),
                         voucher.getDiscountType(),
                         voucher.getDiscountValue(),
                         voucher.getStartDate(),

@@ -27,6 +27,9 @@ public class Product {
     @Column(name = "Price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    @Column(name = "ImageUrl")
+    private String imageUrl;
+
     @ColumnDefault("1")
     @Column(name = "Status", nullable = false)
     private Boolean status = false;
