@@ -1,5 +1,6 @@
 package com.example.vouchermanager.Model.DTO;
 
+import com.example.vouchermanager.Model.Enum.DiscountType;
 import com.example.vouchermanager.Model.Enum.VoucherStatus;
 import lombok.*;
 
@@ -14,7 +15,10 @@ import java.time.LocalDateTime;
 @Builder
 public class VoucherDTO {
     private String voucherCode;
-    private String discountType;
+    private String title;
+    private String logoUrl;
+    private String description;
+    private DiscountType discountType;
     private BigDecimal discountValue;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -30,6 +34,9 @@ public class VoucherDTO {
     public String toString() {
         return "VoucherDTO{" +
                 "voucherCode='" + voucherCode + '\'' +
+                "Title='" + title + '\'' +
+                "logoUrl='" + logoUrl + '\'' +
+                "description='" + description + '\'' +
                 ", discountType='" + discountType + '\'' +
                 ", discountValue=" + discountValue +
                 ", startDate=" + startDate +

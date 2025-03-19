@@ -1,5 +1,6 @@
 package com.example.vouchermanager.Model.Entity;
 
+import com.example.vouchermanager.Model.Enum.DiscountType;
 import com.example.vouchermanager.Model.Enum.VoucherStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,9 +26,19 @@ public class Voucher {
     @Column(name = "VoucherCode", nullable = false, length = 50)
     private String voucherCode;
 
+    @Column(name = "Title", nullable = false)
+    private String title;
+
+    @Column(name = "LogoUrl")
+    private String logoUrl;
+
+    @Column(name = "Description")
+    private String description;
+
+    @Enumerated(EnumType.STRING)
     @Lob
     @Column(name = "DiscountType", nullable = false)
-    private String discountType;
+    private DiscountType discountType;
 
     @Column(name = "DiscountValue", nullable = false, precision = 10, scale = 2)
     private BigDecimal discountValue;

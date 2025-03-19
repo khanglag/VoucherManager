@@ -13,6 +13,7 @@ public class ProductDTO {
     private int productId;
     private String productName;
     private BigDecimal price;
+    private String imageUrl;
     private boolean status;
 
     @Override
