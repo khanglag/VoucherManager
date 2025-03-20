@@ -1,10 +1,11 @@
 steps:
   - name: 'gcr.io/cloud-builders/bash'
     args: ['chmod', '+x', './mvnw']
-
+    
   - name: 'gcr.io/cloud-builders/mvn'
-    args: ['./mvnw', 'clean', 'package', '-DskipTests']
+    args: ['clean', 'package', '-DskipTests']
     dir: '.'
+
 
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['app', 'deploy']
