@@ -1,7 +1,7 @@
 steps:
   - name: 'gcr.io/cloud-builders/bash'
     args: ['chmod', '+x', './mvnw']
-    
+
   - name: 'gcr.io/cloud-builders/mvn'
     args: ['clean', 'package', '-DskipTests']
     dir: '.'
@@ -10,6 +10,11 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['app', 'deploy']
     dir: '.'
+
+  - name: 'gcr.io/cloud-builders/bash'
+    args:
+      - 'apt-get update && apt-get install -y openjdk-17-jdk && update-java-alternatives --set java-1.17.0-openjdk-amd64'
+
 options:
   env:
     - 'GOOGLE_RUNTIME_VERSION=17'
