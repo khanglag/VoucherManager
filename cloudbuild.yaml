@@ -1,12 +1,14 @@
 steps:
-  - name: 'gcr.io/cloud-builders/git'
-    entrypoint: 'bash'
-    args: ['-c', 'chmod +x mvnw']
+  - name: 'gcr.io/cloud-builders/bash'
+    args: ['chmod', '+x', './mvnw']
 
   - name: 'gcr.io/cloud-builders/mvn'
-    args: ['clean', 'package', '-DskipTests']
+    args: ['./mvnw', 'clean', 'package', '-DskipTests']
     dir: '.'
 
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['app', 'deploy']
     dir: '.'
+options:
+  env:
+    - 'GOOGLE_RUNTIME_VERSION=17'
