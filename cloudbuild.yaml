@@ -1,9 +1,6 @@
 steps:
-  - name: 'ubuntu'
-    entrypoint: 'bash'
-    args: ['-c', 'chmod +x mvnw']
   - name: 'gcr.io/cloud-builders/mvn'
-    args: ['./mvnw', 'clean', 'package']
+    args: ['clean', 'package']
     dir: '.'
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['app', 'deploy']
