@@ -1,5 +1,7 @@
 steps:
+  - name: 'ubuntu'
+    entrypoint: 'bash'
+    args: ['-c', 'chmod +x mvnw']
   - name: 'gcr.io/cloud-builders/mvn'
-    args: [ 'clean', 'package' ]
-    env:
-      - 'GOOGLE_RUNTIME_VERSION=17'
+    args: ['./mvnw', 'clean', 'package']
+    dir: '.'
