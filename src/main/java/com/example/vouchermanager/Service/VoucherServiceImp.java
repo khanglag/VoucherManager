@@ -72,11 +72,11 @@ public class VoucherServiceImp implements VoucherService {
         voucherRepository.deleteById(voucherCode);
     }
 
-    @Override
-    public Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate, LocalDate endDate, Pageable pageable) {
-        Specification<Voucher> spec = VoucherSpecification.filterVouchers(title, discountValue, status, startDate, endDate);
-        return voucherRepository.findAll(spec, pageable).map(
-                voucher -> new VoucherDTO(voucher.g, voucher.getTitle())
-        );
-    }
+//    @Override
+//    public Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+//        Specification<Voucher> spec = VoucherSpecification.filterVouchers(title, discountValue, status, startDate, endDate);
+//        return voucherRepository.findAll(spec, pageable).map(
+//                voucher -> new VoucherDTO(voucher.g, voucher.getTitle())
+//        );
+//    }
 }
