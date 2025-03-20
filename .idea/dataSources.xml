@@ -13,7 +13,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="GCP" uuid="7082a002-87fb-4ddb-8f22-ea661d25c7b1">
+    <data-source source="LOCAL" name="GCP" uuid="17c6031e-9527-4752-9876-dfd5121f8c0e">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
