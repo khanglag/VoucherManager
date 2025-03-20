@@ -2,7 +2,7 @@ steps:
   - name: 'gcr.io/cloud-builders/mvn'
     args: [ 'clean', 'package' ]
     dir: '.'
-    
+
   - name: 'gcr.io/cloud-builders/gcloud'
     args: [ 'app', 'deploy' ]
     dir: '.'
