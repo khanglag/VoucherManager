@@ -1,9 +1,15 @@
 steps:
   - name: 'gcr.io/cloud-builders/mvn'
-    args: ['clean', 'package', '-DskipTests']
-
+    args: [ 'clean', 'package' ]
+    dir: '.'
+    
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['app', 'deploy']
+    args: [ 'app', 'deploy' ]
+    dir: '.'
+
+
+timeout: 900s
+
 
 options:
-  logging: CLOUD_LOGGING_ONLY
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
