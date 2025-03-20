@@ -5,10 +5,16 @@ steps:
   - name: 'gcr.io/cloud-builders/bash'
     args: ['./mvnw', 'clean', 'package']
     dir: '.'
+    env:
+      - 'GOOGLE_RUNTIME_VERSION=17'
+
 
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['app', 'deploy']
     dir: '.'
+    env:
+      - 'GOOGLE_RUNTIME_VERSION=17'
+
 
 timeout: 900s
 
