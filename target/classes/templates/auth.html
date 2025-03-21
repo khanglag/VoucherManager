@@ -64,20 +64,12 @@
 
                 <button type="submit" class="form-btn">Đăng nhập</button>
             </form>
-
-
                 <div th:if="${param.error}" class="alert alert-danger text-center mt-3">
                     Tên đăng nhập hoặc mật khẩu không đúng!
                 </div>
-                <div th:if="${param.logout}" class="alert alert-success text-center">
-                    Bạn đã đăng xuất thành công!
-                </div>
-
                 <div class="d-flex justify-content-end mt-3">
                     <a th:href="@{/reset-password}" class="text-decoration-none"  style="color: #b8daff !important;">Quên mật khẩu</a>
-
                 </div>
-
 
             <div class="social-login">
                 <button class="social-btn">
