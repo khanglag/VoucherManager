@@ -21,3 +21,4 @@ steps:
 options:
   env:
     - 'GOOGLE_RUNTIME_VERSION=17' # Đảm bảo sử dụng JDK 17
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
