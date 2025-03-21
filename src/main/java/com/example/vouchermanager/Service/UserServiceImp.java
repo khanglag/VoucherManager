@@ -6,6 +6,8 @@ import com.example.vouchermanager.Model.Entity.User;
 import com.example.vouchermanager.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +28,28 @@ public class UserServiceImp implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+//    @Override
+//    public List<UserDTO> findAll() {
+//        return userRepository.findAll().stream()
+//                .map(user -> new UserDTO(
+//                        user.getId(),
+//                        user.getUsername(),
+//                        user.getPassword(),
+//                        user.getFullName(),
+//                        user.getEmail(),
+//                        user.getPhoneNumber(),
+//                        user.getRoleID().getId(),
+//                        user.getStatus()
+//                ))
+//                .collect(Collectors.toList());
+//    }
+//    @Override
+//    public List<User> findAll(){
+//        return userRepository.findAll();
+//    }
     @Override
-    public List<UserDTO> findAll() {
-        return userRepository.findAll().stream()
+    public Page<UserDTO> findAll(Pageable pageable){
+        return userRepository.findAll(pageable)
                 .map(user -> new UserDTO(
                         user.getId(),
                         user.getUsername(),
@@ -38,8 +59,7 @@ public class UserServiceImp implements UserService {
                         user.getPhoneNumber(),
                         user.getRoleID().getId(),
                         user.getStatus()
-                ))
-                .collect(Collectors.toList());
+                ));
     }
 
     @Override
@@ -58,9 +78,23 @@ public class UserServiceImp implements UserService {
         return userRepository.findByPhoneNumber(phone);
     }
 
+//    @Override
+//    public List<User> findByRoleID(Role role) {
+//        return userRepository.findByRoleID(role);
+//    }
     @Override
-    public List<User> findByRoleID(Role role) {
-        return userRepository.findByRoleID(role);
+    public Page<UserDTO> findByRoleID(Role role, Pageable pageable) {
+        return userRepository.findByRoleID(role, pageable)
+                .map(user -> new UserDTO(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getPassword(),
+                        user.getFullName(),
+                        user.getEmail(),
+                        user.getPhoneNumber(),
+                        user.getRoleID().getId(),
+                        user.getStatus()
+                ));
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.time.Instant;
 @Table(name = "voucherusage")
 public class Voucherusage {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UsageID", nullable = false)
     private Integer id;
 

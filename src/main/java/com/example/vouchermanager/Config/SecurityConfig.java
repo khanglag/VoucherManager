@@ -44,11 +44,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-//                .csrf(csrf -> csrf.disable())
+                // .csrf(csrf -> csrf.disable())
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth", "/", "/index", "/static/**", "/assets/**", "/templates/**",
-                                "/user/**", "/vouchers", "/store", "/brands","/register", "/auth/register")
+
+                                "/user/**", "/vouchers", "/store", "/brands", "/register", "/auth/register")
+
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form

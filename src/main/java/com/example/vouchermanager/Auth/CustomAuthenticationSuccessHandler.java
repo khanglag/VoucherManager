@@ -16,9 +16,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        System.out.println("=======================");
+
         for (GrantedAuthority authority : authorities) {
             String role = authority.getAuthority();
-            System.out.println("==================");
             System.out.println(role);
             if (role.equals("ROLE_Admin")) {
                 response.sendRedirect("/userManagement");

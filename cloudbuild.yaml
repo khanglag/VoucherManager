@@ -1,0 +1,12 @@
+steps:
+  - name: 'gcr.io/cloud-builders/mvn'
+    args: [ 'clean', 'package' ]
+    dir: '.'
+
+  # Triển khai lên Google Cloud App Engine
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['app', 'deploy']
+    dir: '.'
+
+options:
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
