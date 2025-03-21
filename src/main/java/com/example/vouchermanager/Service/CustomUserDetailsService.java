@@ -26,6 +26,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (!user.getStatus()) {
             throw new DisabledException("Tài khoản đã bị khóa!");
         }
+        System.out.println("===================");
+        System.out.println(user.getUsername());
+        System.out.println(user.getPassword());
+        System.out.println(user.getRoleID().getRoleName());
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())

@@ -37,8 +37,7 @@ public class User {
     private String phoneNumber;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    @JoinColumn(name = "RoleID")
+    @JoinColumn(name = "RoleID", referencedColumnName = "RoleID")
     private Role roleID;
 
     @ColumnDefault("1")

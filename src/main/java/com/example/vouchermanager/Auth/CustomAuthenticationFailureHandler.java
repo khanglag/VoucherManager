@@ -26,6 +26,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
             errorMessage = "Sai mật khẩu!";
         }
 
+        System.err.println("Authentication failed: " + exception.getMessage());
+
         response.sendRedirect(response.encodeRedirectURL("/signin?error=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8)));
 
     }
