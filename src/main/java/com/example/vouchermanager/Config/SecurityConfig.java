@@ -53,11 +53,8 @@ public class SecurityConfig {
                         .loginPage("/auth") // Chỉ định trang đăng nhập
                         .permitAll()
                         .successHandler(customAuthenticationSuccessHandler)
-
                         .failureUrl("/auth?error")
-
                         .failureHandler(authenticationFailureHandler())
-
                         .loginProcessingUrl("/j_spring_security_check"))
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/signin") // Trang đăng nhập tùy chỉnh
