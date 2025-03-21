@@ -24,7 +24,7 @@ public interface VoucherService {
     Voucher update(String voucherCode, Voucher voucher);
 
     void delete(String voucherCode);
-    
+
     Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
     Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate, LocalDate endDate, org.springframework.data.domain.Pageable pageable);
