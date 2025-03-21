@@ -66,7 +66,6 @@ public class ProductServiceImp implements ProductService {
     public Page<Product> getProducts(int page, int size, String sortBy, String sortDirection, String productName, BigDecimal minPrice, BigDecimal maxPrice, Boolean status) {
         Sort sort = sortDirection.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = (Pageable) PageRequest.of(page, size, sort);
-
         Specification<Product> spec = ProductSpecification.filterProducts(productName, minPrice, maxPrice, status);
         return productRepository.findAll(spec, (org.springframework.data.domain.Pageable) pageable);
     }
