@@ -17,7 +17,8 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException exception) throws IOException, ServletException {
         String errorMessage = "Sai tài khoản hoặc mật khẩu!";
 
         if (exception instanceof InternalAuthenticationServiceException) {
@@ -26,9 +27,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
             errorMessage = "Sai mật khẩu!";
         }
 
-        System.err.println("Authentication failed: " + exception.getMessage());
-
-        response.sendRedirect(response.encodeRedirectURL("/signin?error=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8)));
+        response.sendRedirect(
+                response.encodeRedirectURL("/auth?error=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8)));
 
     }
 }

@@ -25,71 +25,13 @@
     <link rel="stylesheet" th:href="@{/assets/css/auth.css}" />
 </head>
 <body>
-
-<!--<div class="signin-container d-flex align-items-center justify-content-center">-->
-<!--    <div class="signin-form bg-light p-4 rounded shadow-lg" style="background-color: transparent !important;">-->
-<!--        <h2 class="text-center mb-4" style="color: #b8daff !important;">Đăng nhập</h2>-->
-<!--        <form method="POST" th:action="@{/j_spring_security_check}" class="mb-3">-->
-<!--            <div class="form-group mb-3">-->
-<!--                <input-->
-<!--                        type="tel"-->
-<!--                        id="username"-->
-<!--                        name="username"-->
-<!--                        placeholder="Nhập username"-->
-<!--                        class="form-control py-2 px-3 rounded"-->
-<!--                        required>-->
-<!--            </div>-->
-<!--            <div class="form-group mb-3">-->
-<!--                <input-->
-<!--                        type="password"-->
-<!--                        id="password"-->
-<!--                        name="password"-->
-<!--                        placeholder="Nhập mật khẩu"-->
-<!--                        class="form-control py-2 px-3 rounded"-->
-<!--                        required>-->
-<!--            </div>-->
-<!--            <button type="submit" class="btn btn-info w-100 py-2 text-white">Đăng nhập</button>-->
-<!--        </form>-->
-
-<!--        <div th:if="${param.error}" class="alert alert-danger text-center">-->
-<!--            Tên đăng nhập hoặc mật khẩu không đúng!-->
-<!--        </div>-->
-<!--        <div th:if="${param.logout}" class="alert alert-success text-center">-->
-<!--            Bạn đã đăng xuất thành công!-->
-<!--        </div>-->
-
-<!--        <div class="d-flex justify-content-between mt-3">-->
-<!--            <a th:href="@{/reset-password}" class="text-decoration-none"  style="color: #b8daff !important;">Quên mật khẩu</a>-->
-<!--            <a th:href="@{/register}" class="text-decoration-none"  style="color: #b8daff !important;">Bạn chưa có tài khoản?</a>-->
-<!--        </div>-->
-
-<!--        <div class="social-login mt-2 text-center">-->
-<!--            <p class="text-muted" style="color: #b8daff !important;">Hoặc đăng nhập bằng</p>-->
-<!--            <a href="/oauth2/authorization/google" class="btn btn-danger btn-lg mb-2 w-100">-->
-<!--                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-google me-2" viewBox="0 0 16 16">-->
-<!--                    <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z"/>-->
-<!--                </svg>-->
-<!--                Đăng nhập với Google-->
-<!--            </a>-->
-<!--            <a class="btn btn-dark btn-lg mb-2 w-100" href="/oauth2/authorization/github">-->
-<!--                <i class="fa-brands fa-github me-2"></i> Đăng nhập với Github-->
-<!--            </a>-->
-<!--            <a class="btn btn-primary btn-lg w-100" href="/oauth2/authorization/facebook">-->
-<!--                <i class="fa-brands fa-facebook me-2"></i> Đăng nhập với Facebook-->
-<!--            </a>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-
-
 <canvas id="bg-canvas"></canvas>
 
 <div class="container">
     <div class="form-container" id="form-container">
         <div class="tab-control">
-            <button class="tab-btn active" data-tab="login">Đăng nhập</button>
-            <button class="tab-btn" data-tab="register">Đăng ký</button>
+            <button class="tab-btn active btn" data-tab="login">Đăng nhập</button>
+            <button class="tab-btn btn" data-tab="register">Đăng ký</button>
         </div>
 
         <div class="form-section active" id="login">
@@ -124,7 +66,7 @@
             </form>
 
 
-                <div th:if="${param.error}" class="alert alert-danger text-center">
+                <div th:if="${param.error}" class="alert alert-danger text-center mt-3">
                     Tên đăng nhập hoặc mật khẩu không đúng!
                 </div>
                 <div th:if="${param.logout}" class="alert alert-success text-center">
@@ -157,69 +99,92 @@
             </div>
         </div>
 
-        <div class="form-section" id="register">
+        <div class="form-section" id="register" >
             <form id="register-form" method="POST" action="/register">
-                <div class="input-group">
-                    <label for="register-name">Username</label>
-                    <input
-                            type="text"
-                            id="register-username"
-                            name="register-username"
-                            placeholder="Nhập username"
-                            required
-                    />
-                </div>
-                <div class="input-group">
-                    <label for="register-name">Họ và tên</label>
-                    <input
-                            type="text"
-                            id="register-name"
-                            name="register-name"
-                            placeholder="Nhập họ và tên"
-                            required
-                    />
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group">
+                            <label for="register-username">Username</label>
+                            <input
+                                    type="text"
+                                    id="register-username"
+                                    name="register-username"
+                                    placeholder="Nhập username"
+                                    required
+                            />
+                        </div>
+                        <div class="input-group">
+                            <label for="fullName">Họ và tên</label>
+                            <input
+                                    type="text"
+                                    id="fullName"
+                                    name="fullName"
+                                    placeholder="Nhập họ và tên"
+                                    required
+                            />
+                        </div>
+
+                        <div class="input-group">
+                            <label for="email">Email</label>
+                            <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="Nhập email của bạn"
+                                    required
+                            />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group">
+                            <label for="password">Mật khẩu</label>
+                            <input
+                                    type="password"
+                                    id="pass"
+                                    name="pass"
+                                    placeholder="Mật khẩu"
+                                    required
+                            />
+                        </div>
+
+                        <div class="input-group">
+                            <label for="repass">Xác nhận mật khẩu</label>
+                            <input
+                                    type="password"
+                                    id="repass"
+                                    name="repass"
+                                    placeholder="Xác nhận mật khẩu"
+                                    required
+                            />
+                        </div>
+                        <div class="input-group">
+                            <label for="phoneNumber">Nhập số điện thoại</label>
+                            <input
+                                    type="text"
+                                    id="phoneNumber"
+                                    name="phoneNumber"
+                                    placeholder="Số điện thoại"
+                                    required
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <label for="register-email">Email</label>
-                    <input
-                            type="email"
-                            id="register-email"
-                            name="register-email"
-                            placeholder="Nhập email của bạn"
-                            required
-                    />
-                </div>
 
-                <div class="input-group">
-                    <label for="register-password">Mật khẩu</label>
-                    <input
-                            type="password"
-                            id="register-password"
-                            name="register-password"
-                            placeholder="Tạo mật khẩu"
-                            required
-                    />
-                </div>
 
-                <div class="input-group">
-                    <label for="register-confirm">Xác nhận mật khẩu</label>
-                    <input
-                            type="password"
-                            id="register-confirm"
-                            name="register-confirm"
-                            placeholder="Xác nhận mật khẩu"
-                            required
-                    />
-                </div>
 
-                <button type="submit" class="form-btn">Đăng ký</button>
+                <button type="submit" class="form-btn" id="btnSubmit">Đăng ký</button>
             </form>
 
             <div class="form-footer">
                 Đã có tài khoản?
                 <a href="#" class="tab-link" data-tab="login">Đăng nhập</a>
             </div>
+        </div>
+
+
+        <div id="alert-box" class="alert hidden">
+            <span id="alert-message"></span>
         </div>
     </div>
 </div>
