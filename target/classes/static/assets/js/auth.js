@@ -152,36 +152,73 @@ tabLinks.forEach((link) => {
     });
 });
 
-// // Form validation
-// document
-//     .getElementById("login-form")
-//     .addEventListener("submit", function (e) {
-//         e.preventDefault();
-//         // Xử lý đăng nhập ở đây
-//         console.log("Đăng nhập với:", {
-//             email: document.getElementById("login-email").value,
-//             password: document.getElementById("login-password").value,
-//         });
-//     });
-//
-// document
-//     .getElementById("register-form")
-//     .addEventListener("submit", function (e) {
-//         e.preventDefault();
-//         // Kiểm tra mật khẩu xác nhận
-//         const password = document.getElementById("register-password").value;
-//         const confirm = document.getElementById("register-confirm").value;
-//
-//         if (password !== confirm) {
-//             alert("Mật khẩu xác nhận không khớp!");
-//             return;
-//         }
-//
-//         // Xử lý đăng ký ở đây
-//         console.log("Đăng ký với:", {
-//             name: document.getElementById("register-name").value,
-//             email: document.getElementById("register-email").value,
-//             password: password,
-//         });
-//     });
-//
+const btnSubmit = document.getElementById("btnSubmit");
+btnSubmit.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    const fullName = document.getElementById("fullName");
+    const email = document.getElementById("email");
+    const username = document.getElementById("register-username");
+    const password = document.getElementById("pass");
+    const rePass = document.getElementById("repass");
+    const phoneNumber = document.getElementById("phoneNumber");
+
+    const jsonData = JSON.stringify({
+        username: username.value.trim(),
+        fullName: fullName.value.trim(),
+        password: password.value.trim(),
+        email: email.value.trim(),
+        phoneNumber: phoneNumber.value.trim(),
+        status: false
+    });
+
+    if (!fullName.value || !email.value || !username.value || !password.value || !rePass.value || !phoneNumber.value) {
+        showAlert("⚠️ Vui lòng nhập đầy đủ thông tin!", "error");
+        return;
+    }
+
+    if (password.value !== rePass.value) {
+        showAlert("⚠️ Mật khẩu không khớp!", "error");
+        return;
+    }
+
+    fetch("/auth/register", {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: jsonData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                showAlert(`❌ ${data.error}`, "error");
+            } else if (data.message) {
+                showAlert("🎉 Đăng ký thành công!", "success");
+                // Xóa nội dung input sau khi đăng ký thành công
+                fullName.value = "";
+                email.value = "";
+                username.value = "";
+                password.value = "";
+                rePass.value = "";
+                phoneNumber.value = "";
+            }
+        })
+        .catch(error => {
+            console.error("Lỗi:", error);
+            showAlert("⚠️ Lỗi hệ thống! Vui lòng thử lại.", "error");
+        });
+});
+
+function showAlert(message, type) {
+    const alertBox = document.getElementById("alert-box");
+    const alertMessage = document.getElementById("alert-message");
+
+    alertMessage.textContent = message;
+    alertBox.className = `alert show ${type}`;
+
+    setTimeout(() => {
+        alertBox.classList.remove("show");
+    }, 2000);
+}

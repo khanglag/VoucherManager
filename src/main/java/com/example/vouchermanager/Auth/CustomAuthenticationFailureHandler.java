@@ -26,7 +26,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
             errorMessage = "Sai mật khẩu!";
         }
 
-        response.sendRedirect(response.encodeRedirectURL("/signin?error=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8)));
+        response.sendRedirect(response.encodeRedirectURL("/auth?error=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8)));
 
     }
 }
