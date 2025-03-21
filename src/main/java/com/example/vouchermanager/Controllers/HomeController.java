@@ -4,17 +4,11 @@ import com.example.vouchermanager.Service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.awt.*;
-import java.util.List;
 
 @Controller
 public class HomeController {
@@ -46,19 +40,45 @@ public class HomeController {
         return "index";
     }
 
-
     @GetMapping("/index")
-    public String checkLogin(Model model, Authentication authentication, HttpSession session) {
-        authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof UserDetails) {
-            User user = (User) principal;
-            String username = user.getUsername();
-            com.example.vouchermanager.Model.Entity.User u = userService.findByUsername(username);
-            String name=  u.getFullName();
-            model.addAttribute("user", username);
-            model.addAttribute("name", name);
+    public String checkLoginIndexPage(Model model, Authentication authentication) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
+            if (user != null) {
+                model.addAttribute("user", username);
+                model.addAttribute("name", user.getFullName());
+            }
         }
         return "index";
+    }
+
+    @GetMapping("/store")
+    public String checkLoginStorePage(Model model, Authentication authentication, HttpSession session) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
+            if (user != null) {
+                model.addAttribute("user", username);
+                model.addAttribute("name", user.getFullName());
+            }
+        }
+        return "user/store";
+    }
+
+    @GetMapping("/brands")
+    public String checkLoginBrandsPage(Model model, Authentication authentication, HttpSession session) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
+            if (user != null) {
+                model.addAttribute("user", username);
+                model.addAttribute("name", user.getFullName());
+            }
+        }
+        return "user/brand_collaborations";
     }
 }
