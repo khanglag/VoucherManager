@@ -1,0 +1,23 @@
+steps:
+  # Cấp quyền thực thi cho mvnw (nếu có)
+  - name: 'gcr.io/cloud-builders/bash'
+    args: ['chmod', '+x', './mvnw']
+
+  # Cài đặt JDK 17 thủ công (đảm bảo phiên bản chính xác)
+  - name: 'gcr.io/cloud-builders/bash'
+    args:
+      - 'apt-get update && apt-get install -y openjdk-17-jdk && update-java-alternatives --set java-1.17.0-openjdk-amd64'
+
+  # Build với Maven
+  - name: 'gcr.io/cloud-builders/mvn'
+    args: ['clean', 'package', '-DskipTests']
+    dir: '.'
+
+  # Triển khai lên Google Cloud App Engine
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['app', 'deploy']
+    dir: '.'
+
+options:
+  env:
+    - 'GOOGLE_RUNTIME_VERSION=17' # Đảm bảo sử dụng JDK 17
