@@ -10,6 +10,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -25,6 +27,9 @@ import java.util.stream.Collectors;
 public class VoucherServiceImp implements VoucherService {
     @Autowired
     private VoucherRepository voucherRepository;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Override
     public List<VoucherDTO> findAll() {
@@ -296,5 +301,13 @@ public class VoucherServiceImp implements VoucherService {
         List<VoucherDTO> pagedVouchers = applicableVouchers.subList(start, end);
 
         return new PageImpl<>(pagedVouchers, pageable, applicableVouchers.size());
+    }
+    @Override
+    public Voucher create(Voucher voucher, MultipartFile logoFile) {
+        if (logoFile != null && !logoFile.isEmpty()) {
+            String logoUrl = cloudinaryService.uploadFile(logoFile);
+            voucher.setLogoUrl(logoUrl);
+        }
+        return voucherRepository.save(voucher);
     }
 }
