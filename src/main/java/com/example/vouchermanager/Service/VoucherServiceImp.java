@@ -46,14 +46,14 @@ public class VoucherServiceImp implements VoucherService {
                         voucher.getUsageCount(),
                         voucher.getMaxUsage(),
                         convertInstantToLocalDateTime(voucher.getCreatedDate()),
-                        voucher.getApplicableForAllProducts()
-                ))
+                        voucher.getApplicableForAllProducts()))
                 .collect(Collectors.toList());
     }
 
     private LocalDateTime convertInstantToLocalDateTime(Instant instant) {
         return instant != null ? LocalDateTime.ofInstant(instant, ZoneId.systemDefault()) : null;
     }
+
     @Override
     public Optional<Voucher> getById(String voucherCode) {
         return voucherRepository.findById(voucherCode);
@@ -78,36 +78,41 @@ public class VoucherServiceImp implements VoucherService {
     }
 
     @Override
-    public Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate, LocalDate endDate, java.awt.print.Pageable pageable) {
+    public Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate,
+            LocalDate endDate, java.awt.print.Pageable pageable) {
         return null;
     }
 
     @Override
-    public Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate, LocalDate endDate, Pageable pageable) {
-        Specification<Voucher> spec = VoucherSpecification.filterVouchers(title, discountValue, status, startDate, endDate);
+    public Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate,
+            LocalDate endDate, Pageable pageable) {
+        Specification<Voucher> spec = VoucherSpecification.filterVouchers(title, discountValue, status, startDate,
+                endDate);
 
-        Page<Voucher> vouchers = voucherRepository.findAll(spec,(org.springframework.data.domain.Pageable) pageable);
+        Page<Voucher> vouchers = voucherRepository.findAll(spec, (org.springframework.data.domain.Pageable) pageable);
 
         return vouchers.map(voucher -> new VoucherDTO(
-                        voucher.getVoucherCode(),
-                        voucher.getTitle(),
-                        voucher.getLogoUrl(),
-                        voucher.getDescription(),
-                        voucher.getDiscountType(),
-                        voucher.getDiscountValue(),
-                        voucher.getStartDate(),
-                        voucher.getEndDate(),
-                        voucher.getMinimumOrderValue(),
-                        voucher.getStatus(),
-                        voucher.getCreatedBy().getId(),
-                        voucher.getUsageCount(),
-                        voucher.getMaxUsage(),
-                        convertInstantToLocalDateTime(voucher.getCreatedDate()),
-                        voucher.getApplicableForAllProducts()
-                ));
+                voucher.getVoucherCode(),
+                voucher.getTitle(),
+                voucher.getLogoUrl(),
+                voucher.getDescription(),
+                voucher.getDiscountType(),
+                voucher.getDiscountValue(),
+                voucher.getStartDate(),
+                voucher.getEndDate(),
+                voucher.getMinimumOrderValue(),
+                voucher.getStatus(),
+                voucher.getCreatedBy().getId(),
+                voucher.getUsageCount(),
+                voucher.getMaxUsage(),
+                convertInstantToLocalDateTime(voucher.getCreatedDate()),
+                voucher.getApplicableForAllProducts()));
     }
+
     /**
-     * Tạo voucher với mã do người dùng nhập, kiểm tra tồn tại và gợi ý mã thay thế nếu cần
+     * Tạo voucher với mã do người dùng nhập, kiểm tra tồn tại và gợi ý mã thay thế
+     * nếu cần
+     * 
      * @param voucher Voucher chứa thông tin do người dùng nhập
      * @return Kết quả bao gồm voucher đã tạo hoặc danh sách gợi ý nếu mã trùng
      */
@@ -118,7 +123,8 @@ public class VoucherServiceImp implements VoucherService {
         if (voucherRepository.existsById(inputCode)) {
             // Nếu tồn tại, tạo danh sách gợi ý mã thay thế
             List<String> suggestions = generateVoucherSuggestions(inputCode, 3); // Gợi ý 3 mã
-            return new VoucherCreationResultDTO(null, suggestions, "Mã " + inputCode + " đã tồn tại. Dưới đây là các gợi ý thay thế.");
+            return new VoucherCreationResultDTO(null, suggestions,
+                    "Mã " + inputCode + " đã tồn tại. Dưới đây là các gợi ý thay thế.");
         } else {
             // Nếu không tồn tại, set đầy đủ các thuộc tính và lưu voucher
             Voucher newVoucher = new Voucher();
@@ -134,9 +140,15 @@ public class VoucherServiceImp implements VoucherService {
             newVoucher.setStatus(VoucherStatus.ACTIVE); // Mặc định ACTIVE
             newVoucher.setCreatedBy(voucher.getCreatedBy()); // Có thể null nếu không có user
             newVoucher.setUsageCount(0); // Khởi tạo số lần sử dụng
-            newVoucher.setMaxUsage(voucher.getMaxUsage() != null ? voucher.getMaxUsage() : 100); // Mặc định 100 nếu null
+            newVoucher.setMaxUsage(voucher.getMaxUsage() != null ? voucher.getMaxUsage() : 100); // Mặc định 100 nếu
+                                                                                                 // null
             newVoucher.setCreatedDate(Instant.now()); // Thời gian tạo
-            newVoucher.setApplicableForAllProducts(voucher.getApplicableForAllProducts() != null ? voucher.getApplicableForAllProducts() : false); // Mặc định false nếu null
+            newVoucher.setApplicableForAllProducts(
+                    voucher.getApplicableForAllProducts() != null ? voucher.getApplicableForAllProducts() : false); // Mặc
+                                                                                                                    // định
+                                                                                                                    // false
+                                                                                                                    // nếu
+                                                                                                                    // null
 
             Voucher savedVoucher = voucherRepository.save(newVoucher);
             return new VoucherCreationResultDTO(savedVoucher, null, "Voucher đã được tạo thành công!");
@@ -145,7 +157,8 @@ public class VoucherServiceImp implements VoucherService {
 
     /**
      * Tạo danh sách gợi ý mã voucher thay thế
-     * @param baseCode Mã gốc do người dùng nhập
+     * 
+     * @param baseCode            Mã gốc do người dùng nhập
      * @param numberOfSuggestions Số lượng gợi ý cần tạo
      * @return Danh sách mã gợi ý
      */
@@ -170,6 +183,7 @@ public class VoucherServiceImp implements VoucherService {
         }
         return suggestions;
     }
+
     // Hàm sử dụng voucher
     public VoucherUsageResultDTO useVoucher(String voucherCode, BigDecimal orderValue) {
         Voucher voucher = voucherRepository.findById(voucherCode).orElse(null);
@@ -208,6 +222,7 @@ public class VoucherServiceImp implements VoucherService {
 
         return new VoucherUsageResultDTO(true, voucher.getDiscountValue(), "Áp dụng voucher thành công!");
     }
+
     public VoucherDeactivationResultDTO deactivateVoucher(String voucherCode) {
         Voucher voucher = voucherRepository.findById(voucherCode).orElse(null);
 

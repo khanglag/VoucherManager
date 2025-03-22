@@ -44,9 +44,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth", "/", "/index", "/static/**", "/assets/**", "/templates/**",
-                                "/user/**", "/vouchers", "/store", "/brands","/api/vouchers/create")
+
+                                "/user/**", "/vouchers", "/store", "/brands", "/register", "/auth/register")
+
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
@@ -57,13 +61,13 @@ public class SecurityConfig {
                         .failureHandler(authenticationFailureHandler())
                         .loginProcessingUrl("/j_spring_security_check"))
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/signin") // Trang đăng nhập tùy chỉnh
+                        .loginPage("/auth") // Trang đăng nhập tùy chỉnh
                         .successHandler(customOAuth2SuccessHandler)
-                        .failureUrl("/signin?error") // Trang đích khi đăng nhập thất bại
+                        .failureUrl("/auth?error") // Trang đích khi đăng nhập thất bại
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/auth")
+                        .logoutSuccessUrl("/login?logout")
                         .permitAll()
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
