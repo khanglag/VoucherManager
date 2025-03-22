@@ -1,14 +1,12 @@
 package com.example.vouchermanager.Service;
 
-import com.example.vouchermanager.Model.DTO.VoucherCreationResultDTO;
-import com.example.vouchermanager.Model.DTO.VoucherDTO;
-import com.example.vouchermanager.Model.DTO.VoucherDeactivationResultDTO;
-import com.example.vouchermanager.Model.DTO.VoucherUsageResultDTO;
+import com.example.vouchermanager.Model.DTO.*;
 import com.example.vouchermanager.Model.Entity.Voucher;
 import com.example.vouchermanager.Model.Enum.VoucherStatus;
 import com.example.vouchermanager.Repository.VoucherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
@@ -251,5 +249,52 @@ public class VoucherServiceImp implements VoucherService {
         voucher.setStatus(VoucherStatus.CANCELLED);
         voucherRepository.save(voucher);
         return new VoucherDeactivationResultDTO(true, "Voucher " + voucherCode + " đã được vô hiệu hóa thành công!");
+    }
+    public VoucherActivationResultDTO activateVoucher(String voucherCode) {
+        Voucher voucher = voucherRepository.findById(voucherCode).orElse(null);
+        if (voucher == null) {
+            return new VoucherActivationResultDTO(false, "Mã voucher không tồn tại!");
+        }
+        if (voucher.getStatus() == VoucherStatus.ACTIVE) {
+            return new VoucherActivationResultDTO(false, "Voucher đã ở trạng thái hoạt động!");
+        }
+        if (voucher.getStatus() == VoucherStatus.EXPIRED && voucher.getUsageCount() >= voucher.getMaxUsage()) {
+            return new VoucherActivationResultDTO(false, "Voucher đã hết lượt sử dụng, không thể kích hoạt lại!");
+        }
+        voucher.setStatus(VoucherStatus.ACTIVE);
+        voucherRepository.save(voucher);
+        return new VoucherActivationResultDTO(true, "Voucher " + voucherCode + " đã được kích hoạt lại thành công!");
+    }
+    // Hàm tìm voucher áp dụng cho sản phẩm cụ thể với phân trang
+    public Page<VoucherDTO> findByApplicableProducts(String productId, Pageable pageable) {
+        List<Voucher> allVouchers = voucherRepository.findAll();
+
+        // Lọc voucher áp dụng cho sản phẩm
+        List<VoucherDTO> applicableVouchers = allVouchers.stream()
+                .filter(voucher -> voucher.getApplicableForAllProducts()) // Chỉ lấy voucher áp dụng cho tất cả sản phẩm
+                .map(voucher -> new VoucherDTO(
+                        voucher.getVoucherCode(),
+                        voucher.getTitle(),
+                        voucher.getLogoUrl(),
+                        voucher.getDescription(),
+                        voucher.getDiscountType(),
+                        voucher.getDiscountValue(),
+                        voucher.getStartDate(),
+                        voucher.getEndDate(),
+                        voucher.getMinimumOrderValue(),
+                        voucher.getStatus(),
+                        voucher.getCreatedBy().getId(),
+                        voucher.getUsageCount(),
+                        voucher.getMaxUsage(),
+                        convertInstantToLocalDateTime(voucher.getCreatedDate()),
+                        voucher.getApplicableForAllProducts()))
+                .collect(Collectors.toList());
+
+        // Phân trang thủ công
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), applicableVouchers.size());
+        List<VoucherDTO> pagedVouchers = applicableVouchers.subList(start, end);
+
+        return new PageImpl<>(pagedVouchers, pageable, applicableVouchers.size());
     }
 }
