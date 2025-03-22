@@ -17,6 +17,8 @@ import java.util.Optional;
 public interface VoucherService {
     List<VoucherDTO> findAll();
 
+    Page<VoucherDTO> getAllVouchers(org.springframework.data.domain.Pageable pageable);
+
     Optional<Voucher> getById(String voucherCode);
 
     Voucher create(Voucher voucher);

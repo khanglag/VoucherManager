@@ -53,6 +53,25 @@ public class VoucherServiceImp implements VoucherService {
     private LocalDateTime convertInstantToLocalDateTime(Instant instant) {
         return instant != null ? LocalDateTime.ofInstant(instant, ZoneId.systemDefault()) : null;
     }
+    public Page<VoucherDTO> getAllVouchers(Pageable pageable) {
+        Page<Voucher> vouchers = voucherRepository.findAll(pageable);
+        return vouchers .map(voucher -> new VoucherDTO(
+                voucher.getVoucherCode(),
+                voucher.getTitle(),
+                voucher.getLogoUrl(),
+                voucher.getDescription(),
+                voucher.getDiscountType(),
+                voucher.getDiscountValue(),
+                voucher.getStartDate(),
+                voucher.getEndDate(),
+                voucher.getMinimumOrderValue(),
+                voucher.getStatus(),
+                voucher.getCreatedBy().getId(),
+                voucher.getUsageCount(),
+                voucher.getMaxUsage(),
+                convertInstantToLocalDateTime(voucher.getCreatedDate()),
+                voucher.getApplicableForAllProducts()));
+    }
 
     @Override
     public Optional<Voucher> getById(String voucherCode) {
