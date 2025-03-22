@@ -1,13 +1,11 @@
 package com.example.vouchermanager.Service;
 
-import com.example.vouchermanager.Model.DTO.VoucherCreationResultDTO;
-import com.example.vouchermanager.Model.DTO.VoucherDTO;
-import com.example.vouchermanager.Model.DTO.VoucherUsageResultDTO;
+import com.example.vouchermanager.Model.DTO.*;
 import com.example.vouchermanager.Model.Entity.Voucher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,4 +32,10 @@ public interface VoucherService {
     VoucherCreationResultDTO createVoucherWithCustomCode(Voucher voucher);
 
     VoucherUsageResultDTO useVoucher(String voucherCode, BigDecimal orderValue);
+
+    VoucherActivationResultDTO activateVoucher(String voucherCode);
+
+    VoucherDeactivationResultDTO deactivateVoucher(String voucherCode);
+
+    Page<VoucherDTO> findByApplicableProducts(String productId, Pageable pageable);
 }
