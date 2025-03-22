@@ -95,13 +95,7 @@ public class VoucherServiceImp implements VoucherService {
     public void delete(String voucherCode) {
         voucherRepository.deleteById(voucherCode);
     }
-
-    @Override
-    public Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate,
-            LocalDate endDate, java.awt.print.Pageable pageable) {
-        return null;
-    }
-
+    
     @Override
     public Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate,
             LocalDate endDate, Pageable pageable) {
