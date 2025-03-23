@@ -3,6 +3,7 @@ steps:
     args: [ 'clean', 'package' ]
     env:
       - 'GOOGLE_RUNTIME_VERSION=17'
+      - 'JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64'
     dir: '.'
 
   # Triển khai lên Google Cloud App Engine
@@ -13,4 +14,5 @@ steps:
 options:
   env:
     - 'GOOGLE_RUNTIME_VERSION=17'
+    - 'JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64'
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
