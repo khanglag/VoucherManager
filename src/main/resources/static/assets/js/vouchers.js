@@ -210,3 +210,69 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+
+
+
+//js c
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("voucher-filter-form");
+    const vouchersContainer = document.querySelector(".voucher-list");
+    const vouchers = Array.from(document.querySelectorAll(".voucher-card"));
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // 🔹 Lấy dữ liệu nhập vào từ form
+        const voucherCode = form.querySelector("input[name='voucherCode']").value.trim().toLowerCase();
+        const discountType = form.querySelector("select[name='discountType']").value;
+        const status = form.querySelector("select[name='status']").value;
+        const minOrderValue = parseInt(form.querySelector("input[name='minOrderValue']").value, 10) || 0;
+
+        // 🛍 Lấy giá trị từ checkbox (true/false)
+        const applicableForAllProductsFilter = form.querySelector("input[name='applicableForAllProducts']").checked;
+
+        // 🔹 Lọc danh sách voucher
+        const filteredVouchers = vouchers.filter((voucher) => {
+            // 🏷 Lấy mã voucher
+            const code = voucher.querySelector(".voucher-code")?.textContent.trim().toLowerCase() || "";
+
+            // 💰 Lấy loại giảm giá ("Cố định" hoặc "Phần trăm")
+            const typeElement = voucher.querySelector(".voucher-info-value")?.textContent.trim();
+            const isFixedDiscount = typeElement.includes("Cố định");
+            const isPercentageDiscount = typeElement.includes("Phần trăm");
+
+            // ✅ Xác định trạng thái voucher
+            const statusText = voucher.querySelector(".voucher-status-badge")?.textContent.trim() || "";
+
+            // 💵 Lấy giá trị đơn hàng tối thiểu
+            const minOrderElement = Array.from(voucher.querySelectorAll(".voucher-conditions"))
+                .find(el => el.textContent.includes("Áp dụng cho đơn hàng tối thiểu"))?.querySelector("span");
+
+            const minOrderText = minOrderElement ? minOrderElement.textContent.replace(/\D/g, "") : "0";
+            const orderValue = parseInt(minOrderText, 10) || 0;
+
+            // 🛍 Kiểm tra "Áp dụng cho tất cả sản phẩm"
+            const applicableElement = Array.from(voucher.querySelectorAll(".voucher-conditions"))
+                .find(el => el.textContent.includes("Áp dụng cho tất cả các sản phẩm"));
+            const isApplicableForAll = Boolean(applicableElement); // Nếu có phần tử này thì là true
+
+            return (
+                (voucherCode === "" || code.includes(voucherCode)) &&
+                (discountType === "" || (discountType === "PERCENTAGE" && isPercentageDiscount) || (discountType === "FIXED" && isFixedDiscount)) &&
+                (status === "" || statusText === status) &&
+                (minOrderValue === 0 || orderValue <= minOrderValue) &&
+                (!applicableForAllProductsFilter || isApplicableForAll) // Nếu checkbox được chọn, chỉ hiển thị voucher phù hợp
+            );
+        });
+
+        // 🆕 Cập nhật danh sách voucher hiển thị
+        vouchersContainer.innerHTML = "";
+        if (filteredVouchers.length > 0) {
+            filteredVouchers.forEach(voucher => vouchersContainer.appendChild(voucher));
+        } else {
+            vouchersContainer.innerHTML = "<p>Không tìm thấy voucher phù hợp.</p>";
+        }
+    });
+});
+

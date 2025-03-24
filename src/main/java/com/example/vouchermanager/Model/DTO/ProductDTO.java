@@ -22,6 +22,7 @@ public class ProductDTO {
                 "productId=" + productId +
                 ", productName='" + productName + '\'' +
                 ", price=" + price +
+                ", imageUrl=" + imageUrl +
                 ", status=" + status +
                 '}';
     }

@@ -1,4 +1,5 @@
 package com.example.vouchermanager.Controllers;
+import com.example.vouchermanager.Model.Entity.Product;
 import com.example.vouchermanager.Service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -33,6 +35,12 @@ public class VouchersController {
         }
         List<VoucherDTO> vouchers = voucherServiceImp.findAll();
         model.addAttribute("vouchers", vouchers);
+
+        List<Product> cart = (List<Product>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+        model.addAttribute("cart", cart);
         return "user/vouchers";
     }
 }
