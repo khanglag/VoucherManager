@@ -20,6 +20,9 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT o FROM Order o JOIN FETCH o.userID WHERE o.userID.id = :userId")
     Page<Order> findByUserId(@Param("userId") int userId, Pageable pageable);
 
+    @Query("SELECT MAX(o.id) FROM Order o")
+    int findMaxOrderId();
+
     Optional<Order> findById(int id);
 
     Page<Order> findByOrderDateBetween(Instant startDate, Instant endDate, Pageable pageable);

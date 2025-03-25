@@ -310,4 +310,18 @@ public class VoucherServiceImp implements VoucherService {
         }
         return voucherRepository.save(voucher);
     }
+    @Override
+    public List<Voucher> getPercentageVouchers(Integer productId) {
+        return voucherRepository.findPercentageVouchersByProduct(productId);
+    }
+
+    @Override
+    public List<Voucher> getFixedVouchers(Integer productId) {
+        return voucherRepository.findFixedVouchersByProduct(productId);
+    }
+
+    @Override
+    public List<Voucher> getFreeShipVouchers(Integer productId) {
+        return voucherRepository.findFreeShipVouchersByProduct(productId);
+    }
 }
