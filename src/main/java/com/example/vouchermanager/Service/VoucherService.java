@@ -42,4 +42,9 @@ public interface VoucherService {
 
     Voucher create(Voucher voucher, MultipartFile logoFile);
 
+    List<Voucher> getPercentageVouchers(Integer productId);
+
+    List<Voucher> getFixedVouchers(Integer productId);
+
+    List<Voucher> getFreeShipVouchers(Integer productId);
 }
