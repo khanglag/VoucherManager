@@ -36,7 +36,6 @@ public class PurchaseService {
         BigDecimal TotalAmount = BigDecimal.ZERO;
         BigDecimal FinalAmount = BigDecimal.ZERO;
         for (Orderdetail orderdetail : request.getOrderdetails()) {
-            orderdetailRepository.save(orderdetail);
             TotalAmount = TotalAmount.add(orderdetail.getTotalPrice());
         }
         List<Voucher> vouchers = request.getVoucherCodes().stream()
@@ -50,7 +49,7 @@ public class PurchaseService {
             else if (voucher.getDiscountType()== DiscountType.PERCENTAGE)
                 FinalAmount = FinalAmount.multiply(voucher.getDiscountValue());
             else if (voucher.getDiscountType()== DiscountType.FREESHIP)
-                FinalAmount = TotalAmount.subtract(BigDecimal.valueOf(30));
+                FinalAmount = TotalAmount.subtract(BigDecimal.valueOf(30000));
         }
         Order order = new Order();
         order.setUserID(user);
@@ -59,21 +58,20 @@ public class PurchaseService {
         order.setTotalAmount(TotalAmount);
         order.setFinalAmount(FinalAmount);
         orderRepository.save(order);
+        for (Orderdetail orderdetail : request.getOrderdetails()) {
+            orderdetail.setOrderID(order);
+            orderdetailRepository.save(orderdetail);
+        }
         //Set xong của order
         // Set voucher
-        for (Voucher voucher : vouchers) {
-            voucher.setUsageCount(voucher.getUsageCount() + 1);
-            System.out.println(voucher.getVoucherCode());
-            voucherService.update(voucher.getVoucherCode(),voucher);
-        }
         //Set voucherusage
-        Voucherusage voucherusage = new Voucherusage();
-        vouchers.forEach(voucher -> {
-            voucherusage.setVoucherCode(voucher);
-            voucherusage.setOrderID(order);
-            voucherusage.setUsedDate(Instant.now());
-            voucherusageRepository.save(voucherusage);
-        });
+        for (Voucher voucher : vouchers) {
+            Voucherusage voucherUsage = new Voucherusage();
+            voucherUsage.setVoucherCode(voucher);
+            voucherUsage.setOrderID(order);
+            voucherUsage.setUsedDate(Instant.now());
+            voucherusageRepository.save(voucherUsage);
+        }
         return null;
     }
 }
