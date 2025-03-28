@@ -1,8 +1,14 @@
 package com.example.vouchermanager.Service;
 
 import com.example.vouchermanager.Model.DTO.*;
+import com.example.vouchermanager.Model.Entity.Product;
 import com.example.vouchermanager.Model.Entity.Voucher;
+import com.example.vouchermanager.Model.Entity.Voucherapplicableproduct;
+import com.example.vouchermanager.Model.Entity.VoucherapplicableproductId;
+import com.example.vouchermanager.Model.Enum.DiscountType;
 import com.example.vouchermanager.Model.Enum.VoucherStatus;
+import com.example.vouchermanager.Repository.ProductRepository;
+import com.example.vouchermanager.Repository.VoucherApplicableProductRepository;
 import com.example.vouchermanager.Repository.VoucherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +36,10 @@ public class VoucherServiceImp implements VoucherService {
 
     @Autowired
     private CloudinaryService cloudinaryService;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private VoucherApplicableProductRepository voucherApplicableProductRepository;
 
     @Override
     public List<VoucherDTO> findAll() {
@@ -324,4 +334,53 @@ public class VoucherServiceImp implements VoucherService {
     public List<Voucher> getFreeShipVouchers(Integer productId) {
         return voucherRepository.findFreeShipVouchersByProduct(productId);
     }
+    @Override
+    public void createVouchersForProducts(Voucher voucher, List<Integer> productIds) {
+        voucher.setApplicableForAllProducts(true);
+        createVoucherWithCustomCode(voucher);
+        for (Integer productId : productIds) {
+            Product product = productRepository.findById(Long.valueOf(productId)).orElseThrow(()
+                    -> new RuntimeException("Sản phẩm không tồn tại"));
+            VoucherapplicableproductId id = new VoucherapplicableproductId(voucher.getVoucherCode(), Long.valueOf(productId));
+            Voucherapplicableproduct voucherapplicableproduct = new Voucherapplicableproduct(id,voucher,product);
+            voucherApplicableProductRepository.save(voucherapplicableproduct);
+        }
+    }
+    // Hàm tính giá trị giảm thực tế của voucher
+    private BigDecimal calculateDiscountValue(Voucher voucher, BigDecimal productPrice) {
+        if (voucher.getDiscountType() == DiscountType.FIXED) {
+            return voucher.getDiscountValue(); // Giảm trực tiếp số tiền
+        } else if (voucher.getDiscountType() == DiscountType.PERCENTAGE) {
+            return productPrice.multiply(voucher.getDiscountValue()).divide(BigDecimal.valueOf(100)); // % giảm giá
+        }
+        return BigDecimal.ZERO;
+    }
+    @Override
+    public List<Voucher> getSortedDiscountVouchers(Integer productId) {
+        // Lấy danh sách voucher áp dụng cho sản phẩm
+        List<Voucher> vouchers = voucherApplicableProductRepository.findVouchersByProductId(productId);
+
+        // Lấy giá sản phẩm
+        Product product = productRepository.findById(Long.valueOf(productId))
+                .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));
+        BigDecimal productPrice = product.getPrice();
+
+        return vouchers.stream()
+                .filter(v -> v.getDiscountType() == DiscountType.PERCENTAGE || v.getDiscountType() == DiscountType.FIXED)
+                .sorted((v1, v2) -> {
+                    BigDecimal discount1 = calculateDiscountValue(v1, productPrice);
+                    BigDecimal discount2 = calculateDiscountValue(v2, productPrice);
+                    return discount2.compareTo(discount1); // Sắp xếp giảm dần
+                })
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<Voucher> getSortedFreeShipVouchers(Integer productId) {
+        List<Voucher> vouchers = voucherApplicableProductRepository.findVouchersByProductId(productId);
+
+        return vouchers.stream()
+                .filter(v -> v.getDiscountType() == DiscountType.FREESHIP)
+                .collect(Collectors.toList());
+    }
+
 }
