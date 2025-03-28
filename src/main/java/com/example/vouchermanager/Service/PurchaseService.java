@@ -65,13 +65,13 @@ public class PurchaseService {
         //Set xong của order
         // Set voucher
         //Set voucherusage
-        for (Voucher voucher : vouchers) {
-            Voucherusage voucherUsage = new Voucherusage();
-            voucherUsage.setVoucherCode(voucher);
-            voucherUsage.setOrderID(order);
-            voucherUsage.setUsedDate(Instant.now());
-            voucherusageRepository.save(voucherUsage);
-        }
+//        for (Voucher voucher : vouchers) {
+//            Voucherusage voucherUsage = new Voucherusage();
+//            voucherUsage.setVoucherCode(voucher);
+//            voucherUsage.setOrderID(order);
+//            voucherUsage.setUsedDate(Instant.now());
+//            voucherusageRepository.save(voucherUsage);
+//        }
         return null;
     }
 }
