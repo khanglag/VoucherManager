@@ -49,7 +49,20 @@ public class VoucherApplicableProductServiceImpTest {
     @Test
     public void getSortedDiscountVouchers()
     {
-        for(Voucher voucher: voucherService.getSortedDiscountVouchers(1))
+        for(Voucher voucher: voucherService.getSortedDiscountVouchers(3, BigDecimal.valueOf(10000)))
+        {
+            System.out.println("VoucherCode: " + voucher.getVoucherCode() +
+                    ", Title: " + voucher.getTitle() +
+                    ", Discount: " + voucher.getDiscountValue() +
+                    ", Start: " + voucher.getStartDate() +
+                    ", End: " + voucher.getEndDate());
+        }
+
+    }
+    @Test
+    public void getSortedFreeshipDiscountVouchers()
+    {
+        for(Voucher voucher: voucherService.getSortedFreeShipVouchers(3, BigDecimal.valueOf(10000)))
         {
             System.out.println("VoucherCode: " + voucher.getVoucherCode() +
                     ", Title: " + voucher.getTitle() +

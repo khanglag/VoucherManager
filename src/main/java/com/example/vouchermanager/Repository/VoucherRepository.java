@@ -65,4 +65,5 @@ public interface VoucherRepository extends JpaRepository<Voucher, String>, JpaSp
                 AND v.discountType = 'FREESHIP'
             """)
     List<Voucher> findFreeShipVouchersByProduct(@Param("productId") Integer productId);
+    List<Voucher> findByApplicableForAllProductsTrue();
 }

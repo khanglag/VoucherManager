@@ -50,7 +50,7 @@ public interface VoucherService {
 
     void createVouchersForProducts(Voucher voucher, List<Integer> productIds);
 
-    List<Voucher> getSortedDiscountVouchers(Integer productId);
+    List<Voucher> getSortedDiscountVouchers(Integer productId, BigDecimal orderTotal);
 
-    List<Voucher> getSortedFreeShipVouchers(Integer productId);
+    List<Voucher> getSortedFreeShipVouchers(Integer productId, BigDecimal orderTotal);
 }
