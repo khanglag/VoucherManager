@@ -127,3 +127,137 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    const particlesContainer = document.getElementById('particles');
+    const svg = document.querySelector('.connect-lines svg');
+    const lines = [];
+    const particles = [];
+    const maxParticles = 40;
+    const maxLines = 15;
+
+    // Create particles
+    for (let i = 0; i < maxParticles; i++) {
+        createParticle();
+    }
+
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+
+        // Random starting position
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 110 + 100; // Start from below
+
+        // Random size
+        const size = Math.random() * 4 + 2;
+
+        // Random animation duration and delay
+        const duration = Math.random() * 10 + 15;
+        const delay = Math.random() * 10;
+
+        // Random color from blue/purple palette
+        const colors = [
+            'rgba(59, 130, 246, 0.7)', // blue
+            'rgba(139, 92, 246, 0.7)',  // purple
+            'rgba(236, 72, 153, 0.7)',  // pink
+            'rgba(248, 113, 113, 0.7)', // red
+            'rgba(245, 158, 11, 0.7)'   // amber
+        ];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        particle.style.left = `${posX}%`;
+        particle.style.top = `${posY}%`;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.backgroundColor = color;
+        particle.style.boxShadow = `0 0 ${size * 2}px ${color}`;
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.animationDelay = `${delay}s`;
+
+        particlesContainer.appendChild(particle);
+        particles.push({
+            element: particle,
+            x: posX,
+            y: posY
+        });
+
+        // Remove and recreate particle when animation ends
+        setTimeout(() => {
+            particles.splice(particles.indexOf(particle), 1);
+            particle.remove();
+            createParticle();
+        }, (duration + delay) * 1000);
+    }
+
+    // Create connecting lines animation
+    function createConnectingLines() {
+        // Clear existing lines
+        while (svg.firstChild) {
+            svg.removeChild(svg.firstChild);
+        }
+
+        // Create random connecting lines
+        for (let i = 0; i < maxLines; i++) {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('class', 'line');
+
+            const x1 = Math.random() * 100;
+            const y1 = Math.random() * 100;
+            const x2 = Math.random() * 100;
+            const y2 = Math.random() * 100;
+
+            line.setAttribute('x1', `${x1}%`);
+            line.setAttribute('y1', `${y1}%`);
+            line.setAttribute('x2', `${x2}%`);
+            line.setAttribute('y2', `${y2}%`);
+
+            const opacity = Math.random() * 0.15 + 0.05;
+            line.style.stroke = `rgba(255, 255, 255, ${opacity})`;
+
+            svg.appendChild(line);
+            lines.push(line);
+        }
+    }
+
+    // Animate the lines
+    function animateLines() {
+        lines.forEach(line => {
+            const x1Change = Math.random() * 2 - 1; // -1 to 1
+            const y1Change = Math.random() * 2 - 1;
+            const x2Change = Math.random() * 2 - 1;
+            const y2Change = Math.random() * 2 - 1;
+
+            let x1 = parseFloat(line.getAttribute('x1'));
+            let y1 = parseFloat(line.getAttribute('y1'));
+            let x2 = parseFloat(line.getAttribute('x2'));
+            let y2 = parseFloat(line.getAttribute('y2'));
+
+            x1 += x1Change;
+            y1 += y1Change;
+            x2 += x2Change;
+            y2 += y2Change;
+
+            // Keep within bounds
+            x1 = Math.min(Math.max(x1, 0), 100);
+            y1 = Math.min(Math.max(y1, 0), 100);
+            x2 = Math.min(Math.max(x2, 0), 100);
+            y2 = Math.min(Math.max(y2, 0), 100);
+
+            line.setAttribute('x1', `${x1}%`);
+            line.setAttribute('y1', `${y1}%`);
+            line.setAttribute('x2', `${x2}%`);
+            line.setAttribute('y2', `${y2}%`);
+        });
+
+        requestAnimationFrame(animateLines);
+    }
+
+    // Initialize connecting lines
+    createConnectingLines();
+    requestAnimationFrame(animateLines);
+
+    // Periodically recreate lines for variety
+    setInterval(createConnectingLines, 10000);
+});

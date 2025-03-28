@@ -1,5 +1,6 @@
 package com.example.vouchermanager.Controllers;
 
+import com.example.vouchermanager.Model.Entity.Product;
 import com.example.vouchermanager.Service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class HomeController {
@@ -30,6 +34,17 @@ public class HomeController {
         return "user/brand_collaborations";
     }
 
+    @RequestMapping("/payment")
+    public String payment() {
+        return "user/payment";
+    }
+
+
+    @RequestMapping("/contact")
+    public String contact() {
+        return "user/contact";
+    }
+
     @RequestMapping("/auth")
     public String login() {
         return "auth";
@@ -41,31 +56,23 @@ public class HomeController {
     }
 
     @GetMapping("/index")
-    public String checkLoginIndexPage(Model model, Authentication authentication) {
+    public String checkLoginIndexPage(Model model, Authentication authentication, HttpSession session) {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
             com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
-            if (user != null) {
-                model.addAttribute("user", username);
-                model.addAttribute("name", user.getFullName());
-            }
-        }
-        return "index";
-    }
 
-    @GetMapping("/store")
-    public String checkLoginStorePage(Model model, Authentication authentication, HttpSession session) {
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-            com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
             if (user != null) {
                 model.addAttribute("user", username);
                 model.addAttribute("name", user.getFullName());
             }
         }
-        return "user/store";
+        List<Product> cart = (List<Product>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+        model.addAttribute("cart", cart);
+        return "index";
     }
 
     @GetMapping("/brands")
@@ -79,6 +86,49 @@ public class HomeController {
                 model.addAttribute("name", user.getFullName());
             }
         }
+        List<Product> cart = (List<Product>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>(); // Nếu cart chưa có, tạo danh sách rỗng để tránh lỗi
+        }
+        model.addAttribute("cart", cart);
         return "user/brand_collaborations";
+    }
+
+    @GetMapping("/payment")
+    public String checkLoginPaymentPage(Model model, Authentication authentication, HttpSession session) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
+            if (user != null) {
+                model.addAttribute("user", username);
+                model.addAttribute("name", user.getFullName());
+            }
+        }
+        List<Product> cart = (List<Product>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+        model.addAttribute("cart", cart);
+        return "user/payment";
+    }
+
+    @GetMapping("/contact")
+    public String checkLoginContactPage(Model model, Authentication authentication, HttpSession session) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
+            if (user != null) {
+                model.addAttribute("user", username);
+                model.addAttribute("name", user.getFullName());
+            }
+        }
+        List<Product> cart = (List<Product>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+        model.addAttribute("cart", cart);
+        return "user/contact";
     }
 }

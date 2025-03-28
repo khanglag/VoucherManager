@@ -22,7 +22,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             String role = authority.getAuthority();
             System.out.println(role);
             if (role.equals("ROLE_Admin")) {
-                response.sendRedirect("/userManagement");
+                response.sendRedirect("/admin");
                 return;
             }else {
                 response.sendRedirect("/index");

@@ -33,5 +33,14 @@ public class Product {
     @ColumnDefault("1")
     @Column(name = "Status", nullable = false)
     private Boolean status = false;
-
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", productName='" + productName + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

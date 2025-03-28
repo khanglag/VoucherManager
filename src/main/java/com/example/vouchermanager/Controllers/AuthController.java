@@ -19,6 +19,8 @@ public class AuthController {
     @Autowired
     private UserServiceImp userServiceImp;
 
+
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         String numberPhone = user.getPhoneNumber();
@@ -37,7 +39,7 @@ public class AuthController {
         }
 
         Role role = new Role();
-        role.setId(2);
+        role.setId(3);
         user.setRoleID(role);
         user.setStatus(true);
         userServiceImp.createUser(user);

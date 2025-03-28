@@ -17,10 +17,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,9 +53,10 @@ public class VoucherServiceImp implements VoucherService {
     private LocalDateTime convertInstantToLocalDateTime(Instant instant) {
         return instant != null ? LocalDateTime.ofInstant(instant, ZoneId.systemDefault()) : null;
     }
+
     public Page<VoucherDTO> getAllVouchers(Pageable pageable) {
         Page<Voucher> vouchers = voucherRepository.findAll(pageable);
-        return vouchers .map(voucher -> new VoucherDTO(
+        return vouchers.map(voucher -> new VoucherDTO(
                 voucher.getVoucherCode(),
                 voucher.getTitle(),
                 voucher.getLogoUrl(),
@@ -98,7 +96,7 @@ public class VoucherServiceImp implements VoucherService {
     public void delete(String voucherCode) {
         voucherRepository.deleteById(voucherCode);
     }
-    
+
     @Override
     public Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate,
             LocalDate endDate, Pageable pageable) {
@@ -128,7 +126,7 @@ public class VoucherServiceImp implements VoucherService {
     /**
      * Tạo voucher với mã do người dùng nhập, kiểm tra tồn tại và gợi ý mã thay thế
      * nếu cần
-     * 
+     *
      * @param voucher Voucher chứa thông tin do người dùng nhập
      * @return Kết quả bao gồm voucher đã tạo hoặc danh sách gợi ý nếu mã trùng
      */
@@ -167,7 +165,8 @@ public class VoucherServiceImp implements VoucherService {
                                                                                                                     // null
 
             Voucher savedVoucher = voucherRepository.save(newVoucher);
-            return new VoucherCreationResultDTO(savedVoucher, null, "Voucher đã được tạo thành công!");
+            return new VoucherCreationResultDTO(savedVoucher, Collections.singletonList("success"),
+                    "Voucher đã được tạo thành công!");
         }
     }
 
@@ -255,6 +254,30 @@ public class VoucherServiceImp implements VoucherService {
         voucherRepository.save(voucher);
         return new VoucherDeactivationResultDTO(true, "Voucher " + voucherCode + " đã được vô hiệu hóa thành công!");
     }
+
+    public Integer getTotalMaxUsage() {
+        return voucherRepository.getTotalMaxUsage();
+    }
+
+    public Integer getRemainingUsageForActiveVouchers() {
+        return voucherRepository.getRemainingUsageForActiveVouchers(LocalDate.now());
+    }
+
+    public Integer getRemainingUsageForUpcomingVouchers() {
+        return voucherRepository.getRemainingUsageForUpcomingVouchers(LocalDate.now());
+    }
+
+    public Integer getRemainingUsageForExpiredVouchers() {
+        return voucherRepository.getRemainingUsageForExpiredVouchers(LocalDate.now());
+    }
+
+    public Integer getTotalCancelledVoucherUsage() {
+        return voucherRepository.getTotalCancelledVoucherUsage();
+    }
+
+    public Integer getTotalUsedVouchers() {
+        return voucherRepository.getTotalUsedVouchers();
+
     public VoucherActivationResultDTO activateVoucher(String voucherCode) {
         Voucher voucher = voucherRepository.findById(voucherCode).orElse(null);
         if (voucher == null) {
@@ -270,6 +293,7 @@ public class VoucherServiceImp implements VoucherService {
         voucherRepository.save(voucher);
         return new VoucherActivationResultDTO(true, "Voucher " + voucherCode + " đã được kích hoạt lại thành công!");
     }
+
     // Hàm tìm voucher áp dụng cho sản phẩm cụ thể với phân trang
     public Page<VoucherDTO> findByApplicableProducts(String productId, Pageable pageable) {
         List<Voucher> allVouchers = voucherRepository.findAll();
@@ -302,6 +326,7 @@ public class VoucherServiceImp implements VoucherService {
 
         return new PageImpl<>(pagedVouchers, pageable, applicableVouchers.size());
     }
+
     @Override
     public Voucher create(Voucher voucher, MultipartFile logoFile) {
         if (logoFile != null && !logoFile.isEmpty()) {
@@ -310,6 +335,7 @@ public class VoucherServiceImp implements VoucherService {
         }
         return voucherRepository.save(voucher);
     }
+
     @Override
     public List<Voucher> getPercentageVouchers(Integer productId) {
         return voucherRepository.findPercentageVouchersByProduct(productId);
@@ -323,5 +349,6 @@ public class VoucherServiceImp implements VoucherService {
     @Override
     public List<Voucher> getFreeShipVouchers(Integer productId) {
         return voucherRepository.findFreeShipVouchersByProduct(productId);
+
     }
 }
