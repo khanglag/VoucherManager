@@ -26,7 +26,7 @@ public class Voucher {
     @Column(name = "VoucherCode", nullable = false, length = 50)
     private String voucherCode;
 
-    @Column(name = "Title", nullable = false)
+    @Column(name = "Title")
     private String title;
 
     @Column(name = "LogoUrl")

@@ -6,10 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/order-details")
+//@RestController
+//@RequestMapping("/api/order-details")
+@Controller
+@RequestMapping("/order-details")
 public class OrderDetailController {
     @Autowired
     private OrderdetailServiceImp orderdetailService;
@@ -24,6 +28,23 @@ public class OrderDetailController {
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return orderdetailService.findAll(pageable);
+    }
+
+    @GetMapping("/show-all")
+    public String showOrderDetails(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size,
+            Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<OrderDetailDTO> orderDetails = orderdetailService.findAll(pageable);
+
+        System.out.println("Order Details: " + orderDetails.getContent()); // Kiểm tra log
+
+        model.addAttribute("orderDetails", orderDetails.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", orderDetails.getTotalPages());
+
+        return "order-details";
     }
 
     @GetMapping("/order/{orderId}")
