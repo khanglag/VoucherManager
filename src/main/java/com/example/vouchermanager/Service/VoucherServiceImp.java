@@ -17,10 +17,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,7 +109,7 @@ public class VoucherServiceImp implements VoucherService {
     /**
      * Tạo voucher với mã do người dùng nhập, kiểm tra tồn tại và gợi ý mã thay thế
      * nếu cần
-     * 
+     *
      * @param voucher Voucher chứa thông tin do người dùng nhập
      * @return Kết quả bao gồm voucher đã tạo hoặc danh sách gợi ý nếu mã trùng
      */
@@ -151,7 +148,7 @@ public class VoucherServiceImp implements VoucherService {
                                                                                                                     // null
 
             Voucher savedVoucher = voucherRepository.save(newVoucher);
-            return new VoucherCreationResultDTO(savedVoucher, null, "Voucher đã được tạo thành công!");
+            return new VoucherCreationResultDTO(savedVoucher, Collections.singletonList("success"), "Voucher đã được tạo thành công!");
         }
     }
 
@@ -238,5 +235,27 @@ public class VoucherServiceImp implements VoucherService {
         voucher.setStatus(VoucherStatus.CANCELLED);
         voucherRepository.save(voucher);
         return new VoucherDeactivationResultDTO(true, "Voucher " + voucherCode + " đã được vô hiệu hóa thành công!");
+    }
+    public Integer getTotalMaxUsage() {
+        return voucherRepository.getTotalMaxUsage();
+    }
+    public Integer getRemainingUsageForActiveVouchers() {
+        return voucherRepository.getRemainingUsageForActiveVouchers(LocalDate.now());
+    }
+
+    public Integer getRemainingUsageForUpcomingVouchers() {
+        return voucherRepository.getRemainingUsageForUpcomingVouchers(LocalDate.now());
+    }
+
+    public Integer getRemainingUsageForExpiredVouchers() {
+        return voucherRepository.getRemainingUsageForExpiredVouchers(LocalDate.now());
+    }
+
+    public Integer getTotalCancelledVoucherUsage() {
+        return voucherRepository.getTotalCancelledVoucherUsage();
+    }
+
+    public Integer getTotalUsedVouchers() {
+        return voucherRepository.getTotalUsedVouchers();
     }
 }

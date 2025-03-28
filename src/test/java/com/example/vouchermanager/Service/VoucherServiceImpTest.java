@@ -20,10 +20,19 @@ public class VoucherServiceImpTest {
     @Autowired
     VoucherServiceImp voucherServiceImp;
 
+    @Autowired
+    VoucherService voucherService;
     @Test
     public void testFindAll(){
         List<VoucherDTO> voucherDTOS = voucherServiceImp.findAll();
         voucherDTOS.forEach(System.out::println);
+    }
+
+    @Test
+    public void testVoucher(){
+        int total = voucherServiceImp.getRemainingUsageForActiveVouchers();
+        System.out.println("-------------");
+        System.out.println(total);
     }
 //    @Test
 //    public void testfindAllFiltered(){

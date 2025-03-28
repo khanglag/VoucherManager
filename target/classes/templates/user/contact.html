@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Hệ thống quản lý voucher</title>
+  <!-- Bootstrap CSS -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet"
+  />
+  <!-- Font Awesome -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <!-- css -->
+  <link rel="stylesheet" th:href="@{/assets/css/index.css}" />
+
+  <link rel="stylesheet" th:href="@{/assets/css/contact.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/global.css}" />
+</head>
+<body>
+<nav th:replace="index :: Navbar"></nav>
+<div id="canvas-container"></div>
+
+<div class="container">
+  <div class="page-title">
+    <h1>Liên Hệ & Chính Sách Voucher</h1>
+    <p>
+      Chúng tôi luôn sẵn sàng hỗ trợ bạn với mọi thắc mắc về voucher và dịch
+      vụ khách hàng.
+    </p>
+  </div>
+
+  <div class="content-wrapper">
+    <div class="contact-section">
+      <h2 class="section-title">Thông Tin Liên Hệ</h2>
+
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path
+                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+              />
+            </svg>
+          </div>
+          <div class="contact-details">
+            <h4>Địa Chỉ</h4>
+            <p>
+             273 An Dương Vương Phường 14 Quận 5<br />TP. Hồ Chí Minh, Việt Nam
+            </p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path
+                      d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+              />
+            </svg>
+          </div>
+          <div class="contact-details">
+            <h4>Email</h4>
+            <a href="mailto:voucher@example.com">team8@gmail.com</a>
+            <p>Phản hồi trong vòng 24 giờ</p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path
+                      d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.21c.28-.26.36-.65.25-1C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1zM12 3v10l3-3h6V3h-9z"
+              />
+            </svg>
+          </div>
+          <div class="contact-details">
+            <h4>Hotline</h4>
+            <a href="tel:+84901234567">+84 (0) 33 6065 760</a>
+            <p>Hỗ trợ 24/7</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-section contact-form">
+      <h2 class="section-title">Gửi Yêu Cầu</h2>
+
+      <form>
+        <div class="form-group">
+          <label for="name">Họ và tên</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Chủ đề</label>
+          <input type="text" id="subject" name="subject" required />
+        </div>
+
+        <div class="form-group">
+          <label for="message">Nội dung</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Gửi Yêu Cầu</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <h2 class="section-title">Chính Sách Quản Lý Voucher</h2>
+
+    <div class="policy-list">
+      <div class="policy-item">
+        <h3>1. Quy định chung về voucher</h3>
+        <p>
+          Voucher là phiếu giảm giá có giá trị áp dụng khi mua sắm tại cửa
+          hàng hoặc trực tuyến của chúng tôi. Mỗi voucher có điều kiện áp
+          dụng riêng và được quy định rõ ràng khi phát hành.
+        </p>
+
+        <div class="highlighted-box">
+          <h4>Lưu ý quan trọng</h4>
+          <p>
+            Mỗi voucher chỉ được sử dụng một lần và không thể quy đổi thành
+            tiền mặt. Voucher không được hoàn lại sau khi đã sử dụng.
+          </p>
+        </div>
+      </div>
+
+      <div class="policy-item">
+        <h3>2. Điều kiện sử dụng</h3>
+        <p>
+          Tất cả các voucher đều có điều kiện sử dụng riêng, bao gồm nhưng
+          không giới hạn:
+        </p>
+        <ul>
+          <li>
+            Thời hạn sử dụng: Mỗi voucher có thời hạn sử dụng xác định. Sau
+            thời hạn này, voucher sẽ tự động hết hiệu lực.
+          </li>
+          <li>
+            Giá trị tối thiểu: Một số voucher chỉ áp dụng khi tổng giá trị
+            đơn hàng đạt mức tối thiểu quy định.
+          </li>
+          <li>
+            Phạm vi áp dụng: Voucher có thể áp dụng cho tất cả sản phẩm hoặc
+            chỉ một số sản phẩm cụ thể.
+          </li>
+          <li>
+            Giới hạn: Mỗi khách hàng chỉ được sử dụng một số lượng voucher
+            nhất định trong một khoảng thời gian.
+          </li>
+        </ul>
+      </div>
+
+      <div class="policy-item">
+        <h3>3. Quy trình phát hành và quản lý</h3>
+        <p>
+          Voucher được phát hành theo các chương trình khuyến mãi hoặc ưu
+          đãi đặc biệt. Quá trình quản lý voucher được thực hiện nghiêm ngặt
+          để đảm bảo tính minh bạch và hiệu quả:
+        </p>
+        <ul>
+          <li>
+            Mỗi voucher được cấp mã số duy nhất và được theo dõi trong hệ
+            thống.
+          </li>
+          <li>
+            Hệ thống tự động kiểm tra tính hợp lệ của voucher khi sử dụng.
+          </li>
+          <li>
+            Thông tin sử dụng voucher được lưu trữ để đảm bảo không có
+            trường hợp sử dụng trùng lặp.
+          </li>
+        </ul>
+      </div>
+
+      <div class="policy-item">
+        <h3>4. Chính sách hủy và hoàn trả</h3>
+        <p>
+          Khi đơn hàng được áp dụng voucher bị hủy hoặc hoàn trả, các quy
+          định sau sẽ được áp dụng:
+        </p>
+        <ul>
+          <li>
+            Hủy đơn hàng: Voucher đã sử dụng sẽ được khôi phục lại nếu đơn
+            hàng bị hủy trước khi giao hàng.
+          </li>
+          <li>
+            Hoàn trả một phần: Nếu chỉ hoàn trả một phần đơn hàng, voucher
+            vẫn được coi là đã sử dụng nếu giá trị còn lại của đơn hàng vẫn
+            đáp ứng điều kiện áp dụng.
+          </li>
+          <li>
+            Hoàn trả toàn bộ: Voucher có thể được khôi phục nếu khách hàng
+            hoàn trả toàn bộ đơn hàng.
+          </li>
+        </ul>
+
+        <div class="highlighted-box">
+          <h4>Quy định khôi phục</h4>
+          <p>
+            Thời gian khôi phục voucher có thể mất từ 3-5 ngày làm việc.
+            Voucher chỉ được khôi phục nếu vẫn còn trong thời hạn sử dụng.
+          </p>
+        </div>
+      </div>
+
+      <div class="policy-item">
+        <h3>5. Quy định về chuyển nhượng và chia sẻ</h3>
+        <p>
+          Để đảm bảo tính công bằng và hiệu quả của các chương trình khuyến
+          mãi, chúng tôi có các quy định về chuyển nhượng và chia sẻ voucher
+          như sau:
+        </p>
+        <ul>
+          <li>
+            Voucher cá nhân: Không được phép chuyển nhượng cho người khác,
+            chỉ áp dụng cho tài khoản được cấp.
+          </li>
+          <li>
+            Voucher quà tặng: Có thể chuyển nhượng theo quy định cụ thể được
+            ghi rõ khi phát hành.
+          </li>
+          <li>
+            Nghiêm cấm việc mua bán, trao đổi voucher dưới mọi hình thức.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-section">
+    <h2 class="section-title">Câu Hỏi Thường Gặp</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        Làm thế nào để kiểm tra thời hạn sử dụng của voucher?
+      </div>
+      <div class="faq-answer">
+        Bạn có thể kiểm tra thời hạn sử dụng của voucher bằng cách đăng nhập
+        vào tài khoản và truy cập mục "Ví Voucher" hoặc kiểm tra trực tiếp
+        thông tin trên mã voucher được gửi qua email.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        Tôi có thể sử dụng nhiều voucher cùng lúc được không?
+      </div>
+      <div class="faq-answer">
+        Thông thường, bạn chỉ có thể sử dụng một voucher cho mỗi đơn hàng.
+        Tuy nhiên, một số chương trình khuyến mãi đặc biệt có thể cho phép
+        kết hợp voucher. Vui lòng kiểm tra điều kiện sử dụng của từng
+        voucher cụ thể.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        Nếu tôi quên sử dụng voucher và đã hết hạn, có thể gia hạn không?
+      </div>
+      <div class="faq-answer">
+        Chúng tôi không gia hạn voucher đã hết hạn. Tuy nhiên, trong một số
+        trường hợp đặc biệt, bạn có thể liên hệ với bộ phận Chăm sóc Khách
+        hàng để được xem xét hỗ trợ.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Làm thế nào để nhận được voucher mới?</div>
+      <div class="faq-answer">
+        Bạn có thể nhận voucher mới thông qua các chương trình khuyến mãi,
+        đăng ký nhận bản tin, trong các dịp sinh nhật, hoặc từ chương trình
+        khách hàng thân thiết của chúng tôi. Đảm bảo đã đăng ký tài khoản và
+        đồng ý nhận thông tin khuyến mãi để không bỏ lỡ các ưu đãi.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        Tôi có thể áp dụng voucher cho đơn hàng đã thanh toán không?
+      </div>
+      <div class="faq-answer">
+        Không, voucher phải được áp dụng trước khi hoàn tất thanh toán.
+        Chúng tôi không thể áp dụng voucher hoặc hoàn tiền cho đơn hàng đã
+        được xác nhận và thanh toán.
+      </div>
+    </div>
+  </div>
+</div>
+<footer th:replace="index :: Footer"></footer>
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script th:src="@{/assets/js/store.js}"></script>
+<script th:src="@{/assets/js/helpers.js}"></script>
+<script th:src="@{/assets/js/contact.js}"></script>
+</body>
+</html>

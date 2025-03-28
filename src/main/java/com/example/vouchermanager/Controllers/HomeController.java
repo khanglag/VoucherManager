@@ -39,6 +39,12 @@ public class HomeController {
         return "user/payment";
     }
 
+
+    @RequestMapping("/contact")
+    public String contact() {
+        return "user/contact";
+    }
+
     @RequestMapping("/auth")
     public String login() {
         return "auth";
@@ -55,6 +61,7 @@ public class HomeController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
             com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
+
             if (user != null) {
                 model.addAttribute("user", username);
                 model.addAttribute("name", user.getFullName());
@@ -104,5 +111,24 @@ public class HomeController {
         }
         model.addAttribute("cart", cart);
         return "user/payment";
+    }
+
+    @GetMapping("/contact")
+    public String checkLoginContactPage(Model model, Authentication authentication, HttpSession session) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
+            if (user != null) {
+                model.addAttribute("user", username);
+                model.addAttribute("name", user.getFullName());
+            }
+        }
+        List<Product> cart = (List<Product>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+        model.addAttribute("cart", cart);
+        return "user/contact";
     }
 }
