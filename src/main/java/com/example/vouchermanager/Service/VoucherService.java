@@ -47,4 +47,10 @@ public interface VoucherService {
     List<Voucher> getFixedVouchers(Integer productId);
 
     List<Voucher> getFreeShipVouchers(Integer productId);
+
+    void createVouchersForProducts(Voucher voucher, List<Integer> productIds);
+
+    List<Voucher> getSortedDiscountVouchers(Integer productId);
+
+    List<Voucher> getSortedFreeShipVouchers(Integer productId);
 }
