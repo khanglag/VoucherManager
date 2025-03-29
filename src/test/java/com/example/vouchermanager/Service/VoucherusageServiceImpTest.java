@@ -36,4 +36,5 @@ public class VoucherusageServiceImpTest {
         voucherusage.setUsedDate(Instant.now());
         voucherusageRepository.save(voucherusage);
     }
+    
 }
