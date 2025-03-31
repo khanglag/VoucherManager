@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**","/store/**","/admin/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth", "/", "/index", "/static/**", "/assets/**", "/templates/**",
-                                "/user/**", "/vouchers", "/store", "/brands", "/register", "/auth/register",
+                                "/user/**", "/vouchers", "/store", "/brands","/contact", "/register", "/auth/register",
                                 "/order-details/**")
 
                         .permitAll()

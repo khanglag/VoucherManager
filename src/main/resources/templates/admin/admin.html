@@ -19,6 +19,10 @@
   <!-- css -->
   <link rel="stylesheet" th:href="@{/assets/css/admin.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/vouchers_managerment.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/users_managerment.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/products_managerment.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/orders_managerment.css}" />
+
 </head>
 <body>
 
@@ -91,15 +95,13 @@
       <div th:replace="~{admin/vouchersmanager :: VouchersManagerment}"></div>
     </div>
     <div id="users" class="page" style="display: none">
-      <div th:replace="~{admin/productsmanager :: ProductsManager}"></div>
+      <div th:replace="~{admin/usersmanager :: UsersManagerment}"></div>
     </div>
     <div id="products" class="page" style="display: none">
-      <h1>Báo Cáo</h1>
-      <p>Danh sách báo cáo.</p>
+      <div th:replace="~{admin/productsmanager :: ProductsManager}"></div>
     </div>
     <div id="order" class="page" style="display: none">
-      <h1>Cài Đặt</h1>
-      <p>Cấu hình hệ thống.</p>
+      <div th:replace="~{admin/ordersmanager :: OrdersManager}"></div>
     </div>
     <div id="statistics" class="page" style="display: none">
       <h1>Thống Kê</h1>
@@ -114,5 +116,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script th:src="@{/assets/js/admin.js}"></script>
 <script th:src="@{/assets/js/vouchers_managerment.js}"></script>
+<script th:src="@{/assets/js/users_managerment.js}"></script>
+<script th:src="@{/assets/js/products_managerment.js}"></script>
+<script th:src="@{/assets/js/orders_managerment.js}"></script>
 </body>
 </html>

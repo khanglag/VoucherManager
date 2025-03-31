@@ -277,7 +277,7 @@ public class VoucherServiceImp implements VoucherService {
 
     public Integer getTotalUsedVouchers() {
         return voucherRepository.getTotalUsedVouchers();
-
+    }
     public VoucherActivationResultDTO activateVoucher(String voucherCode) {
         Voucher voucher = voucherRepository.findById(voucherCode).orElse(null);
         if (voucher == null) {

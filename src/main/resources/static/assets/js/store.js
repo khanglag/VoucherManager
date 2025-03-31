@@ -148,11 +148,16 @@ for (let i = 0; i < 15; i++) {
 
 
 //
+
 document.addEventListener("DOMContentLoaded", function () {
     const addToCartButtons = document.querySelectorAll(".add-to-cart");
 
     addToCartButtons.forEach((button) => {
         button.addEventListener("click", () => {
+            const nameOfUser = document.querySelector(".nameOfUser")?.textContent.trim();
+            if (!nameOfUser) {
+                window.location.href = "/auth";
+            }
             const productId = parseInt(button.getAttribute("data-id"));
             const existingItem = cart.find(item => item.id === productId);
             if (existingItem) {
