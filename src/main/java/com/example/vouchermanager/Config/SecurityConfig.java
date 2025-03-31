@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth", "/", "/index", "/static/**", "/assets/**", "/templates/**",
                                 "/user/**", "/vouchers", "/store", "/brands","/contact", "/register", "/auth/register",
-                                "/order-details/**")
+                                "/order-details/**","reset-password","confirm-OTP","verify-OTP", "resend-OTP")
 
                         .permitAll()
                         .anyRequest().authenticated())
