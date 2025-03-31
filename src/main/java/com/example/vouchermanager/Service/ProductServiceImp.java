@@ -49,10 +49,18 @@ public class ProductServiceImp implements ProductService {
 
     public Optional<Product> updateProduct(Integer id, Product productDetails) {
         return productRepository.findById(Long.valueOf(id)).map(product -> {
-            product.setProductName(productDetails.getProductName());
-            product.setPrice(productDetails.getPrice());
-            product.setImageUrl(productDetails.getImageUrl());
-            product.setStatus(productDetails.getStatus());
+            if (productDetails.getProductName() != null) {
+                product.setProductName(productDetails.getProductName());
+            }
+            if (productDetails.getPrice() != null) {
+                product.setPrice(productDetails.getPrice());
+            }
+            if (productDetails.getImageUrl() != null) {
+                product.setImageUrl(productDetails.getImageUrl());
+            }
+            if (productDetails.getStatus() != null) {
+                product.setStatus(productDetails.getStatus());
+            }
             return productRepository.save(product);
         });
     }
