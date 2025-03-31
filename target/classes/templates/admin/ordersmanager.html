@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"
+        name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title> Hệ thống quản lý voucher</title>
+
+  <!-- Bootstrap CSS -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet"
+  />
+  <!-- Font Awesome -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <!-- css -->
+  <link rel="stylesheet" th:href="@{/assets/css/orders_managerment.css}" />
+
+</head>
+<body>
+<div th:fragment="OrdersManager">
+  <div class="order_container">
+
+    <div class="order_actions">
+      <div class="order_search">
+        <input
+                type="text"
+                id="order_search-input"
+                class="order_search-input"
+                placeholder="Tìm kiếm theo mã đơn, tên khách hàng..."
+        />
+      </div>
+      <div class="order_search-date">
+        <input
+                type="date"
+                id="order_search-date"
+                class="order_search-input"
+                placeholder="Chọn ngày"
+        />
+      </div>
+    </div>
+
+    <div class="order_filter-container">
+      <div class="order_filter order_active" data-filter="all">Tất cả</div>
+      <div class="order_filter" data-filter="pending">Chờ xác nhận</div>
+      <div class="order_filter" data-filter="completed">Đã xác nhận</div>
+      <div class="order_filter" data-filter="cancelled">Đã hủy</div>
+    </div>
+
+    <div class="order_table-container">
+      <table class="order_table">
+        <thead>
+        <tr>
+          <th>Mã đơn hàng</th>
+          <th>Khách hàng</th>
+          <th>Ngày đặt</th>
+          <th>Giá trị đơn hàng</th>
+          <th>Tổng đơn hàng sau ưu đãi</th>
+          <th>Trạng thái</th>
+          <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody id="order_table-body">
+        <tr th:each="order : ${orders}">
+          <td th:text="${order.orderId}"></td>
+          <td th:text="${userNames[order.userId]}"></td>
+          <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm:ss')}"></td>
+          <td th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')}"></td>
+          <td th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')}"></td>
+          <td >
+            <span style="padding: 10px; border-radius: 30px" th:text="${order.orderStatus.toString()}"
+                  th:classappend="${order.orderStatus.toString() == 'PENDING' ? 'order_status-pending' :
+                    (order.orderStatus.toString() == 'COMPLETED' ? 'order_status-confirmed' :
+                    (order.orderStatus.toString() == 'CANCELLED' ? 'order_status-cancelled' : ''))}">
+
+            </span>
+          </td>
+          <td style="width: 28%;">
+            <!-- Nút Xem -->
+            <button class="custom-btn btn-view" onclick="viewOrder(this)" th:data-id="${order.orderId}">
+              <i class="fas fa-eye"></i> Xem
+            </button>
+
+            <!-- Nút Duyệt -->
+            <button class="custom-btn btn-approve" onclick="approveOrder(this)" th:data-id="${order.orderId}"
+                    th:disabled="${order.orderStatus == 'COMPLETED' || order.orderStatus == 'CANCELLED'}">
+              <i class="fas fa-check-circle"></i> Duyệt
+            </button>
+
+            <!-- Nút Hủy -->
+            <button class="custom-btn btn-cancel" onclick="cancelOrder(this)" th:data-id="${order.orderId}"
+                    th:disabled="${order.orderStatus == 'CANCELLED'}">
+              <i class="fas fa-times-circle"></i> Hủy
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty state sẽ hiển thị khi không có dữ liệu -->
+      <div
+              id="order_empty-state"
+              class="order_empty-state"
+              style="display: none"
+      >
+        <div class="order_empty-icon">📦</div>
+        <h3 class="order_empty-title">Không tìm thấy đơn hàng</h3>
+        <p class="order_empty-desc">
+          Bạn chưa có đơn hàng nào hoặc không có đơn hàng phù hợp với bộ lọc
+          hiện tại.
+        </p>
+      </div>
+    </div>
+  </div>
+
+<!--  &lt;!&ndash; Modal tạo/chỉnh sửa đơn hàng &ndash;&gt;-->
+<!--  <div id="order_modal" class="order_modal">-->
+<!--    <div class="order_modal-content">-->
+<!--      <div class="order_modal-header">-->
+<!--        <h2 id="order_modal-title" class="order_modal-title">-->
+<!--          Tạo đơn hàng mới-->
+<!--        </h2>-->
+<!--        <button id="order_modal-close" class="order_modal-close">-->
+<!--          &times;-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <form id="order_form">-->
+<!--        <div class="order_form-grid">-->
+<!--          <div class="order_form-group">-->
+<!--            <label class="order_form-label" for="order_customer"-->
+<!--            >Tên khách hàng</label-->
+<!--            >-->
+<!--            <input-->
+<!--                    type="text"-->
+<!--                    id="order_customer"-->
+<!--                    class="order_form-input"-->
+<!--                    required-->
+<!--            />-->
+<!--          </div>-->
+<!--          <div class="order_form-group">-->
+<!--            <label class="order_form-label" for="order_phone"-->
+<!--            >Số điện thoại</label-->
+<!--            >-->
+<!--            <input-->
+<!--                    type="text"-->
+<!--                    id="order_phone"-->
+<!--                    class="order_form-input"-->
+<!--                    required-->
+<!--            />-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        <div class="order_form-group">-->
+<!--          <label class="order_form-label" for="order_address">Địa chỉ</label>-->
+<!--          <input-->
+<!--                  type="text"-->
+<!--                  id="order_address"-->
+<!--                  class="order_form-input"-->
+<!--                  required-->
+<!--          />-->
+<!--        </div>-->
+
+<!--        <div class="order_form-grid">-->
+<!--          <div class="order_form-group">-->
+<!--            <label class="order_form-label" for="order_products"-->
+<!--            >Sản phẩm</label-->
+<!--            >-->
+<!--            <select-->
+<!--                    id="order_products"-->
+<!--                    class="order_form-select"-->
+<!--                    multiple-->
+<!--                    required-->
+<!--            >-->
+<!--              <option value="1">iPhone 15 Pro Max</option>-->
+<!--              <option value="2">Samsung Galaxy S24 Ultra</option>-->
+<!--              <option value="3">Xiaomi 14 Ultra</option>-->
+<!--              <option value="4">OPPO Find X7 Ultra</option>-->
+<!--              <option value="5">Vivo X100 Pro</option>-->
+<!--            </select>-->
+<!--          </div>-->
+<!--          <div class="order_form-group">-->
+<!--            <label class="order_form-label" for="order_status"-->
+<!--            >Trạng thái</label-->
+<!--            >-->
+<!--            <select id="order_status" class="order_form-select" required>-->
+<!--              <option value="pending">Chờ xác nhận</option>-->
+<!--              <option value="confirmed">Đã xác nhận</option>-->
+<!--              <option value="shipping">Đang giao</option>-->
+<!--              <option value="delivered">Đã giao</option>-->
+<!--              <option value="cancelled">Đã hủy</option>-->
+<!--            </select>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        <div class="order_form-group">-->
+<!--          <label class="order_form-label" for="order_notes">Ghi chú</label>-->
+<!--          <textarea-->
+<!--                  id="order_notes"-->
+<!--                  class="order_form-input"-->
+<!--                  rows="3"-->
+<!--          ></textarea>-->
+<!--        </div>-->
+
+<!--        <div class="order_form-actions">-->
+<!--          <button-->
+<!--                  type="button"-->
+<!--                  id="order_cancel-btn"-->
+<!--                  class="order_btn order_btn-cancel"-->
+<!--          >-->
+<!--            Hủy-->
+<!--          </button>-->
+<!--          <button type="submit" class="order_btn order_btn-success">-->
+<!--            Lưu đơn hàng-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+</div>
+<script th:src="@{/assets/js/orders_managerment.js}"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+</body>
+</html>

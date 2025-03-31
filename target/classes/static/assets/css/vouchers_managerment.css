@@ -209,11 +209,19 @@ body {
 }
 
 /* Voucher Table */
-.voucher-table {
-    width: 100%;
-    border-collapse: collapse;
+.voucher-table thead{
+    /*width: 100%;*/
+    /*border-collapse: collapse;*/
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa; /* Màu nền giúp tiêu đề rõ ràng */
+    z-index: 2;
 }
-
+.table-container{
+    max-height: 750px;
+    overflow-y: auto; /* Bật thanh cuộn dọc khi cần */
+    border: 1px solid #ddd;
+}
 .voucher-table th,
 .voucher-table td {
     border: 1px solid var(--border-color);

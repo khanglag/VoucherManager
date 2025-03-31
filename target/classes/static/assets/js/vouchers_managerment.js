@@ -93,8 +93,6 @@ function showNotification(message, isError = false) {
         notification.classList.remove("show");
         window.location.reload();
     }, 3000);
-
-
 }
 
 

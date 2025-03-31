@@ -209,6 +209,7 @@ public class VoucherServiceImp implements VoucherService {
         }
         return suggestions;
     }
+
     @Override
     // Hàm sử dụng voucher
     public VoucherUsageResultDTO useVoucher(String voucherCode, BigDecimal orderValue) {
@@ -267,7 +268,6 @@ public class VoucherServiceImp implements VoucherService {
         return new VoucherDeactivationResultDTO(true, "Voucher " + voucherCode + " đã được vô hiệu hóa thành công!");
     }
 
-
     public Integer getTotalMaxUsage() {
         return voucherRepository.getTotalMaxUsage();
     }
@@ -291,6 +291,7 @@ public class VoucherServiceImp implements VoucherService {
     public Integer getTotalUsedVouchers() {
         return voucherRepository.getTotalUsedVouchers();
     }
+
     @Override
     public VoucherActivationResultDTO activateVoucher(String voucherCode) {
         Voucher voucher = voucherRepository.findById(voucherCode).orElse(null);
@@ -307,6 +308,7 @@ public class VoucherServiceImp implements VoucherService {
         voucherRepository.save(voucher);
         return new VoucherActivationResultDTO(true, "Voucher " + voucherCode + " đã được kích hoạt lại thành công!");
     }
+
     @Override
     // Hàm tìm voucher áp dụng cho sản phẩm cụ thể với phân trang
     public Page<VoucherDTO> findByApplicableProducts(String productId, Pageable pageable) {
@@ -365,18 +367,21 @@ public class VoucherServiceImp implements VoucherService {
         return voucherRepository.findFreeShipVouchersByProduct(productId);
 
     }
+
     @Override
     public void createVouchersForProducts(Voucher voucher, List<Integer> productIds) {
         voucher.setApplicableForAllProducts(false);
         createVoucherWithCustomCode(voucher);
         for (Integer productId : productIds) {
-            Product product = productRepository.findById(Long.valueOf(productId)).orElseThrow(()
-                    -> new RuntimeException("Sản phẩm không tồn tại"));
-            VoucherapplicableproductId id = new VoucherapplicableproductId(voucher.getVoucherCode(), Long.valueOf(productId));
-            Voucherapplicableproduct voucherapplicableproduct = new Voucherapplicableproduct(id,voucher,product);
+            Product product = productRepository.findById(Long.valueOf(productId))
+                    .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));
+            VoucherapplicableproductId id = new VoucherapplicableproductId(voucher.getVoucherCode(),
+                    Long.valueOf(productId));
+            Voucherapplicableproduct voucherapplicableproduct = new Voucherapplicableproduct(id, voucher, product);
             voucherApplicableProductRepository.save(voucherapplicableproduct);
         }
     }
+
     // Hàm tính giá trị giảm thực tế của voucher
     private BigDecimal calculateDiscountValue(Voucher voucher, BigDecimal productPrice) {
         if (voucher.getDiscountType() == DiscountType.FIXED) {
@@ -386,6 +391,7 @@ public class VoucherServiceImp implements VoucherService {
         }
         return BigDecimal.ZERO;
     }
+
     @Override
     public List<Voucher> getSortedDiscountVouchers(Integer productId, BigDecimal orderTotal) {
         // Lấy danh sách voucher áp dụng cho sản phẩm cụ thể
@@ -406,13 +412,19 @@ public class VoucherServiceImp implements VoucherService {
 
         // Lọc và sắp xếp voucher
         return allVouchers.stream()
-                .filter(v ->
-                        (v.getDiscountType() == DiscountType.PERCENTAGE || v.getDiscountType() == DiscountType.FIXED) &&
-                                v.getStatus() == VoucherStatus.ACTIVE &&                         // Kiểm tra trạng thái ACTIVE
-                                !v.getStartDate().isAfter(LocalDate.now()) &&                    // Chưa đến ngày bắt đầu
-                                !v.getEndDate().isBefore(LocalDate.now()) &&                      // Chưa quá ngày kết thúc
-                                (v.getUsageCount() < v.getMaxUsage()) &&                          // Số lượng sử dụng chưa đạt max
-                                (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0) // Đơn hàng đạt giá trị tối thiểu
+                .filter(v -> (v.getDiscountType() == DiscountType.PERCENTAGE
+                        || v.getDiscountType() == DiscountType.FIXED) &&
+                        v.getStatus() == VoucherStatus.ACTIVE && // Kiểm tra trạng thái ACTIVE
+                        !v.getStartDate().isAfter(LocalDate.now()) && // Chưa đến ngày bắt đầu
+                        !v.getEndDate().isBefore(LocalDate.now()) && // Chưa quá ngày kết thúc
+                        (v.getUsageCount() < v.getMaxUsage()) && // Số lượng sử dụng chưa đạt max
+                        (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0) // Đơn
+                                                                                                                  // hàng
+                                                                                                                  // đạt
+                                                                                                                  // giá
+                                                                                                                  // trị
+                                                                                                                  // tối
+                                                                                                                  // thiểu
                 )
                 .sorted((v1, v2) -> {
                     BigDecimal discount1 = calculateDiscountValue(v1, productPrice);
@@ -440,12 +452,11 @@ public class VoucherServiceImp implements VoucherService {
                 .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));
         BigDecimal productPrice = product.getPrice();
 
-
         return allVouchers.stream()
                 .filter(v -> v.getDiscountType() == DiscountType.FREESHIP &&
-                        v.getStatus() == VoucherStatus.ACTIVE &&                         // Kiểm tra trạng thái ACTIVE
-                        !v.getStartDate().isAfter(LocalDate.now()) &&                    // Chưa đến ngày bắt đầu
-                        !v.getEndDate().isBefore(LocalDate.now()) &&                      // Chưa quá ngày kết thúc
+                        v.getStatus() == VoucherStatus.ACTIVE && // Kiểm tra trạng thái ACTIVE
+                        !v.getStartDate().isAfter(LocalDate.now()) && // Chưa đến ngày bắt đầu
+                        !v.getEndDate().isBefore(LocalDate.now()) && // Chưa quá ngày kết thúc
                         (v.getUsageCount() < v.getMaxUsage()) &&
                         (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0))
                 .collect(Collectors.toList());

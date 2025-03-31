@@ -121,8 +121,8 @@ body {
     justify-content: flex-end;
     align-items: center;
     padding: 0 20px;
-    border-radius: 5px; /* Bo góc nhẹ cho mềm mại */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Bóng nhẹ, không quá gắt */
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     z-index: 10;
 }
 
