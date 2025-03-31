@@ -153,7 +153,7 @@
         </div>
 
         <!-- Danh Sách Voucher -->
-        <section class="section">
+        <section class="section table-container">
             <div class="section-title">
                 <h2>Danh Sách Voucher</h2>
                 <div>
@@ -170,7 +170,7 @@
                 <tr>
                     <th>Code</th>
                     <th>Tiêu đề</th>
-                    <th>Mô tả</th>
+                    <th style="display: none">Mô tả</th>
                     <th>Loại</th>
                     <th>Giá trị</th>
                     <th>Giá trị đơn hàng tối thiểu</th>
@@ -186,7 +186,7 @@
                 <tr th:each="voucher : ${vouchers}">
                     <td th:text="${voucher.voucherCode}"></td>
                     <td th:text="${voucher.title}"></td>
-                    <td th:text="${voucher.description}"></td>
+                    <td th:text="${voucher.description}" style="display: none"></td>
                     <td th:text="${voucher.discountType.name() == 'PERCENTAGE' ? 'Giảm Phần Trăm'
                 : (voucher.discountType.name() == 'FIXED' ? 'Giảm Tiền Cố Định'
                 : 'Miễn Phí Vận Chuyển')}">
@@ -202,7 +202,7 @@
                     <td th:text="${voucher.usageCount}"></td>
                     <td th:text="${voucher.maxUsage}"></td>
                     <td>
-                         <span th:classappend="${voucher.status.name() == 'ACTIVE' ? 'status-active'
+                         <span  th:classappend="${voucher.status.name() == 'ACTIVE' ? 'status-active'
                                 : (voucher.status.name() == 'EXPIRED' ? 'status-expired'
                                 : 'status-disabled')}"
                                  th:text="${voucher.status.name() == 'ACTIVE' ? 'ACTIVE'
@@ -210,7 +210,7 @@
                                 : 'CANCELLED')}">
                          </span>
                     </td>
-                    <td style="width: 13%;">
+                    <td style="width: 14%;">
                         <button  onclick="editVoucher(this)" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
                                 style="border-radius: 8px; padding: 10px 16px; font-size: 16px; font-weight: 600; transition: all 0.3s ease-in-out;
            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15); border: none; background-color: #28a745;"

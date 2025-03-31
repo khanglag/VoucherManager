@@ -43,10 +43,11 @@ public class UserServiceImp implements UserService {
 //                ))
 //                .collect(Collectors.toList());
 //    }
-//    @Override
-//    public List<User> findAll(){
-//        return userRepository.findAll();
-//    }
+
+    @Override
+    public List<User> findAll(){
+        return userRepository.findAll();
+    }
     @Override
     public Page<UserDTO> findAll(Pageable pageable){
         return userRepository.findAll(pageable)

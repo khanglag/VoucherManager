@@ -22,10 +22,10 @@ public class ProductServiceImpTest {
     @Test
     public void createProduct() {
         Product product = new Product();
-        product.setProductName("Nước hoa nữ Gucci");
-        product.setImageUrl("https://product.hstatic.net/200000791527/product/screenshot_1841_80e6d2e71ac84744a6b7d1ff9ecc96de_grande.png");
-        product.setPrice(BigDecimal.valueOf(11990000));
-        product.setStatus(true);
-        productServiceImp.createProduct(product);
+//        product.setProductName("Giày Gucci");
+//        product.setImageUrl("https://giaynation.com/wp-content/uploads/2023/08/Gia%CC%80y-Gucci-Tennis-Ebony-sie%CC%82u-ca%CC%82%CC%81p3.jpeg");
+        product.setPrice(BigDecimal.valueOf(13990000));
+        product.setStatus(false);
+        productServiceImp.updateProduct(4,product);
     }
 }
