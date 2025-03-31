@@ -426,13 +426,11 @@
     transform: scale(1.2);
 }
 
-/* Hiệu ứng khi click */
 .custom-btn:active {
     transform: translateY(0);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Hiệu ứng ripple */
 .custom-btn::after {
     content: "";
     position: absolute;
@@ -453,7 +451,6 @@
     transition: 0s;
 }
 
-/* Style riêng cho từng nút */
 .btn-view {
     background: linear-gradient(135deg, #42c3ca, #2b8bc6);
     color: white;
@@ -469,7 +466,6 @@
     color: white;
 }
 
-/* Style cho nút disabled */
 .custom-btn:disabled {
     background: #cccccc;
     color: #666666;
