@@ -45,10 +45,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // .csrf(csrf -> csrf.disable())
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**","/store/**","/admin/**"))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**","/store/**","/admin/**","/api/payment/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth", "/", "/index", "/static/**", "/assets/**", "/templates/**",
-                                "/user/**", "/vouchers", "/store", "/brands","/contact", "/register", "/auth/register",
+                                "/user/**", "/vouchers", "/store", "/brands","/contact",
+                                "/register","/payment", "/auth/register",
                                 "/order-details/**")
 
                         .permitAll()
