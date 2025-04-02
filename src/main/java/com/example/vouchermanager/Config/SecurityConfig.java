@@ -48,10 +48,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**","/store/**","/admin/**","/api/payment/**","/api/vouchers/**","/api/purchase/create"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth", "/", "/index", "/static/**", "/assets/**", "/templates/**",
-                                "/user/**", "/vouchers", "/store", "/brands","/contact",
-                                "/register","/payment", "/auth/register",
-                                "/order-details/**")
-
+                                "/user/**", "/vouchers", "/store", "/brands","/contact", "/register", "/auth/register",
+                                "/order-details/**","reset-password","confirm-OTP","verify-OTP", "resend-OTP")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
