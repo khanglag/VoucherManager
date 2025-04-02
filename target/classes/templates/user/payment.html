@@ -100,11 +100,11 @@
           <div class="voucher-row">
             <div class="voucher-option">
               <span><i class="fa-solid fa-ticket"></i> Shop Voucher</span>
-              <button onclick="openVoucherModal()">Chọn voucher</button>
+              <button onclick="openVoucherModal('shop-voucher')">Chọn voucher</button>
             </div>
             <div class="voucher-option">
               <span><i class="fas fa-motorcycle"></i> Shop Voucher</span>
-              <button onclick="openVoucherModal()">Chọn voucher</button>
+              <button onclick="openVoucherModal('shipping')">Chọn voucher</button>
             </div>
             <div class="voucher-option">
               <input type="text" class="voucher-input" placeholder="Nhập mã voucher">
@@ -114,23 +114,57 @@
           <div class="total-summary">
             <div class="item">
               <span class="label">Tổng tiền hàng:</span>
-              <span class="value">₫254.000</span>
+              <span id ="summary" class="value">₫254.000</span>
             </div>
             <div class="item">
               <span class="label">Tổng tiền phí vận chuyển:</span>
-              <span class="value">₫32.700</span>
+              <span class="value">₫30.000</span>
+            </div>
+
+            <div class="item">
+              <span class="label">Giảm giá sản phẩm:</span>
+              <span id ="voucher-shop" class="value">0₫</span>
             </div>
             <div class="item">
-              <span class="label">Tổng thanh toán:</span>
-              <span class="value">₫286.700</span>
+              <span class="label">Giảm giá ship:</span>
+              <span id ="voucher-ship" class="value">0₫</span>
+            </div>
+
+            <div class="item">
+              <span class="total">Tổng thanh toán:</span>
+              <span  id="summary-summary" class="value">₫286.700</span>
             </div>
           </div>
         </div>
         <!-- Checkout Button -->
-        <button class="checkout-btn">Mua</button>
+        <button class="checkout-btn" onclick="createPurchaseRequest()">Mua</button>
       </div>
     </div>
   </div>
+  <div id="voucherModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>CHỌN VOUCHER</span>
+        <span class="close" onclick="closeVoucherModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="search-container">
+          <input type="text" placeholder=" Mã Voucher" />
+          <button>Áp dụng</button>
+        </div>
+        <span>Danh sách voucher</span>
+      <div class="voucher-result">
+        <ul id="voucher-list">
+        </ul>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeVoucherModal()">Trở lại</button>
+        <button id="btn-ok" class="btn-ok" onclick="submitVoucher()">OK</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer th:replace="index :: Footer"></footer>
 <!-- Bootstrap JS -->
@@ -138,6 +172,7 @@
 <!-- Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script th:src="@{/assets/js/payment.js}"></script>
+<script th:src="@{/assets/js/store.js}"></script>
 <script th:src="@{/assets/js/helpers.js}"></script>
 
 </body>

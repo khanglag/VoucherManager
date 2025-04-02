@@ -2,6 +2,7 @@
 package com.example.vouchermanager.Service;
 
 import com.example.vouchermanager.Model.DTO.VoucherDTO;
+import com.example.vouchermanager.Model.Entity.Voucher;
 import com.example.vouchermanager.Model.Enum.DiscountType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,7 +38,15 @@ public class VoucherServiceImpTest {
         System.out.println("-------------");
         System.out.println(total);
     }
-
+    @Test void setVoucherServiceImp(){
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        List<Voucher> vouchers = voucherService.getSortedDiscountVouchers(list,BigDecimal.valueOf(300000));
+        for (Voucher voucher : vouchers) {
+            System.out.println("Voucher code: "+voucher.getVoucherCode()+" ");
+        }
+    }
     // package com.example.vouchermanager.Service;
     //
     // import com.example.vouchermanager.Model.DTO.VoucherDTO;

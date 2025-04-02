@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,6 @@ public class PaymentController {
         List<CartDTO>cartDTOS= (List<CartDTO>) session.getAttribute("cartpayment");
         for (CartDTO cartDTO : cartDTOS) {
             if (cartDTO.getId()==(request.getItemId())) {
-                System.out.println("ID CARTS:"+cartDTO.getId()+"|| ID REQUEST: "+request.getItemId());
                 cartDTO.setQuantity(cartDTO.getQuantity() + request.getQuantity());
                 success.set(true);
                 session.setAttribute("cartpayment", cartDTOS);
@@ -82,5 +82,22 @@ public class PaymentController {
 
         // Trả về 200 OK
         return ResponseEntity.ok().build();
+    }
+    @PostMapping("/apply-voucher")
+    @ResponseBody
+    public ResponseEntity<String> applyVoucher(@RequestBody Map<String, String> payload, HttpSession session) {
+        try {
+            String voucherCode = payload.get("voucherCode"); // Lấy voucherCode từ body
+            List<String> vouchers = (List<String>) session.getAttribute("voucher");
+            vouchers.add(voucherCode);
+            if (vouchers.size() > 2) {
+                vouchers.remove(0); // Xóa phần tử đầu tiên nếu danh sách >= 2
+            }
+            session.setAttribute("voucher", vouchers);
+            System.out.println(voucherCode+"HEHEHHEHEHEHHE DAYA NE");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error applying voucher: " + e.getMessage());
+        }
+        return null;
     }
 }

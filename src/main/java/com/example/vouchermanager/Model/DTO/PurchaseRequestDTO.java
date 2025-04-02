@@ -14,5 +14,4 @@ public class PurchaseRequestDTO {
     private Long userId; // Chỉ cần ID thay vì toàn bộ User entity
     private List<Orderdetail> orderdetails;
     private List<String> voucherCodes;
-
 }

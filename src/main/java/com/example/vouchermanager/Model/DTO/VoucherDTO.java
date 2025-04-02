@@ -1,5 +1,6 @@
 package com.example.vouchermanager.Model.DTO;
 
+import com.example.vouchermanager.Model.Entity.Voucher;
 import com.example.vouchermanager.Model.Enum.DiscountType;
 import com.example.vouchermanager.Model.Enum.VoucherStatus;
 import lombok.*;
@@ -7,6 +8,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -50,5 +52,23 @@ public class VoucherDTO {
                 ", applicableForAllProducts=" + applicableForAllProducts +
                 '}';
     }
-
+    public static VoucherDTO fromEntity(Voucher voucher) {
+        return new VoucherDTO(
+                voucher.getVoucherCode(),
+                voucher.getTitle(),
+                voucher.getLogoUrl(),
+                voucher.getDescription(),
+                voucher.getDiscountType(),
+                voucher.getDiscountValue(),
+                voucher.getStartDate(),
+                voucher.getEndDate(),
+                voucher.getMinimumOrderValue(),
+                voucher.getStatus(),
+                voucher.getCreatedBy() != null ? voucher.getCreatedBy().getId() : 0,
+                voucher.getUsageCount(),
+                voucher.getMaxUsage(),
+                voucher.getCreatedDate() != null ? voucher.getCreatedDate().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay() : null,
+                voucher.getApplicableForAllProducts()
+        );
+    }
 }

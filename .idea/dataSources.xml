@@ -39,7 +39,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="vouchermanager@localhost" uuid="c8cc6e6e-5db6-4ce3-a7c6-8c3e050cd0a0">
+    <data-source source="LOCAL" name="vouchermanager@localhost" uuid="7a9bf3a4-9739-430c-a4e6-44338b6b9828">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>

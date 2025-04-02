@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -460,5 +461,77 @@ public class VoucherServiceImp implements VoucherService {
                         (v.getUsageCount() < v.getMaxUsage()) &&
                         (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0))
                 .collect(Collectors.toList());
+    }
+    @Override
+    public List<Voucher> getSortedDiscountVouchers(List<Integer> productIds, BigDecimal orderTotal) {
+        // Lấy danh sách voucher áp dụng cho từng sản phẩm trong danh sách productIds
+        Set<Voucher> productVouchers = new HashSet<>();
+        for (Integer productId : productIds) {
+            productVouchers.addAll(voucherApplicableProductRepository.findVouchersByProductId(productId));
+        }
+
+        // Lấy danh sách voucher áp dụng cho tất cả sản phẩm
+        List<Voucher> globalVouchers = voucherRepository.findByApplicableForAllProductsTrue();
+
+        // Gộp tất cả voucher lại
+        List<Voucher> allVouchers = new ArrayList<>(productVouchers);
+        allVouchers.addAll(globalVouchers);
+        // Lọc voucher hợp lệ
+        return allVouchers.stream()
+                .filter(v -> (v.getDiscountType() == DiscountType.PERCENTAGE || v.getDiscountType() == DiscountType.FIXED) &&
+                        v.getStatus() == VoucherStatus.ACTIVE &&
+                        !v.getStartDate().isAfter(LocalDate.now()) &&
+                        !v.getEndDate().isBefore(LocalDate.now()) &&
+                        (v.getUsageCount() < v.getMaxUsage()) &&
+                        (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0)
+                )
+                .sorted((v1, v2) -> {
+                    BigDecimal discount1 = getMaxDiscount(v1, orderTotal);
+                    BigDecimal discount2 = getMaxDiscount(v2, orderTotal);
+                    return discount2.compareTo(discount1); // Sắp xếp giảm dần
+                })
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<Voucher> getSortedFreeShipVouchers(List<Integer> productIds, BigDecimal orderTotal) {
+        // Lấy danh sách voucher áp dụng cho từng sản phẩm trong danh sách productIds
+        Set<Voucher> productVouchers = new HashSet<>();
+        for (Integer productId : productIds) {
+            productVouchers.addAll(voucherApplicableProductRepository.findVouchersByProductId(productId));
+        }
+
+        // Lấy danh sách voucher áp dụng cho tất cả sản phẩm
+        List<Voucher> globalVouchers = voucherRepository.findByApplicableForAllProductsTrue();
+
+        // Gộp tất cả voucher lại
+        List<Voucher> allVouchers = new ArrayList<>(productVouchers);
+        allVouchers.addAll(globalVouchers);
+
+        // Lấy giá sản phẩm theo ID
+        Map<Integer, BigDecimal> productPrices = productRepository.findAllById(productIds.stream().map(Long::valueOf).toList())
+                .stream().collect(Collectors.toMap(p -> p.getId().intValue(), Product::getPrice));
+
+        // Lọc voucher hợp lệ
+        return allVouchers.stream()
+                .filter(v -> v.getDiscountType() == DiscountType.FREESHIP && // Chỉ lọc voucher Freeship
+                        v.getStatus() == VoucherStatus.ACTIVE && // Kiểm tra trạng thái ACTIVE
+                        !v.getStartDate().isAfter(LocalDate.now()) && // Chưa đến ngày bắt đầu
+                        !v.getEndDate().isBefore(LocalDate.now()) && // Chưa quá ngày kết thúc
+                        (v.getUsageCount() < v.getMaxUsage()) && // Số lượng sử dụng chưa đạt max
+                        (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0)) // Đơn hàng đạt giá trị tối thiểu
+                .collect(Collectors.toList());
+    }
+
+
+    // Hàm hỗ trợ tính giảm giá cao nhất trong các sản phẩm
+    private BigDecimal getMaxDiscount(Voucher voucher, BigDecimal orderTotal) {
+        if (voucher.getDiscountType() == DiscountType.FIXED) {
+            // Giảm giá cố định: Trừ giá trị cố định từ tổng tiền đơn hàng
+            return voucher.getDiscountValue(); // Trả về giá trị giảm cố định từ voucher
+        } else if (voucher.getDiscountType() == DiscountType.PERCENTAGE) {
+            // Giảm giá theo phần trăm: Tính giảm giá từ tổng giá trị đơn hàng
+            return orderTotal.multiply(voucher.getDiscountValue()).divide(BigDecimal.valueOf(100));
+        }
+        return BigDecimal.ZERO; // Nếu không phải loại giảm giá hợp lệ, trả về 0
     }
 }

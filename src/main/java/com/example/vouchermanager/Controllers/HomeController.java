@@ -116,7 +116,14 @@ public class HomeController {
                 carts.add(cartDTO); // Add to list
             }
         }
-        model.addAttribute("carts", carts); // Add to model instead of session
+        List<String> vouchers = (List<String>) session.getAttribute("voucher");
+        if (vouchers == null) {
+            vouchers = new ArrayList<>(); // Khởi tạo danh sách rỗng
+            session.setAttribute("voucher", vouchers);
+        }
+        vouchers = new ArrayList<>(); // Khởi tạo danh sách rỗng
+        session.setAttribute("voucher", vouchers);
+        model.addAttribute("carts", carts);
         session.setAttribute("cartpayment", carts);
         return "user/payment";
     }
