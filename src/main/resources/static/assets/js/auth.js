@@ -159,7 +159,10 @@ btnSubmit.addEventListener("click", (event) => {
         phoneNumber: phoneNumber.value.trim(),
         status: false
     });
-
+    if (password.value.length < 8) {
+        showAlert("⚠️ Vui lòng đặt mật khẩu trên 8 ký tự", "error");
+        return;
+    }
     if (!fullName.value || !email.value || !username.value || !password.value || !rePass.value || !phoneNumber.value) {
         showAlert("⚠️ Vui lòng nhập đầy đủ thông tin!", "error");
         return;

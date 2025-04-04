@@ -426,13 +426,11 @@
     transform: scale(1.2);
 }
 
-/* Hiệu ứng khi click */
 .custom-btn:active {
     transform: translateY(0);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Hiệu ứng ripple */
 .custom-btn::after {
     content: "";
     position: absolute;
@@ -453,7 +451,6 @@
     transition: 0s;
 }
 
-/* Style riêng cho từng nút */
 .btn-view {
     background: linear-gradient(135deg, #42c3ca, #2b8bc6);
     color: white;
@@ -469,7 +466,6 @@
     color: white;
 }
 
-/* Style cho nút disabled */
 .custom-btn:disabled {
     background: #cccccc;
     color: #666666;
@@ -486,3 +482,319 @@
 .custom-btn:disabled i {
     color: #888888;
 }
+
+/*modal chi tiết đơn hàng*/
+.orders_detailModal_modal {
+    display: none; /* Ẩn mặc định */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.orders_detailModal_modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.orders_detailModal_close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.orders_detailModal_close:hover,
+.orders_detailModal_close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+.orders_detailModal_modal-content h2 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.orders_detailModal_orderDetails {
+    list-style-type: none;
+    padding: 0;
+}
+
+.orders_detailModal_orderDetails li {
+    background: #f9f9f9;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border-left: 5px solid #007bff;
+}
+
+
+/*danh sách sản phẩm trong order*/
+#orders_detailModal_orderDetails {
+    padding: 0;
+    margin: 0;
+}
+
+#orders_detailModal_orderDetails li {
+    font-size: 16px;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fafafa;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#orders_detailModal_orderDetails li:hover {
+    background-color: #f1f1f1;
+}
+
+.product-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.product-info span {
+    font-size: 14px;
+    color: #555;
+    flex: 1;
+}
+
+.product-info span strong {
+    color: #333;
+}
+
+.product-id {
+    color: #007bff;
+}
+
+.quantity, .unit-price, .total-price {
+    text-align: right;
+    font-weight: bold;
+}
+
+.quantity {
+    color: #28a745;
+}
+
+.unit-price {
+    color: #6c757d;
+}
+
+.total-price {
+    color: #dc3545;
+}
+
+/*popup modal xác nhận*/
+.orders_modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -10;
+    opacity: 0;
+    transition: opacity 0.3s ease, z-index 0s linear 0.3s;
+}
+
+.orders_modal.show {
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.3s ease, z-index 0s linear 0s;
+}
+
+.orders_modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 350px;
+}
+
+.orders_modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.orders_btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.orders_btn-cancel {
+    background: #ccc;
+    color: black;
+}
+
+.orders_btn-confirm {
+    background: #28a745;
+    color: white;
+}
+.success-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+    z-index: 1000;
+}
+/*thống kê doanh tiền giảm giá*/
+.statistic_totalAmount {
+    background: #c4e6c78f;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 400px;
+    max-width: 100%;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.statistic_totalAmount:hover {
+    transform: scale(1.05);
+}
+
+.title_statistic_totalAmount {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.form_statistic_totalAmount {
+    margin-bottom: 20px;
+}
+
+.month_statistic_totalAmount,
+.year_statistic_totalAmount {
+    width: 120px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.month_statistic_totalAmount:focus,
+.year_statistic_totalAmount:focus {
+    border-color: #4caf50;
+}
+
+.btn_statistic_totalAmount {
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn_statistic_totalAmount:hover {
+    background-color: #0056b3;
+}
+
+.amount_statistic_totalAmount {
+    font-size: 24px;
+    font-weight: bold;
+    color: #e44d26;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f1f8e9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/*thống kê doanh thu thực tế*/
+
+.statistic_finalAmount {
+    background: #e8f5e9; /* Màu xanh lá nhạt */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid #a5d6a7;
+    text-align: center;
+    max-width: 400px;
+    transition: all 0.3s ease-in-out;
+}
+
+.statistic_finalAmount:hover {
+    background: #c8e6c9;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.title_statistic_finalAmount {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.form_statistic_finalAmount {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.month_statistic_finalAmount, .year_statistic_finalAmount {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #a5d6a7;
+    outline: none;
+}
+
+.btn_statistic_finalAmount {
+    padding: 10px 15px;
+    background: #66bb6a;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn_statistic_finalAmount:hover {
+    background: #388e3c;
+}
+
+.amount_statistic_finalAmount {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2e7d32;
+    margin-top: 10px;
+}
+
+/**/
+

@@ -42,6 +42,7 @@
                 <option value="staff">Staff</option>
                 <option value="customer">Customer</option>
             </select>
+            <button id="users_resetFilter" class="action-btn">Đặt lại</button>
         </div>
 
         <div class="users_table-container">
@@ -69,15 +70,20 @@
                     <td th:text="${user.status ? 'Hoạt động' : 'Bị khóa'}"></td>
                     <td style="display: flex; justify-content: space-around">
                         <button class="users_btn users_btn-edit">
-                            <i class="fas fa-edit"></i>
+                            <i class="fas fa-edit" title="Sửa"></i>
                         </button>
                         <button class="users_btn users_btn-delete" onclick="user_openModal(this)"  th:attr="data-username=${user.username}">
-                            <i class="fas fa-user-lock users_btn-block"></i>
+                            <i class="fas fa-user-lock users_btn-block" title="Khóa"></i>
                         </button>
                     </td>
                 </tr>
                 </tbody>
             </table>
+            <div class="pagination-container" style="margin-top: 15px; display: flex; justify-content: center; gap: 5px;">
+                <button id="prevPage" class="pagination-btn">« Trước</button>
+                <span id="pageInfo" style="padding: 5px 10px; font-weight: bold;"></span>
+                <button id="nextPage" class="pagination-btn">Tiếp »</button>
+            </div>
         </div>
     </div>
     <!-- Modal xác nhận khóa tài khoản -->

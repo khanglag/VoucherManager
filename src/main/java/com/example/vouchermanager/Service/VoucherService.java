@@ -53,4 +53,6 @@ public interface VoucherService {
     List<Voucher> getSortedDiscountVouchers(Integer productId, BigDecimal orderTotal);
 
     List<Voucher> getSortedFreeShipVouchers(Integer productId, BigDecimal orderTotal);
+
+
 }

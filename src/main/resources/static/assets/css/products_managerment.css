@@ -557,5 +557,39 @@
 .products_modal.show {
     display: flex;
 }
+/*phân trang*/
+.products_pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination_btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.pagination_btn:hover {
+    background-color: #0056b3;
+}
+
+.pagination_btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#productPageInfo {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
 
 

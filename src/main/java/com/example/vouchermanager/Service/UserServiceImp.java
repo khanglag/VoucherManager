@@ -28,6 +28,9 @@ public class UserServiceImp implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleService roleService;
+
 //    @Override
 //    public List<UserDTO> findAll() {
 //        return userRepository.findAll().stream()
@@ -148,5 +151,27 @@ public class UserServiceImp implements UserService {
         }
 
         return userRepository.save(userExists);
+    }
+
+    // Lấy tất cả nhân viên có RoleID = 2 mà không phân trang
+    public List<User> getAllUsersByRoleId(Integer roleId) {
+        // Tạo một Role đối tượng với roleId được cung cấp
+        Role role = new Role();
+        role.setId(roleId);
+
+        // Lấy tất cả người dùng có RoleID = roleId
+        List<User> users = userRepository.findByRoleID(role);
+
+        // In thông tin nhân viên
+        users.forEach(user -> {
+            System.out.println("User ID: " + user.getId() +
+                    ", Full Name: " + user.getFullName() +
+                    ", Username: " + user.getUsername() +
+                    ", Email: " + user.getEmail() +
+                    ", Phone: " + user.getPhoneNumber());
+        });
+
+        // Trả về danh sách người dùng
+        return users;
     }
 }

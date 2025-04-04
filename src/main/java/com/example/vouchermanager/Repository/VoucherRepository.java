@@ -1,5 +1,7 @@
 package com.example.vouchermanager.Repository;
 
+import com.example.vouchermanager.Model.DTO.VoucherPerformanceDTO;
+import com.example.vouchermanager.Model.Entity.User;
 import com.example.vouchermanager.Model.Entity.Voucher;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -39,6 +41,21 @@ public interface VoucherRepository extends JpaRepository<Voucher, String>, JpaSp
     @Query("SELECT SUM(v.usageCount) FROM Voucher v")
     Integer getTotalUsedVouchers();
 
+    // Thống kê voucher tạo theo tháng
+    @Query("SELECT YEAR(v.startDate) AS year, MONTH(v.startDate) AS month, COUNT(v) AS issuedCount " +
+            "FROM Voucher v " +
+            "GROUP BY YEAR(v.startDate), MONTH(v.startDate) " +
+            "ORDER BY YEAR(v.startDate) DESC, MONTH(v.startDate) DESC")
+    List<Object[]> countVouchersIssuedPerMonth();
+
+    // Lấy tất cả voucher có trạng thái "ACTIVE"
+    List<Voucher> findByStatus(String status);
+
+    // Lấy số lượng voucher đã sử dụng và phát hành cho từng voucher
+    @Query("SELECT v.voucherCode, v.usageCount, v.maxUsage FROM Voucher v WHERE v.status = 'ACTIVE'")
+    List<Object[]> findVoucherUsageData();
+
+
     @Query("""
                 SELECT v FROM Voucher v
                 JOIN Voucherapplicableproduct vap ON v.voucherCode = vap.id.voucherCode
@@ -66,4 +83,6 @@ public interface VoucherRepository extends JpaRepository<Voucher, String>, JpaSp
             """)
     List<Voucher> findFreeShipVouchersByProduct(@Param("productId") Integer productId);
     List<Voucher> findByApplicableForAllProductsTrue();
+
+    List<Voucher> findByCreatedBy(User user);
 }

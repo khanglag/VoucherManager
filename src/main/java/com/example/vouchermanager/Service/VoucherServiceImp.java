@@ -1,15 +1,13 @@
 package com.example.vouchermanager.Service;
 
 import com.example.vouchermanager.Model.DTO.*;
-import com.example.vouchermanager.Model.Entity.Product;
-import com.example.vouchermanager.Model.Entity.Voucher;
-import com.example.vouchermanager.Model.Entity.Voucherapplicableproduct;
-import com.example.vouchermanager.Model.Entity.VoucherapplicableproductId;
+import com.example.vouchermanager.Model.Entity.*;
 import com.example.vouchermanager.Model.Enum.DiscountType;
 import com.example.vouchermanager.Model.Enum.VoucherStatus;
 import com.example.vouchermanager.Repository.ProductRepository;
 import com.example.vouchermanager.Repository.VoucherApplicableProductRepository;
 import com.example.vouchermanager.Repository.VoucherRepository;
+import com.example.vouchermanager.Repository.VoucherusageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,11 +31,15 @@ public class VoucherServiceImp implements VoucherService {
     private VoucherRepository voucherRepository;
 
     @Autowired
+    private VoucherusageRepository voucherusageRepository;
+    @Autowired
     private CloudinaryService cloudinaryService;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private VoucherApplicableProductRepository voucherApplicableProductRepository;
+    @Autowired
+    private UserServiceImp userServiceImp;
 
     @Override
     public List<VoucherDTO> findAll() {
@@ -461,4 +464,105 @@ public class VoucherServiceImp implements VoucherService {
                         (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0))
                 .collect(Collectors.toList());
     }
+
+    public Map<String, Object> getVoucherStatistics() {
+        Map<String, Object> statistics = new HashMap<>();
+        List<Object[]> issuedPerMonth = voucherRepository.countVouchersIssuedPerMonth();
+        statistics.put("issuedPerMonth", issuedPerMonth);
+        return statistics;
+    }
+    public Map<String, BigDecimal> getVoucherPerformance() {
+        Map<String, BigDecimal> voucherPerformance = new HashMap<>();
+        List<Object[]> voucherData = voucherRepository.findVoucherUsageData();
+
+        for (Object[] row : voucherData) {
+            String voucherCode = (String) row[0];
+            Integer usageCount = (Integer) row[1];
+            Integer maxUsage = (Integer) row[2];
+
+            // Tính hiệu suất
+            BigDecimal performance = BigDecimal.ZERO;
+            if (maxUsage != null && maxUsage > 0) {
+
+                performance = new BigDecimal(usageCount != null ? usageCount : 0)
+                        .divide(new BigDecimal(maxUsage), 4, BigDecimal.ROUND_HALF_UP)
+                        .multiply(new BigDecimal(100));
+
+                // Làm tròn về 2 chữ số sau dấu phẩy
+                performance = performance.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+
+            voucherPerformance.put(voucherCode, performance);
+        }
+
+        return voucherPerformance; // Trả về bản đồ hiệu suất của từng voucher
+    }
+
+    public List<VoucherPerformanceDTO> calculateVoucherPerformanceForAllUsersWithRoleId2() {
+        List<User> users = userServiceImp.getAllUsersByRoleId(2);
+
+        List<VoucherPerformanceDTO> performanceDTOs = new ArrayList<>();
+
+
+        for (User user : users) {
+            List<Voucher> vouchers = voucherRepository.findByCreatedBy(user);
+
+            for (Voucher voucher : vouchers) {
+                int totalIssued = voucher.getMaxUsage();
+                int totalUsed = voucher.getUsageCount();
+                int totalRemaining = totalIssued - totalUsed;
+
+                BigDecimal efficiency = new BigDecimal(totalUsed)
+                        .divide(new BigDecimal(totalIssued), 4, RoundingMode.HALF_UP)
+                        .multiply(new BigDecimal(100));
+
+                VoucherPerformanceDTO dto = new VoucherPerformanceDTO(
+                        voucher.getVoucherCode(),
+                        totalIssued,
+                        totalUsed,
+                        totalRemaining,
+                        efficiency,
+                        user.getId(),
+                        user.getFullName()
+                );
+                performanceDTOs.add(dto);
+            }
+        }
+
+        return performanceDTOs;
+    }
+    public List<VoucherPerformanceDTO> calculateVoucherPerformanceForAllUsersWithRoleId1() {
+        List<User> users = userServiceImp.getAllUsersByRoleId(1);
+
+        List<VoucherPerformanceDTO> performanceDTOs = new ArrayList<>();
+
+
+        for (User user : users) {
+            List<Voucher> vouchers = voucherRepository.findByCreatedBy(user);
+
+            for (Voucher voucher : vouchers) {
+                int totalIssued = voucher.getMaxUsage();
+                int totalUsed = voucher.getUsageCount();
+                int totalRemaining = totalIssued - totalUsed;
+
+                BigDecimal efficiency = new BigDecimal(totalUsed)
+                        .divide(new BigDecimal(totalIssued), 4, RoundingMode.HALF_UP)
+                        .multiply(new BigDecimal(100));
+
+                VoucherPerformanceDTO dto = new VoucherPerformanceDTO(
+                        voucher.getVoucherCode(),
+                        totalIssued,
+                        totalUsed,
+                        totalRemaining,
+                        efficiency,
+                        user.getId(),
+                        user.getFullName()
+                );
+                performanceDTOs.add(dto);
+            }
+        }
+
+        return performanceDTOs;
+    }
+
 }
