@@ -122,6 +122,12 @@ public class UserServiceImp implements UserService {
         }
         return null;
     }
+    @Transactional
+    public User forgetPassword(int id, String newPassword) {
+        User user = userRepository.findById(id);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return userRepository.save(user);
+    }
 
     @Transactional
     public User updateUser(int id, User user) {

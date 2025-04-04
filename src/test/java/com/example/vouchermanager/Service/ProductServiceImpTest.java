@@ -28,4 +28,12 @@ public class ProductServiceImpTest {
         product.setStatus(false);
         productServiceImp.updateProduct(4,product);
     }
+    @Test
+    public void updateProduct() {
+        Product product = new Product();
+        product.setPrice(BigDecimal.valueOf(13990000));
+        product.setImageUrl("HEHEEE");
+        product.setStatus(false);
+        productServiceImp.updateProduct(4,product);
+    }
 }

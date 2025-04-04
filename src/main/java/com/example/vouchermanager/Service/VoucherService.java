@@ -26,7 +26,6 @@ public interface VoucherService {
 
     void delete(String voucherCode);
 
-
     Page<VoucherDTO> findAllFiltered(String title, BigDecimal discountValue, String status, LocalDate startDate,
             LocalDate endDate, org.springframework.data.domain.Pageable pageable);
 
@@ -54,5 +53,8 @@ public interface VoucherService {
 
     List<Voucher> getSortedFreeShipVouchers(Integer productId, BigDecimal orderTotal);
 
+    List<Voucher> getSortedDiscountVouchers(List<Integer> productIds, BigDecimal orderTotal);
+
+    List<Voucher> getSortedFreeShipVouchers(List<Integer> productIds, BigDecimal orderTotal);
 
 }

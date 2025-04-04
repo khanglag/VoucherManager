@@ -1,5 +1,6 @@
 package com.example.vouchermanager.Controllers;
 
+import com.example.vouchermanager.Model.DTO.CartDTO;
 import com.example.vouchermanager.Model.Entity.Product;
 import com.example.vouchermanager.Service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class HomeController {
@@ -96,6 +98,7 @@ public class HomeController {
 
     @GetMapping("/payment")
     public String checkLoginPaymentPage(Model model, Authentication authentication, HttpSession session) {
+        // Xử lý thông tin người dùng
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
@@ -105,11 +108,23 @@ public class HomeController {
                 model.addAttribute("name", user.getFullName());
             }
         }
+        List<CartDTO> carts = new ArrayList<>();
         List<Product> cart = (List<Product>) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new ArrayList<>();
+        if (cart != null) {
+            for (int i = 0; i < cart.size(); i++) {
+                CartDTO cartDTO = new CartDTO(i, cart.get(i), 1);
+                carts.add(cartDTO); // Add to list
+            }
         }
-        model.addAttribute("cart", cart);
+        List<String> vouchers = (List<String>) session.getAttribute("voucher");
+        if (vouchers == null) {
+            vouchers = new ArrayList<>(); // Khởi tạo danh sách rỗng
+            session.setAttribute("voucher", vouchers);
+        }
+        vouchers = new ArrayList<>(); // Khởi tạo danh sách rỗng
+        session.setAttribute("voucher", vouchers);
+        model.addAttribute("carts", carts);
+        session.setAttribute("cartpayment", carts);
         return "user/payment";
     }
 
