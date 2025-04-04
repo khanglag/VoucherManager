@@ -21,5 +21,6 @@ public interface VoucherusageRepository extends JpaRepository<Voucherusage, Inte
             "ORDER BY v.usedDate ASC")
     List<Object[]> findVoucherUsage(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
-
+    @Query("SELECT v FROM Voucherusage v WHERE YEAR(v.usedDate) = :year AND MONTH(v.usedDate) = :month")
+    List<Voucherusage> findVouchersByMonthAndYear(int year, int month);
 }

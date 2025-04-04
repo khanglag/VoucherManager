@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -187,4 +188,14 @@ public Page<OrderDTO> findAll(Pageable pageable) {
 
         return orderRepository.save(orderExits);
     }
+
+    public BigDecimal getTotalDiscountByMonth(int month, int year) {
+        return orderRepository.getTotalDiscountByMonth(month, year);
+    }
+    @Override
+    public BigDecimal getTotalFinalAmountForMonth(int month, int year) {
+        return orderRepository.getTotalFinalAmountByMonthAndYear(month, year);
+    }
+
+
 }

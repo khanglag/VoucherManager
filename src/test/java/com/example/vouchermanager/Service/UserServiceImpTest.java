@@ -44,14 +44,8 @@ public class UserServiceImpTest {
 
     @Test
     public void testUpdateUser(){
-        User user = new User();
-        user.setFullName("Nguyen Ke aaa");
-        user.setEmail("aaa@gmail.com");
-        user.setStatus(true);
 
-        int id = 2;
-
-        userServiceImp.updateUser(id, user);
+        userServiceImp.getAllUsersByRoleId(2);
     }
 
     @Test

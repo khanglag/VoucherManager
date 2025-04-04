@@ -1,0 +1,296 @@
+.statisticEfficiency_title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(45deg, #3498db, #1abc9c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 20px 0;
+    position: relative;
+}
+
+
+.statisticEfficiency_titleByAdmin{
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(45deg, #dc4143, #ac771a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 20px 0;
+    position: relative;
+}
+
+
+
+.statisticEfficiency_voucher-table {
+    width: 100%;
+    border-collapse: collapse;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+.statisticEfficiency_voucher-table th {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    padding: 12px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+}
+
+
+.statisticEfficiency_voucher-table th:hover {
+    background: #1abc9c;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+
+
+.statisticEfficiency_voucher-table td {
+    padding: 10px;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+
+.statisticEfficiency_voucher-table tr:hover {
+    background: rgba(52, 152, 219, 0.3);
+}
+
+
+.statisticEfficiency_filter input {
+    padding: 10px;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: all 0.3s;
+}
+
+.statisticEfficiency_filter input:hover,
+.statisticEfficiency_filter input:focus {
+    border-color: #e74c3c;
+    outline: none;
+    box-shadow: 0px 0px 8px rgba(231, 76, 60, 0.5);
+}
+
+.export-btn {
+    background: linear-gradient(45deg, #ff4757, #e84118);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
+}
+
+
+.export-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 5px 15px rgba(231, 76, 60, 0.5);
+}
+
+.statisticEfficiency_no-data {
+    text-align: center;
+    font-size: 18px;
+    color: #7f8c8d;
+    font-style: italic;
+    animation: blink 1.5s infinite;
+}
+
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+
+@keyframes highlightRow {
+    0% { background-color: #f6e58d; }
+    100% { background-color: white; }
+}
+
+.sorted-row {
+    animation: highlightRow 0.5s ease-in-out;
+}
+
+.statisticEfficiency_voucher-tableByAdmin {
+    width: 100%;
+    border-collapse: collapse;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.statisticEfficiency_voucher-tableByAdmin th {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+    padding: 12px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+}
+
+.statisticEfficiency_voucher-tableByAdmin th:hover {
+    background: #d35400;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+
+.statisticEfficiency_voucher-tableByAdmin td {
+    padding: 10px;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+.statisticEfficiency_voucher-tableByAdmin tr:hover {
+    background: rgba(255, 220, 220, 0.5);
+}
+
+.export-btn {
+    background: linear-gradient(45deg, #ff4757, #e84118);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
+}
+
+.export-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 5px 15px rgba(231, 76, 60, 0.5);
+}
+
+.statisticEfficiency_no-dataByAdmin {
+    text-align: center;
+    font-size: 18px;
+    color: #7f8c8d;
+    font-style: italic;
+    animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+@keyframes highlightRow {
+    0% { background-color: #f6e58d; }
+    100% { background-color: white; }
+}
+
+
+.sorted-row {
+    animation: highlightRow 0.5s ease-in-out;
+}
+
+#searchIdByAdmin{
+    padding: 10px;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: all 0.3s;
+}
+#searchNameByAdmin{
+    padding: 10px;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: all 0.3s;
+}
+#searchVoucherByAdmin{
+    padding: 10px;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: all 0.3s;
+}
+
+/*Phân trang admin*/
+.pagination-container {
+    margin-top: 15px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pagination-btn:hover {
+    background-color: #0056b3;
+}
+
+.pagination-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    font-size: 16px;
+    font-weight: bold;
+}
+/*phana trang staff*/
+.pagination-container {
+    margin-top: 15px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pagination-btn:hover {
+    background-color: #0056b3;
+}
+
+.pagination-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    font-size: 16px;
+    font-weight: bold;
+}

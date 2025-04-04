@@ -30,7 +30,10 @@ function submitAddVoucher(event){
             return;
         }
     }
-
+    if (discountType === "PERCENTAGE" && parseFloat(discountValue) >= 100) {
+        showNotification("Không được vượt quá 100%", true);
+        return;
+    }
     const jsonData = {
         title,
         voucherCode,
@@ -104,7 +107,7 @@ function editVoucher(button) {
     document.getElementById('model_description').value = row.cells[2].innerText;
     let discountTypeText = row.cells[3].innerText.trim();
     let discountTypeValue = discountTypeText === 'Giảm Phần Trăm' ? 'PERCENTAGE' :
-        discountTypeText === 'Giảm Tiền Cố Định' ? 'FIXED' : 'FREE_SHIPPING';
+        discountTypeText === 'Giảm Tiền Cố Định' ? 'FIXED' : 'FREESHIP';
     document.getElementById('model_discountType').value = discountTypeValue;
 
     let discountValueText = row.cells[4].innerText.replace(/đ/g, '').replace('%', '').replace(/,/g, '').trim();
@@ -116,7 +119,8 @@ function editVoucher(button) {
     document.getElementById('model_endDate').value = formatDate(row.cells[7].innerText);
     document.getElementById('model_maxUsage').value = row.cells[9].innerText;
 
-    let statusText = row.cells[10].innerText.trim();
+    let statusText = row.cells[11].innerText.trim();
+    console.log(statusText)
     document.getElementById('model_status').value = statusText === 'ACTIVE' ? 'ACTIVE' :
         statusText === 'EXPIRED' ? 'EXPIRED' : 'CANCELLED';
 }
@@ -188,3 +192,61 @@ function fetchEditVoucher() {
             alert("Có lỗi xảy ra khi cập nhật voucher. Vui lòng thử lại!");
         });
 }
+
+//lọc
+document.addEventListener("DOMContentLoaded", function () {
+    const applyFilterBtn = document.getElementById("applyFilter");
+    const resetFilterBtn = document.getElementById("resetFilter");
+
+    const filters = {
+        code: document.getElementById("filterCode"),
+        type: document.getElementById("filterType"),
+        status: document.getElementById("filterStatus"),
+        startDate: document.getElementById("filterStartDate"),
+        endDate: document.getElementById("filterEndDate"),
+        efficiencyMin: document.getElementById("filterEfficiencyMin"),
+    };
+
+    const tableRows = document.querySelectorAll(".voucher-table tbody tr");
+
+    function filterTable() {
+        tableRows.forEach(row => {
+            const code = row.cells[0].textContent.trim().toLowerCase();
+            const type = row.cells[3].textContent.trim();
+            const status = row.cells[11].textContent.trim();
+            const startDate = row.cells[6].textContent.trim();
+            const endDate = row.cells[7].textContent.trim();
+            const efficiency = parseFloat(row.cells[10].textContent.replace("%", "")) || 0;
+
+            let showRow = true;
+
+            if (filters.code.value && !code.includes(filters.code.value.toLowerCase())) {
+                showRow = false;
+            }
+            if (filters.type.value && type !== filters.type.value) {
+                showRow = false;
+            }
+            if (filters.status.value && status !== filters.status.value) {
+                showRow = false;
+            }
+            if (filters.startDate.value && new Date(startDate.split("/").reverse().join("-")) < new Date(filters.startDate.value)) {
+                showRow = false;
+            }
+            if (filters.endDate.value && new Date(endDate.split("/").reverse().join("-")) > new Date(filters.endDate.value)) {
+                showRow = false;
+            }
+            if (filters.efficiencyMin.value && efficiency < parseFloat(filters.efficiencyMin.value)) {
+                showRow = false;
+            }
+
+            row.style.display = showRow ? "" : "none";
+        });
+    }
+
+    applyFilterBtn.addEventListener("click", filterTable);
+
+    resetFilterBtn.addEventListener("click", function () {
+        Object.values(filters).forEach(input => input.value = "");
+        filterTable();
+    });
+});

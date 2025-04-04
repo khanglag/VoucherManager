@@ -23,7 +23,95 @@
 <body>
 <div th:fragment="OrdersManager">
   <div class="order_container">
+    <div class=" mb-3 d-flex" style="justify-content: space-around">
+<!--      <div class="statistic_totalAmount">-->
+<!--        <div class="title_statistic_totalAmount">Chọn tháng để xem thống kê</div>-->
+<!--        <form method="get" action="/admin" class="form_statistic_totalAmount" id="statisticForm">-->
+<!--          <select name="month" class="month_statistic_totalAmount">-->
+<!--            <option th:each="m : ${#numbers.sequence(1, 12)}"-->
+<!--                    th:value="${m}"-->
+<!--                    th:text="${'Tháng ' + m}"-->
+<!--                    th:selected="${m == selectedMonth}">-->
+<!--            </option>-->
+<!--          </select>-->
+<!--          <select name="year" class="year_statistic_totalAmount">-->
+<!--            <option th:each="y : ${#numbers.sequence(2020, 2030)}"-->
+<!--                    th:value="${y}"-->
+<!--                    th:text="${y}"-->
+<!--                    th:selected="${y == selectedYear}">-->
+<!--            </option>-->
+<!--          </select>-->
+<!--          <button type="submit" class="btn_statistic_totalAmount">Xem thống kê</button>-->
+<!--        </form>-->
+<!--        <div class="title_statistic_totalAmount">Tổng số tiền đã giảm giá</div>-->
+<!--        <div class="amount_statistic_totalAmount" th:text="${#numbers.formatInteger(totalDiscount, 3, 'COMMA')} + ' VNĐ'"></div>-->
+<!--      </div>-->
+<!--      <div class="statistic_totalAmount">-->
+<!--          <div class="title_statistic_totalAmount">Chọn tháng để xem thống kê</div>-->
+<!--          <form id="statisticFinalAmountForm" class="form_statistic_totalAmount">-->
+<!--            <select name="month" class="month_statistic_totalAmount">-->
+<!--              <option th:each="m : ${#numbers.sequence(1, 12)}"-->
+<!--                      th:value="${m}"-->
+<!--                      th:text="${'Tháng ' + m}">-->
+<!--              </option>-->
+<!--            </select>-->
+<!--            <select name="year" class="year_statistic_totalAmount">-->
+<!--              <option th:each="y : ${#numbers.sequence(2020, 2030)}"-->
+<!--                      th:value="${y}"-->
+<!--                      th:text="${y}">-->
+<!--              </option>-->
+<!--            </select>-->
+<!--            <button type="submit" class="btn_statistic_totalAmount">Xem thống kê</button>-->
+<!--          </form>-->
+<!--          <div class="title_statistic_totalAmount">Tổng doanh thu thực tế</div>-->
+<!--          <div class="amount_statistic_totalAmount">0 VNĐ</div>-->
+<!--      </div>-->
+      <div class="statistic_totalAmount">
+        <div class="title_statistic_totalAmount">Chọn tháng để xem thống kê</div>
+        <form id="statisticForm" class="form_statistic_totalAmount" method="POST">
+          <select name="month" class="month_statistic_totalAmount">
+            <option th:each="m : ${#numbers.sequence(1, 12)}"
+                    th:value="${m}"
+                    th:text="${'Tháng ' + m}"
+                    th:selected="${m == selectedMonth}">
+            </option>
+          </select>
+          <select name="year" class="year_statistic_totalAmount">
+            <option th:each="y : ${#numbers.sequence(2020, 2030)}"
+                    th:value="${y}"
+                    th:text="${y}"
+                    th:selected="${y == selectedYear}">
+            </option>
+          </select>
+          <input type="hidden" name="isDiscount" value="true"/>
+          <button type="submit" class="btn_statistic_totalAmount">Xem thống kê</button>
+        </form>
+        <div class="title_statistic_totalAmount">Tổng số tiền đã giảm giá</div>
+        <div class="amount_statistic_totalAmount" id="totalDiscount">0 VNĐ</div>
+      </div>
 
+      <div class="statistic_totalAmount">
+        <div class="title_statistic_totalAmount">Chọn tháng để xem thống kê</div>
+        <form id="statisticFinalAmountForm" class="form_statistic_totalAmount" method="POST">
+          <select name="month" class="month_statistic_totalAmount">
+            <option th:each="m : ${#numbers.sequence(1, 12)}"
+                    th:value="${m}"
+                    th:text="${'Tháng ' + m}">
+            </option>
+          </select>
+          <select name="year" class="year_statistic_totalAmount">
+            <option th:each="y : ${#numbers.sequence(2020, 2030)}"
+                    th:value="${y}"
+                    th:text="${y}">
+            </option>
+          </select>
+          <button type="submit" class="btn_statistic_totalAmount">Xem thống kê</button>
+        </form>
+        <div class="title_statistic_totalAmount">Tổng doanh thu thực tế</div>
+        <div class="amount_statistic_totalAmount" id="totalRevenue">0 VNĐ</div>
+      </div>
+
+    </div>
     <div class="order_actions">
       <div class="order_search">
         <input
@@ -67,32 +155,30 @@
         <tr th:each="order : ${orders}">
           <td th:text="${order.orderId}"></td>
           <td th:text="${userNames[order.userId]}"></td>
-          <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm:ss')}"></td>
+          <td th:text="${#temporals.format(order.orderDate.minusHours(7), 'dd/MM/yyyy HH:mm:ss')}"></td>
+
           <td th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')}"></td>
           <td th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')}"></td>
-          <td >
-            <span style="padding: 10px; border-radius: 30px" th:text="${order.orderStatus.toString()}"
-                  th:classappend="${order.orderStatus.toString() == 'PENDING' ? 'order_status-pending' :
-                    (order.orderStatus.toString() == 'COMPLETED' ? 'order_status-confirmed' :
-                    (order.orderStatus.toString() == 'CANCELLED' ? 'order_status-cancelled' : ''))}">
-
-            </span>
+          <td>
+    <span id="orders_order-status-${order.orderId}" style="padding: 10px; border-radius: 30px"
+          th:text="${order.orderStatus.toString()}"
+          th:classappend="${order.orderStatus.toString() == 'PENDING' ? 'order_status-pending' :
+                            (order.orderStatus.toString() == 'COMPLETED' ? 'order_status-confirmed' :
+                            (order.orderStatus.toString() == 'CANCELLED' ? 'order_status-cancelled' : ''))}">
+    </span>
           </td>
           <td style="width: 28%;">
-            <!-- Nút Xem -->
             <button class="custom-btn btn-view" onclick="viewOrder(this)" th:data-id="${order.orderId}">
               <i class="fas fa-eye"></i> Xem
             </button>
 
-            <!-- Nút Duyệt -->
             <button class="custom-btn btn-approve" onclick="approveOrder(this)" th:data-id="${order.orderId}"
-                    th:disabled="${order.orderStatus == 'COMPLETED' || order.orderStatus == 'CANCELLED'}">
+                    th:disabled="${order.orderStatus.toString() == 'COMPLETED'}">
               <i class="fas fa-check-circle"></i> Duyệt
             </button>
 
-            <!-- Nút Hủy -->
             <button class="custom-btn btn-cancel" onclick="cancelOrder(this)" th:data-id="${order.orderId}"
-                    th:disabled="${order.orderStatus == 'CANCELLED'}">
+                    th:disabled="${order.orderStatus.toString() == 'CANCELLED'}">
               <i class="fas fa-times-circle"></i> Hủy
             </button>
           </td>
@@ -100,7 +186,7 @@
         </tbody>
       </table>
 
-      <!-- Empty state sẽ hiển thị khi không có dữ liệu -->
+      <!--Nếu không có dữ liệu -->
       <div
               id="order_empty-state"
               class="order_empty-state"
@@ -114,111 +200,47 @@
         </p>
       </div>
     </div>
+
+    <!-- Modal hiển thị thông tin đơn hàng -->
+    <div id="orders_detailModal_orderModal" class="orders_detailModal_modal">
+      <div class="orders_detailModal_modal-content">
+        <span class="orders_detailModal_close">&times;</span>
+        <h2>Chi tiết đơn hàng</h2>
+        <p><strong>Mã đơn hàng:</strong> <span id="orders_detailModal_orderId"></span></p>
+        <p><strong>Mã người mua:</strong> <span id="orders_detailModal_userId"></span></p>
+        <p><strong>Ngày đặt:</strong> <span id="orders_detailModal_orderDate"></span></p>
+        <p><strong>Giá trị đơn hàng:</strong> <span id="orders_detailModal_totalAmount"></span></p>
+        <p><strong>Tổng đơn hàng sau ưu đãi:</strong> <span id="orders_detailModal_finalAmount"></span></p>
+        <p><strong>	Trạng thái:</strong> <span id="orders_detailModal_orderStatus"></span></p>
+        <hr>
+        <h3>Danh sách sản phẩm</h3>
+        <ul id="orders_detailModal_orderDetails"></ul>
+      </div>
+    </div>
+
+    <!--Modal duyệt đơn hàng-->
+    <div id="orders_confirmModal" class="orders_modal">
+      <div class="orders_modal-content">
+        <h2>Xác nhận duyệt đơn hàng</h2>
+        <p>Bạn có chắc muốn duyệt đơn hàng này không?</p>
+        <div class="orders_modal-actions">
+          <button id="orders_cancelApprove" class="orders_btn orders_btn-cancel">Hủy</button>
+          <button id="orders_confirmApprove" class="orders_btn orders_btn-confirm">Duyệt</button>
+        </div>
+      </div>
+    </div>
+    <!--Modal hủy đơn hàng-->
+    <div id="orders_cancelModal" class="orders_modal">
+      <div class="orders_modal-content">
+        <h2>Xác nhận hủy đơn hàng</h2>
+        <p>Bạn có chắc muốn hủy đơn hàng này không?</p>
+        <div class="orders_modal-actions">
+          <button id="orders_cancelCancel" class="orders_btn orders_btn-cancel">Hủy</button>
+          <button id="orders_confirmCancel" class="orders_btn orders_btn-confirm">Hủy đơn hàng</button>
+        </div>
+      </div>
+    </div>
   </div>
-
-<!--  &lt;!&ndash; Modal tạo/chỉnh sửa đơn hàng &ndash;&gt;-->
-<!--  <div id="order_modal" class="order_modal">-->
-<!--    <div class="order_modal-content">-->
-<!--      <div class="order_modal-header">-->
-<!--        <h2 id="order_modal-title" class="order_modal-title">-->
-<!--          Tạo đơn hàng mới-->
-<!--        </h2>-->
-<!--        <button id="order_modal-close" class="order_modal-close">-->
-<!--          &times;-->
-<!--        </button>-->
-<!--      </div>-->
-<!--      <form id="order_form">-->
-<!--        <div class="order_form-grid">-->
-<!--          <div class="order_form-group">-->
-<!--            <label class="order_form-label" for="order_customer"-->
-<!--            >Tên khách hàng</label-->
-<!--            >-->
-<!--            <input-->
-<!--                    type="text"-->
-<!--                    id="order_customer"-->
-<!--                    class="order_form-input"-->
-<!--                    required-->
-<!--            />-->
-<!--          </div>-->
-<!--          <div class="order_form-group">-->
-<!--            <label class="order_form-label" for="order_phone"-->
-<!--            >Số điện thoại</label-->
-<!--            >-->
-<!--            <input-->
-<!--                    type="text"-->
-<!--                    id="order_phone"-->
-<!--                    class="order_form-input"-->
-<!--                    required-->
-<!--            />-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <div class="order_form-group">-->
-<!--          <label class="order_form-label" for="order_address">Địa chỉ</label>-->
-<!--          <input-->
-<!--                  type="text"-->
-<!--                  id="order_address"-->
-<!--                  class="order_form-input"-->
-<!--                  required-->
-<!--          />-->
-<!--        </div>-->
-
-<!--        <div class="order_form-grid">-->
-<!--          <div class="order_form-group">-->
-<!--            <label class="order_form-label" for="order_products"-->
-<!--            >Sản phẩm</label-->
-<!--            >-->
-<!--            <select-->
-<!--                    id="order_products"-->
-<!--                    class="order_form-select"-->
-<!--                    multiple-->
-<!--                    required-->
-<!--            >-->
-<!--              <option value="1">iPhone 15 Pro Max</option>-->
-<!--              <option value="2">Samsung Galaxy S24 Ultra</option>-->
-<!--              <option value="3">Xiaomi 14 Ultra</option>-->
-<!--              <option value="4">OPPO Find X7 Ultra</option>-->
-<!--              <option value="5">Vivo X100 Pro</option>-->
-<!--            </select>-->
-<!--          </div>-->
-<!--          <div class="order_form-group">-->
-<!--            <label class="order_form-label" for="order_status"-->
-<!--            >Trạng thái</label-->
-<!--            >-->
-<!--            <select id="order_status" class="order_form-select" required>-->
-<!--              <option value="pending">Chờ xác nhận</option>-->
-<!--              <option value="confirmed">Đã xác nhận</option>-->
-<!--              <option value="shipping">Đang giao</option>-->
-<!--              <option value="delivered">Đã giao</option>-->
-<!--              <option value="cancelled">Đã hủy</option>-->
-<!--            </select>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <div class="order_form-group">-->
-<!--          <label class="order_form-label" for="order_notes">Ghi chú</label>-->
-<!--          <textarea-->
-<!--                  id="order_notes"-->
-<!--                  class="order_form-input"-->
-<!--                  rows="3"-->
-<!--          ></textarea>-->
-<!--        </div>-->
-
-<!--        <div class="order_form-actions">-->
-<!--          <button-->
-<!--                  type="button"-->
-<!--                  id="order_cancel-btn"-->
-<!--                  class="order_btn order_btn-cancel"-->
-<!--          >-->
-<!--            Hủy-->
-<!--          </button>-->
-<!--          <button type="submit" class="order_btn order_btn-success">-->
-<!--            Lưu đơn hàng-->
-<!--          </button>-->
-<!--        </div>-->
-<!--      </form>-->
-<!--    </div>-->
-<!--  </div>-->
 </div>
 <script th:src="@{/assets/js/orders_managerment.js}"></script>
 

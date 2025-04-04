@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const typeElement = voucher.querySelector(".voucher-info-value")?.textContent.trim();
             const isFixedDiscount = typeElement.includes("Cố định");
             const isPercentageDiscount = typeElement.includes("Phần trăm");
-
+            const isFreeshipDiscount = typeElement.includes("Freeship");
             // ✅ Xác định trạng thái voucher
             const statusText = voucher.querySelector(".voucher-status-badge")?.textContent.trim() || "";
 
@@ -259,7 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             return (
                 (voucherCode === "" || code.includes(voucherCode)) &&
-                (discountType === "" || (discountType === "PERCENTAGE" && isPercentageDiscount) || (discountType === "FIXED" && isFixedDiscount)) &&
+                (discountType === "" || (discountType === "PERCENTAGE" && isPercentageDiscount)|| (discountType === "FREESHIP" && isFreeshipDiscount) || (discountType === "FIXED" && isFixedDiscount)) &&
                 (status === "" || statusText === status) &&
                 (minOrderValue === 0 || orderValue <= minOrderValue) &&
                 (!applicableForAllProductsFilter || isApplicableForAll) // Nếu checkbox được chọn, chỉ hiển thị voucher phù hợp

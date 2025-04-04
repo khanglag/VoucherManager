@@ -1,15 +1,13 @@
 package com.example.vouchermanager.Service;
 
 import com.example.vouchermanager.Model.DTO.*;
-import com.example.vouchermanager.Model.Entity.Product;
-import com.example.vouchermanager.Model.Entity.Voucher;
-import com.example.vouchermanager.Model.Entity.Voucherapplicableproduct;
-import com.example.vouchermanager.Model.Entity.VoucherapplicableproductId;
+import com.example.vouchermanager.Model.Entity.*;
 import com.example.vouchermanager.Model.Enum.DiscountType;
 import com.example.vouchermanager.Model.Enum.VoucherStatus;
 import com.example.vouchermanager.Repository.ProductRepository;
 import com.example.vouchermanager.Repository.VoucherApplicableProductRepository;
 import com.example.vouchermanager.Repository.VoucherRepository;
+import com.example.vouchermanager.Repository.VoucherusageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,11 +31,15 @@ public class VoucherServiceImp implements VoucherService {
     private VoucherRepository voucherRepository;
 
     @Autowired
+    private VoucherusageRepository voucherusageRepository;
+    @Autowired
     private CloudinaryService cloudinaryService;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private VoucherApplicableProductRepository voucherApplicableProductRepository;
+    @Autowired
+    private UserServiceImp userServiceImp;
 
     @Override
     public List<VoucherDTO> findAll() {
@@ -462,6 +464,105 @@ public class VoucherServiceImp implements VoucherService {
                         (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0))
                 .collect(Collectors.toList());
     }
+
+    public Map<String, Object> getVoucherStatistics() {
+        Map<String, Object> statistics = new HashMap<>();
+        List<Object[]> issuedPerMonth = voucherRepository.countVouchersIssuedPerMonth();
+        statistics.put("issuedPerMonth", issuedPerMonth);
+        return statistics;
+    }
+
+    public Map<String, BigDecimal> getVoucherPerformance() {
+        Map<String, BigDecimal> voucherPerformance = new HashMap<>();
+        List<Object[]> voucherData = voucherRepository.findVoucherUsageData();
+
+        for (Object[] row : voucherData) {
+            String voucherCode = (String) row[0];
+            Integer usageCount = (Integer) row[1];
+            Integer maxUsage = (Integer) row[2];
+
+            // Tính hiệu suất
+            BigDecimal performance = BigDecimal.ZERO;
+            if (maxUsage != null && maxUsage > 0) {
+
+                performance = new BigDecimal(usageCount != null ? usageCount : 0)
+                        .divide(new BigDecimal(maxUsage), 4, BigDecimal.ROUND_HALF_UP)
+                        .multiply(new BigDecimal(100));
+
+                // Làm tròn về 2 chữ số sau dấu phẩy
+                performance = performance.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+
+            voucherPerformance.put(voucherCode, performance);
+        }
+
+        return voucherPerformance; // Trả về bản đồ hiệu suất của từng voucher
+    }
+
+    public List<VoucherPerformanceDTO> calculateVoucherPerformanceForAllUsersWithRoleId2() {
+        List<User> users = userServiceImp.getAllUsersByRoleId(2);
+
+        List<VoucherPerformanceDTO> performanceDTOs = new ArrayList<>();
+
+        for (User user : users) {
+            List<Voucher> vouchers = voucherRepository.findByCreatedBy(user);
+
+            for (Voucher voucher : vouchers) {
+                int totalIssued = voucher.getMaxUsage();
+                int totalUsed = voucher.getUsageCount();
+                int totalRemaining = totalIssued - totalUsed;
+
+                BigDecimal efficiency = new BigDecimal(totalUsed)
+                        .divide(new BigDecimal(totalIssued), 4, RoundingMode.HALF_UP)
+                        .multiply(new BigDecimal(100));
+
+                VoucherPerformanceDTO dto = new VoucherPerformanceDTO(
+                        voucher.getVoucherCode(),
+                        totalIssued,
+                        totalUsed,
+                        totalRemaining,
+                        efficiency,
+                        user.getId(),
+                        user.getFullName());
+                performanceDTOs.add(dto);
+            }
+        }
+
+        return performanceDTOs;
+    }
+
+    public List<VoucherPerformanceDTO> calculateVoucherPerformanceForAllUsersWithRoleId1() {
+        List<User> users = userServiceImp.getAllUsersByRoleId(1);
+
+        List<VoucherPerformanceDTO> performanceDTOs = new ArrayList<>();
+
+        for (User user : users) {
+            List<Voucher> vouchers = voucherRepository.findByCreatedBy(user);
+
+            for (Voucher voucher : vouchers) {
+                int totalIssued = voucher.getMaxUsage();
+                int totalUsed = voucher.getUsageCount();
+                int totalRemaining = totalIssued - totalUsed;
+
+                BigDecimal efficiency = new BigDecimal(totalUsed)
+                        .divide(new BigDecimal(totalIssued), 4, RoundingMode.HALF_UP)
+                        .multiply(new BigDecimal(100));
+
+                VoucherPerformanceDTO dto = new VoucherPerformanceDTO(
+                        voucher.getVoucherCode(),
+                        totalIssued,
+                        totalUsed,
+                        totalRemaining,
+                        efficiency,
+                        user.getId(),
+                        user.getFullName());
+                performanceDTOs.add(dto);
+            }
+        }
+
+        return performanceDTOs;
+    }
+
     @Override
     public List<Voucher> getSortedDiscountVouchers(List<Integer> productIds, BigDecimal orderTotal) {
         // Lấy danh sách voucher áp dụng cho từng sản phẩm trong danh sách productIds
@@ -478,13 +579,13 @@ public class VoucherServiceImp implements VoucherService {
         allVouchers.addAll(globalVouchers);
         // Lọc voucher hợp lệ
         return allVouchers.stream()
-                .filter(v -> (v.getDiscountType() == DiscountType.PERCENTAGE || v.getDiscountType() == DiscountType.FIXED) &&
+                .filter(v -> (v.getDiscountType() == DiscountType.PERCENTAGE
+                        || v.getDiscountType() == DiscountType.FIXED) &&
                         v.getStatus() == VoucherStatus.ACTIVE &&
                         !v.getStartDate().isAfter(LocalDate.now()) &&
                         !v.getEndDate().isBefore(LocalDate.now()) &&
                         (v.getUsageCount() < v.getMaxUsage()) &&
-                        (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0)
-                )
+                        (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0))
                 .sorted((v1, v2) -> {
                     BigDecimal discount1 = getMaxDiscount(v1, orderTotal);
                     BigDecimal discount2 = getMaxDiscount(v2, orderTotal);
@@ -492,6 +593,7 @@ public class VoucherServiceImp implements VoucherService {
                 })
                 .collect(Collectors.toList());
     }
+
     @Override
     public List<Voucher> getSortedFreeShipVouchers(List<Integer> productIds, BigDecimal orderTotal) {
         // Lấy danh sách voucher áp dụng cho từng sản phẩm trong danh sách productIds
@@ -508,7 +610,8 @@ public class VoucherServiceImp implements VoucherService {
         allVouchers.addAll(globalVouchers);
 
         // Lấy giá sản phẩm theo ID
-        Map<Integer, BigDecimal> productPrices = productRepository.findAllById(productIds.stream().map(Long::valueOf).toList())
+        Map<Integer, BigDecimal> productPrices = productRepository
+                .findAllById(productIds.stream().map(Long::valueOf).toList())
                 .stream().collect(Collectors.toMap(p -> p.getId().intValue(), Product::getPrice));
 
         // Lọc voucher hợp lệ
@@ -518,10 +621,15 @@ public class VoucherServiceImp implements VoucherService {
                         !v.getStartDate().isAfter(LocalDate.now()) && // Chưa đến ngày bắt đầu
                         !v.getEndDate().isBefore(LocalDate.now()) && // Chưa quá ngày kết thúc
                         (v.getUsageCount() < v.getMaxUsage()) && // Số lượng sử dụng chưa đạt max
-                        (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0)) // Đơn hàng đạt giá trị tối thiểu
+                        (v.getMinimumOrderValue() == null || orderTotal.compareTo(v.getMinimumOrderValue()) >= 0)) // Đơn
+                                                                                                                   // hàng
+                                                                                                                   // đạt
+                                                                                                                   // giá
+                                                                                                                   // trị
+                                                                                                                   // tối
+                                                                                                                   // thiểu
                 .collect(Collectors.toList());
     }
-
 
     // Hàm hỗ trợ tính giảm giá cao nhất trong các sản phẩm
     private BigDecimal getMaxDiscount(Voucher voucher, BigDecimal orderTotal) {
@@ -534,4 +642,5 @@ public class VoucherServiceImp implements VoucherService {
         }
         return BigDecimal.ZERO; // Nếu không phải loại giảm giá hợp lệ, trả về 0
     }
+
 }

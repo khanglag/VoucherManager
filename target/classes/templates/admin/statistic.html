@@ -1,10 +1,136 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Hệ thống quản lý voucher</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+            rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <!-- css -->
+    <link rel="stylesheet" th:href="@{/assets/css/statistic.css}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
 </head>
 <body>
+<div  th:fragment="Statistic(performanceList,performanceListByAdmin)" style="margin: 2%">
+
+        <div style="display: flex; width: 50%">
+            <canvas id="voucherChart" ></canvas>
+            <canvas id="performanceStatistics" ></canvas>
+        </div>
+        <div class="mt-4">
+            <h1 class="statisticEfficiency_title">Báo cáo hiệu suất Voucher của nhân viên tạo</h1>
+            <div class="statisticEfficiency_filter mb-2">
+                <input type="text" id="searchId" placeholder="🔍 Mã NV" onkeyup="filterTable()">
+                <input type="text" id="searchName" placeholder="🔍 Tên Nhân viên" onkeyup="filterTable()">
+                <input type="text" id="searchVoucher" placeholder="🔍 Mã Voucher" onkeyup="filterTable()">
+                <button onclick="exportToPDF()" class="export-btn btn btn-primary">📄 Xuất PDF</button>
+            </div>
+
+            <div th:if="${performanceList != null and not #lists.isEmpty(performanceList)}">
+                <table class="statisticEfficiency_voucher-table" border="1">
+                    <thead>
+                    <tr>
+                        <th>Mã NV</th>
+                        <th>Tên Nhân viên</th>
+                        <th>Mã Voucher</th>
+                        <th>Tổng phát hành</th>
+                        <th>Đã sử dụng</th>
+                        <th>Còn lại</th>
+                        <th onclick="sortEfficiency()" style="cursor: pointer;">
+                            Hiệu suất (%) ⬆️⬇️
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="voucherTableBody">
+                    <tr th:each="dto : ${performanceList}">
+                        <td th:text="${dto.userId}"></td>
+                        <td th:text="${dto.userName}"></td>
+                        <td th:text="${dto.voucherCode}"></td>
+                        <td th:text="${dto.totalIssued}"></td>
+                        <td th:text="${dto.totalUsed}"></td>
+                        <td th:text="${dto.totalRemaining}"></td>
+                        <td th:text="${dto.efficiency != null ? #numbers.formatDecimal(dto.efficiency, 1, 2, 'POINT') : '0.00'} + '%'"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Nút phân trang -->
+            <div id="pagination" class="pagination-container">
+                <button id="prevPage" class="pagination-btn">Trước</button>
+                <span id="pageInfo" class="pagination-info"></span>
+                <button id="nextPage" class="pagination-btn">Sau</button>
+            </div>
+            <div th:if="${performanceList == null or #lists.isEmpty(performanceList)}" class="statisticEfficiency_no-data">
+                <p>Không có dữ liệu hiệu suất voucher nào được tìm thấy</p>
+            </div>
+        </div>
+        <div class="mt-4">
+        <h1 class="statisticEfficiency_titleByAdmin">Báo cáo hiệu suất Voucher của ADMIN tạo</h1>
+        <div class="statisticEfficiency_filterByAdmin mb-2">
+            <input type="text" id="searchIdByAdmin" placeholder="🔍 Mã Admin" onkeyup="filterTableByAdmin()">
+            <input type="text" id="searchNameByAdmin" placeholder="🔍 Tên Admin" onkeyup="filterTableByAdmin()">
+            <input type="text" id="searchVoucherByAdmin" placeholder="🔍 Mã Voucher" onkeyup="filterTableByAdmin()">
+            <button onclick="exportToPDFByAdmin()" class="export-btn btn btn-danger">📄 Xuất PDF</button>
+        </div>
+
+        <div th:if="${performanceListByAdmin != null and not #lists.isEmpty(performanceListByAdmin)}">
+            <table class="statisticEfficiency_voucher-tableByAdmin" border="1">
+                <thead>
+                <tr>
+                    <th>Mã Admin</th>
+                    <th>Tên Admin</th>
+                    <th>Mã Voucher</th>
+                    <th>Tổng phát hành</th>
+                    <th>Đã sử dụng</th>
+                    <th>Còn lại</th>
+                    <th onclick="sortEfficiencyByAdmin()" style="cursor: pointer;">
+                        Hiệu suất (%) ⬆️⬇️
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="voucherTableBodyByAdmin">
+                <tr th:each="dto : ${performanceListByAdmin}">
+                    <td th:text="${dto.userId}"></td>
+                    <td th:text="${dto.userName}"></td>
+                    <td th:text="${dto.voucherCode}"></td>
+                    <td th:text="${dto.totalIssued}"></td>
+                    <td th:text="${dto.totalUsed}"></td>
+                    <td th:text="${dto.totalRemaining}"></td>
+                    <td th:text="${dto.efficiency != null ? #numbers.formatDecimal(dto.efficiency, 1, 2, 'POINT') : '0.00'} + '%'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+            <!-- Nút phân trang -->
+            <div id="paginationByAdmin" class="pagination-container">
+                <button id="prevPageByAdmin" class="pagination-btn">Trước</button>
+                <span id="pageInfoByAdmin" class="pagination-info"></span>
+                <button id="nextPageByAdmin" class="pagination-btn">Sau</button>
+            </div>
+        <div th:if="${performanceListByAdmin == null or #lists.isEmpty(performanceListByAdmin)}" class="statisticEfficiency_no-dataByAdmin">
+            <p>Không có dữ liệu hiệu suất voucher nào được tìm thấy</p>
+        </div>
+    </div>
+
+</div>
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- Three.js -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>-->
+<script th:src="@{/assets/js/base64.js}"></script>
+<script th:src="@{/assets/js/statistic.js}"></script>
 
 </body>
 </html>

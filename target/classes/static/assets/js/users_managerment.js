@@ -1,40 +1,81 @@
 //lọc users
 document.addEventListener("DOMContentLoaded", function () {
+    const rowsPerPage = 15;
+    let currentPage = 1;
+
+    const tableBody = document.getElementById("users_tableBody");
+    const rows = Array.from(tableBody.querySelectorAll("tr"));
+
+    const prevBtn = document.getElementById("prevPage");
+    const nextBtn = document.getElementById("nextPage");
+    const pageInfo = document.getElementById("pageInfo");
+
     const searchInput = document.getElementById("users_searchInput");
     const roleFilter = document.getElementById("users_roleFilter");
-    const tableBody = document.getElementById("users_tableBody");
-    const rows = tableBody.getElementsByTagName("tr");
+    const resetBtn = document.getElementById("users_resetFilter"); // Nút Đặt lại
 
-    function filterUsers() {
-        const searchText = searchInput.value.toLowerCase().trim();
-        const selectedRole = roleFilter.value.toLowerCase().trim();
-        let visibleCount = 0;
+    function filterRows() {
+        const searchText = searchInput.value.toLowerCase();
+        const selectedRole = roleFilter.value.toLowerCase();
 
-        for (let row of rows) {
+        return rows.filter(row => {
             const username = row.cells[1].textContent.toLowerCase();
             const fullName = row.cells[2].textContent.toLowerCase();
             const email = row.cells[3].textContent.toLowerCase();
-            const phoneNumber = row.cells[4].textContent.toLowerCase();
+            const phone = row.cells[4].textContent.toLowerCase();
             const role = row.cells[5].textContent.toLowerCase();
-            const matchSearch =
-                searchText === "" ||
-                username.includes(searchText) ||
-                fullName.includes(searchText) ||
-                email.includes(searchText) ||
-                phoneNumber.includes(searchText);
 
-            const matchRole = selectedRole === "" || role === selectedRole;
+            const matchesSearch = [username, fullName, email, phone].some(field => field.includes(searchText));
+            const matchesRole = selectedRole === "" || role === selectedRole;
 
-            if (matchSearch && matchRole) {
-                row.style.display = "";
-                row.cells[0].textContent = ++visibleCount;
-            } else {
-                row.style.display = "none";
-            }
-        }
+            return matchesSearch && matchesRole;
+        });
     }
-    searchInput.addEventListener("input", filterUsers);
-    roleFilter.addEventListener("change", filterUsers);
+
+    function renderTable(filteredRows) {
+        const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+        currentPage = Math.min(currentPage, totalPages) || 1;
+
+        rows.forEach(row => row.style.display = "none");
+        filteredRows.forEach((row, index) => {
+            row.style.display = (index >= (currentPage - 1) * rowsPerPage && index < currentPage * rowsPerPage) ? "" : "none";
+        });
+
+        pageInfo.textContent = `Trang ${currentPage} / ${totalPages || 1}`;
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+    }
+
+    function updateTable() {
+        renderTable(filterRows());
+    }
+
+    // Xử lý khi ấn nút Đặt lại
+    resetBtn.addEventListener("click", function () {
+        searchInput.value = "";
+        roleFilter.value = "";
+        currentPage = 1; // Quay về trang đầu tiên
+        updateTable();
+    });
+
+    prevBtn.addEventListener("click", function () {
+        if (currentPage > 1) {
+            currentPage--;
+            updateTable();
+        }
+    });
+
+    nextBtn.addEventListener("click", function () {
+        if (currentPage < Math.ceil(filterRows().length / rowsPerPage)) {
+            currentPage++;
+            updateTable();
+        }
+    });
+
+    searchInput.addEventListener("input", updateTable);
+    roleFilter.addEventListener("change", updateTable);
+
+    updateTable();
 });
 
 //model thêm người dùng
@@ -223,3 +264,43 @@ function user_blockUser() {
         });
     user_closeModal();
 }
+
+//phân trang
+document.addEventListener("DOMContentLoaded", function () {
+    const rowsPerPage = 15;
+    let currentPage = 1;
+
+    const tableBody = document.getElementById("users_tableBody");
+    const rows = Array.from(tableBody.querySelectorAll("tr"));
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+    const prevBtn = document.getElementById("prevPage");
+    const nextBtn = document.getElementById("nextPage");
+    const pageInfo = document.getElementById("pageInfo");
+
+    function renderTable() {
+        rows.forEach((row, index) => {
+            row.style.display = (index >= (currentPage - 1) * rowsPerPage && index < currentPage * rowsPerPage) ? "" : "none";
+        });
+
+        pageInfo.textContent = `Trang ${currentPage} / ${totalPages}`;
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === totalPages;
+    }
+
+    prevBtn.addEventListener("click", function () {
+        if (currentPage > 1) {
+            currentPage--;
+            renderTable();
+        }
+    });
+
+    nextBtn.addEventListener("click", function () {
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderTable();
+        }
+    });
+
+    renderTable();
+});

@@ -16,4 +16,5 @@ public interface OrderdetailRepository extends JpaRepository<Orderdetail, Intege
 //    List<Orderdetail> findByProductID_Id(int productId);
     Page<Orderdetail> findByOrderID_Id(int orderId, Pageable pageable);
     Page<Orderdetail> findByProductID_Id(int productId, Pageable pageable);
+
 }

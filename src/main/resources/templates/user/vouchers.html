@@ -52,7 +52,7 @@
 
     <div class="shine-effect"></div>
 </div>
-<div class="parent container mt-3">
+<div class="parent  mt-3">
     <div class="div1">
         <div class="container" >
             <h1 class="elegant-heading">Bộ lọc tìm kiếm voucher</h1>
@@ -70,6 +70,7 @@
                         <option value="">Chọn loại giảm giá</option>
                         <option value="PERCENTAGE">Giảm theo %</option>
                         <option value="FIXED">Giảm số tiền cố định</option>
+                        <option value="FREESHIP">Freeship</option>
                     </select>
                 </div>
 
@@ -147,7 +148,9 @@
                                 <span class="voucher-info-value">
                             <th:block th:if="${voucher.discountType.name() == 'FIXED'}">Cố định</th:block>
                             <th:block th:if="${voucher.discountType.name() == 'PERCENTAGE'}">Phần trăm</th:block>
-                            <th:block th:unless="${voucher.discountType.name() == 'FIXED' or voucher.discountType.name() == 'PERCENTAGE'}">
+                            <th:block th:if="${voucher.discountType.name() == 'FREESHIP'}">Freeship</th:block>
+                            <th:block th:unless="${voucher.discountType.name() == 'FIXED' or voucher.discountType.name() == 'PERCENTAGE'
+                            or voucher.discountType.name() == 'FREESHIP'}">
                                 Không xác định
                             </th:block>
                         </span>
@@ -158,10 +161,13 @@
                             <th:block th:if="${voucher.discountType.name() == 'FIXED'}"
                                       th:text="${voucher.discountValue != null ? #numbers.formatInteger(voucher.discountValue, 0, 'COMMA') : '0'}">
                             </th:block>
+                             <th:block th:if="${voucher.discountType.name() == 'FREESHIP'}"
+                                       th:text="${voucher.discountValue != null ? #numbers.formatInteger(voucher.discountValue, 0, 'COMMA') : '0'}">
+                            </th:block>
                             <th:block th:if="${voucher.discountType.name() == 'PERCENTAGE'}"
                                       th:text="${voucher.discountValue != null ? #numbers.formatInteger(voucher.discountValue, 0) : '0'}">
                             </th:block>
-                            <th:block th:unless="${voucher.discountType.name() == 'FIXED' or voucher.discountType.name() == 'PERCENTAGE'}">
+                            <th:block th:unless="${voucher.discountType.name() == 'FIXED' or voucher.discountType.name() == 'PERCENTAGE' or voucher.discountType.name() == 'FREESHIP'}">
                                 N/A
                             </th:block>
                          </span>

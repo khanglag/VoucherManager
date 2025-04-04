@@ -43,8 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("products_search");
     const priceFilter = document.getElementById("products_price_filter");
     const maxPriceDisplay = document.getElementById("products_max_price");
-    const statusFilter = document.getElementById("products_status_filter");
+    //const statusFilter = document.getElementById("products_status_filter");
     const productRows = document.querySelectorAll("#products_list .products_row");
+
     priceFilter.addEventListener("input", function () {
         const priceValue = parseInt(priceFilter.value).toLocaleString("vi-VN") + "₫";
         maxPriceDisplay.textContent = priceValue;
@@ -52,36 +53,35 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     searchInput.addEventListener("input", filterProducts);
-
-    statusFilter.addEventListener("change", filterProducts);
+ //   statusFilter.addEventListener("change", filterProducts);
 
     function filterProducts() {
         const searchValue = searchInput.value.trim().toLowerCase();
         const maxPrice = parseInt(priceFilter.value);
-        const selectedStatus = statusFilter.value;
+      //  const selectedStatus = statusFilter.value;
 
         productRows.forEach(row => {
             const productId = row.querySelector(".products_td:nth-child(1)").textContent.trim();
             const productName = row.querySelector(".products_td:nth-child(2)").textContent.trim().toLowerCase();
             const productPriceText = row.querySelector(".products_td:nth-child(3)").textContent.trim().replace(/[^\d]/g, "");
             const productPrice = parseInt(productPriceText) || 0;
-            const productStatus = row.querySelector(".products_td:nth-child(5)").textContent.trim(); // "Hoạt động" hoặc "Khóa"
+            const productStatus = row.querySelector(".products_td:nth-child(5)").dataset.status; // Lấy giá trị từ data-status
+
             const matchesSearch = searchValue === "" || productId.includes(searchValue) || productName.includes(searchValue);
             const matchesPrice = productPrice <= maxPrice;
+           // const matchesStatus = (selectedStatus === "all") || (productStatus === selectedStatus);
 
-            const matchesStatus = (selectedStatus === "all") ||
-                (selectedStatus === "active" && productStatus === "Hoạt động") ||
-                (selectedStatus === "inactive" && productStatus === "Khóa");
-            row.style.display = (matchesSearch && matchesPrice && matchesStatus) ? "" : "none";
+            row.style.display = (matchesSearch && matchesPrice ) ? "" : "none";
         });
     }
 });
+
 //Hàm add sản phẩm
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("products_form");
 
     form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Ngăn chặn reload trang
+        event.preventDefault();
 
         const productData = {
             productName: document.getElementById("products_productName").value.trim(),
@@ -144,12 +144,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const productRow = this.closest(".products_row");
             const productName = productRow.querySelector(".products_td:nth-child(2)").innerText.trim();
             const productId = productRow.querySelector(".products_td:nth-child(1)").innerText.trim();
-
-            // Điền thông tin vào modal xác nhận xóa
             document.getElementById("products_delete_name").innerText = productName;
             document.getElementById("products_confirm_delete").setAttribute("data-id", productId);
-
-            // Hiển thị modal
             deleteModal.show();
         });
     });
@@ -211,18 +207,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedProductId = null;
     document.querySelectorAll(".products_btn_delete").forEach(button => {
         button.addEventListener("click", function () {
-            selectedProductId = this.getAttribute("data-id"); // Lấy ID sản phẩm
+            selectedProductId = this.getAttribute("data-id");
             const productName = this.closest(".products_row").querySelector(".products_td:nth-child(2)").innerText.trim();
-
-            // Hiển thị tên sản phẩm trong modal
             document.getElementById("products_delete_name").innerText = productName;
-
-            // Hiển thị modal
             deleteModal.show();
         });
     });
-
-    // hàm block
     deleteButton.addEventListener("click", function () {
         if (selectedProductId) {
             const productData = { id: selectedProductId };
@@ -249,3 +239,78 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+// phân trang
+document.addEventListener("DOMContentLoaded", function () {
+    const productsPerPage = 15;
+    let currentProductPage = 1;
+
+    const productTableBody = document.getElementById("products_list");
+    const productRows = Array.from(productTableBody.querySelectorAll("tr"));
+
+    const prevProductBtn = document.getElementById("prevProductPage");
+    const nextProductBtn = document.getElementById("nextProductPage");
+    const productPageInfo = document.getElementById("productPageInfo");
+
+    const productSearchInput = document.getElementById("products_search");
+    const priceFilter = document.getElementById("products_price_filter");
+    const statusFilter = document.getElementById("products_status_filter");
+
+    function filterProducts() {
+        const searchText = productSearchInput.value.toLowerCase();
+        const maxPrice = parseInt(priceFilter.value);
+     //   const selectedStatus = statusFilter.value.toLowerCase();
+
+        return productRows.filter(row => {
+            const productId = row.cells[0].textContent.toLowerCase();
+            const productName = row.cells[1].textContent.toLowerCase();
+            const productPrice = parseInt(row.cells[2].textContent.replace(/[^\d]/g, ""));
+            const productStatus = row.cells[4].textContent.toLowerCase();
+
+            const matchesSearch = productId.includes(searchText) || productName.includes(searchText);
+            const matchesPrice = productPrice <= maxPrice;
+          //  const matchesStatus = selectedStatus === "all" || productStatus.includes(selectedStatus);
+
+            return matchesSearch && matchesPrice ;
+        });
+    }
+
+    function renderProductTable(filteredProducts) {
+        const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+        currentProductPage = Math.min(currentProductPage, totalPages) || 1;
+
+        productRows.forEach(row => row.style.display = "none");
+        filteredProducts.forEach((row, index) => {
+            row.style.display = (index >= (currentProductPage - 1) * productsPerPage && index < currentProductPage * productsPerPage) ? "" : "none";
+        });
+
+        productPageInfo.textContent = `Trang ${currentProductPage} / ${totalPages || 1}`;
+        prevProductBtn.disabled = currentProductPage === 1;
+        nextProductBtn.disabled = currentProductPage === totalPages || totalPages === 0;
+    }
+
+    function updateProductTable() {
+        renderProductTable(filterProducts());
+    }
+
+    prevProductBtn.addEventListener("click", function () {
+        if (currentProductPage > 1) {
+            currentProductPage--;
+            updateProductTable();
+        }
+    });
+
+    nextProductBtn.addEventListener("click", function () {
+        if (currentProductPage < Math.ceil(filterProducts().length / productsPerPage)) {
+            currentProductPage++;
+            updateProductTable();
+        }
+    });
+
+    productSearchInput.addEventListener("input", updateProductTable);
+    priceFilter.addEventListener("input", updateProductTable);
+   // statusFilter.addEventListener("change", updateProductTable);
+
+    updateProductTable();
+});
+

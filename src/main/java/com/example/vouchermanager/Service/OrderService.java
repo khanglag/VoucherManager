@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface OrderService {
     Page<OrderDTO> findByUserId(int userId, Pageable pageable);
     Page<OrderDTO> getOrdersByDateRange(Instant startDate, Instant endDate, Pageable pageable);
     Page<OrderDTO> findByStatus(String status, Pageable pageable);
-
+    BigDecimal getTotalFinalAmountForMonth(int month, int year);
 }

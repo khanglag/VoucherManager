@@ -2,9 +2,17 @@
 package com.example.vouchermanager.Service;
 
 import com.example.vouchermanager.Model.DTO.VoucherDTO;
+
+import com.example.vouchermanager.Model.DTO.VoucherPerformanceDTO;
+import com.example.vouchermanager.Model.Entity.User;
+
 import com.example.vouchermanager.Model.Entity.Voucher;
+
 import com.example.vouchermanager.Model.Enum.DiscountType;
+import com.example.vouchermanager.Repository.VoucherRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -14,9 +22,17 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import java.util.Arrays;
+
 import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class VoucherServiceImpTest {
@@ -26,10 +42,18 @@ public class VoucherServiceImpTest {
     @Autowired
     VoucherService voucherService;
 
+    @Autowired
+    VoucherRepository voucherRepository;
+
+    @Autowired
+    UserServiceImp userServiceImp;
+
     @Test
     public void testFindAll() {
-        List<VoucherDTO> voucherDTOS = voucherServiceImp.findAll();
-        voucherDTOS.forEach(System.out::println);
+
+        List<VoucherPerformanceDTO> performanceDTOs = voucherServiceImp
+                .calculateVoucherPerformanceForAllUsersWithRoleId2();
+        System.out.println(performanceDTOs);
     }
 
     @Test
@@ -38,13 +62,15 @@ public class VoucherServiceImpTest {
         System.out.println("-------------");
         System.out.println(total);
     }
-    @Test void setVoucherServiceImp(){
+
+    @Test
+    void setVoucherServiceImp() {
         List<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
-        List<Voucher> vouchers = voucherService.getSortedDiscountVouchers(list,BigDecimal.valueOf(300000));
+        List<Voucher> vouchers = voucherService.getSortedDiscountVouchers(list, BigDecimal.valueOf(300000));
         for (Voucher voucher : vouchers) {
-            System.out.println("Voucher code: "+voucher.getVoucherCode()+" ");
+            System.out.println("Voucher code: " + voucher.getVoucherCode() + " ");
         }
     }
     // package com.example.vouchermanager.Service;
@@ -91,4 +117,19 @@ public class VoucherServiceImpTest {
     //
     // }
 
+    @Test
+    void testGetVoucherStatistics() {
+        Map<String, Object> statistics = voucherServiceImp.getVoucherStatistics();
+
+        System.out.println("\n===== Voucher Statistics =====");
+
+        System.out.println("\nIssued Per Month:");
+        List<Object[]> issuedPerMonth = (List<Object[]>) statistics.get("issuedPerMonth");
+        issuedPerMonth
+                .forEach(row -> System.out.println("Year: " + row[0] + ", Month: " + row[1] + ", Issued: " + row[2]));
+
+        // Kiểm tra dữ liệu
+        assertEquals(2, issuedPerMonth.size());
+
+    }
 }
