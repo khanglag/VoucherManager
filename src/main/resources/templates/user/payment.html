@@ -83,24 +83,33 @@
               <h5>Địa chỉ nhận hàng</h5>
             </div>
             <div class="shipping-details">
-              <span class="customer-name">Lê Duy Khang</span>
-              <span class="customer-phone">(+84) 358808913</span>
-              <p class="customer-address">340 Đường Nguyễn Trãi, Phường 7, Quận 5...</p>
+              <span class="customer-name" id="customer-name">Lê Duy Khang</span>
+              <span class="customer-phone" id="customer-phone">(+84) 358808913</span>
+              <p class="customer-address" id="customer-address">340 Đường Nguyễn Trãi, Phường 7, Quận 5...</p>
             </div>
-            <button class="change-address">Thay đổi</button>
+            <button class="change-address" onclick="openModal()">Thay đổi</button>
 
-            <!-- Modal Đổi Địa Chỉ -->
-            <div id="addressModal" class="address-modal">
+            <!-- Modal Đổi Thông Tin Khách Hàng -->
+            <div id="addressModal" class="address-modal" style="display: none;">
               <div class="address-modal-content">
-                <h2>Thay đổi địa chỉ</h2>
+                <h2>Thay đổi thông tin</h2>
                 <form id="addressForm">
-                  <label for="new-address">Địa chỉ mới:</label>
-                  <input type="text" id="new-address" name="new-address" placeholder="Nhập địa chỉ mới" required>
+                  <label for="new-name">Họ và tên:</label>
+                  <input type="text" id="new-name" placeholder="Nhập họ và tên" required>
+
+                  <label for="new-phone">Số điện thoại:</label>
+                  <input type="text" id="new-phone" placeholder="Nhập số điện thoại" required>
+
+                  <label for="new-address">Địa chỉ:</label>
+                  <input type="text" id="new-address" placeholder="Nhập địa chỉ mới" required>
+
                   <button type="submit">Lưu</button>
                   <button type="button" onclick="closeModal()">Đóng</button>
                 </form>
               </div>
             </div>
+
+          </div>
           </div>
 
           <!-- Subtotal -->

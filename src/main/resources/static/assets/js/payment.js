@@ -78,7 +78,6 @@ function updateSubtotal() {
     const cartItems = document.querySelectorAll('.cart-item');
     const summary = document.getElementById("summary-summary")
     let subtotal = 0;
-
     cartItems.forEach(item => {
         // Lấy giá từ data-price
         const price = parseFloat(item.getAttribute('data-price'));
@@ -87,7 +86,7 @@ function updateSubtotal() {
         subtotal += price * quantity; // Tính tổng cho mỗi item
 
     });
-    summarynb = subtotal+ 30000;
+    summarynb = subtotal;
     // Cập nhật giá trị vào phần tử subtotal
     const subtotalElement = document.querySelector('#subtotal');
     const summaryElement = document.getElementById('summary')
@@ -96,7 +95,7 @@ function updateSubtotal() {
         const formattedSubtotal = subtotal.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
         subtotalElement.textContent = `${formattedSubtotal}₫`; // Hiển thị dạng X,XXX₫
         summaryElement.textContent = `${formattedSubtotal}₫`;
-        summary.textContent = `${summarynb.toLocaleString('vi-VN', { minimumFractionDigits: 0 })}₫`
+        summarydiv()
     }
 }
 
@@ -202,17 +201,34 @@ function resetVoucherValue(type) {
     }
     // Cập nhật lại tổng giá trị sau khi reset voucher
     const summary = document.getElementById('summary-summary');
-    const totalValue = summarynb - 30000 - (appliedVouchers.ship || 0) - (appliedVouchers.shop || 0);
-    summary.textContent = totalValue.toLocaleString('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-    });
+    const totalValue = summarynb - (appliedVouchers.ship || 0) - (appliedVouchers.shop || 0);
+    summarydiv();
 }
 
 const appliedVouchers = {
     ship: 0,
     shop: 0
 };
+function summarydiv(){
+    const summary = document.getElementById('summary-summary');
+    if(appliedVouchers.ship===0 && appliedVouchers.shop===0){
+        summary.textContent=( summarynb+30000).toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+    } else if(appliedVouchers.ship!==0 && appliedVouchers.shop!==0){
+        summary.textContent= (summarynb-appliedVouchers.ship-appliedVouchers.shop+30000).toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+    }
+    else  {
+        summary.textContent= (summarynb-appliedVouchers.ship-appliedVouchers.shop+30000).toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+    }
+}
 function updateVoucher(type, price) {
     const subtotalString = document.getElementById('subtotal').textContent;
     const summary = document.getElementById('summary-summary');
@@ -220,7 +236,6 @@ function updateVoucher(type, price) {
     const numericValue = parseFloat(subtotalString.replace(/[₫,\.]/g, '').replace('₫', ''));
     // Chuyển price thành số trước khi format
     const numericPrice = Number(price);
-
     const formattedSubtotal = numericPrice.toLocaleString('vi-VN', {
         style: 'currency',
         currency: 'VND'
@@ -230,10 +245,7 @@ function updateVoucher(type, price) {
         if (vouchershipElement) {
             appliedVouchers.ship=numericPrice;
             vouchershipElement.textContent = formattedSubtotal;
-            summary.textContent= (summarynb-30000-appliedVouchers.ship-appliedVouchers.shop).toLocaleString('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-            });
+            summarydiv();
         } else {
             console.error("Không tìm thấy #voucher-ship");
         }
@@ -243,20 +255,14 @@ function updateVoucher(type, price) {
             if (type==="FIXED"){
                 appliedVouchers.shop = numericPrice;
                 vouchershopElement.textContent = formattedSubtotal;
-                summary.textContent= (summarynb-30000-appliedVouchers.ship-appliedVouchers.shop).toLocaleString('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                });
+                summarydiv()
             }else {
-                appliedVouchers.shop =((summarynb-30000)*numericPrice/100);
+                appliedVouchers.shop =((summarynb)*numericPrice/100);
                 vouchershopElement.textContent = (summarynb - (summarynb-appliedVouchers.ship-appliedVouchers.shop)).toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 });
-                summary.textContent= (summarynb-30000-appliedVouchers.ship-appliedVouchers.shop).toLocaleString('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                });
+                summarydiv()
             }
         } else {
             console.error("Không tìm thấy #voucher-shop");
@@ -337,9 +343,36 @@ const customerAddress = document.querySelector(".customer-address");
 
 // Hàm mở modal
 function openModal() {
-    modal.style.display = "flex";  // Hiển thị modal
-    newAddressInput.value = customerAddress.textContent;  // Điền địa chỉ hiện tại vào modal
+    const modal = document.getElementById("addressModal");
+    modal.style.display = "flex";
+
+    // Lấy thông tin hiện tại để điền sẵn vào input
+    document.getElementById("new-name").value = document.getElementById("customer-name").textContent;
+    document.getElementById("new-phone").value = document.getElementById("customer-phone").textContent;
+    document.getElementById("new-address").value = document.getElementById("customer-address").textContent;
 }
+
+function closeModal() {
+    document.getElementById("addressModal").style.display = "none";
+}
+
+document.getElementById("addressForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    // Lấy dữ liệu từ input
+    const newName = document.getElementById("new-name").value;
+    const newPhone = document.getElementById("new-phone").value;
+    const newAddress = document.getElementById("new-address").value;
+
+    // Cập nhật thông tin hiển thị
+    document.getElementById("customer-name").textContent = newName;
+    document.getElementById("customer-phone").textContent = newPhone;
+    document.getElementById("customer-address").textContent = newAddress;
+
+    // Đóng modal
+    closeModal();
+});
+
 
 // Hàm đóng modal
 function closeModal() {
