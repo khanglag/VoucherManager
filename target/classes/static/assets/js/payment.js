@@ -105,49 +105,8 @@ function updateSubtotal() {
 // Danh sách voucher mẫu
 
 
-function openVoucherModal(type) {
-    const modal = document.getElementById("voucherModal");
-    const voucherList = document.getElementById("voucher-list");
 
-    // Hiển thị modal
-    modal.style.display = "flex";
 
-    // Gọi API lấy danh sách voucher
-    fetch(`http://localhost:8080/api/vouchers?type=${type}`)
-        .then(response => response.json())
-        .then(vouchers => {
-            if (vouchers.length === 0) {
-                voucherList.innerHTML = "<p>Không có voucher nào.</p>";
-                return;
-            }
-            // Cập nhật nội dung voucherList
-            voucherList.innerHTML = vouchers.map(voucher => `
-                <li>
-                    <div class="coupon-left">
-                        <span>${voucher.discountType === "FREESHIP" ? "FREE SHIP" : "GIẢM GIÁ"}</span>
-                        <small>${voucher.discountType === "FREESHIP" ? "Mã vận chuyển" : "Mã giảm giá"}</small>
-                    </div>
-                    <div class="coupon-right">
-                        <div class="info-voucher">
-                            <span class="voucher-id">${voucher.voucherCode}</span>
-                            <small class="title-voucher">${voucher.title}</small>
-                            <span class="voucher-date">${voucher.endDate}</span>
-                        </div>
-                        <div class="voucher-price">
-                            <small class="voucher-quantity">X${voucher.maxUsage - voucher.usageCount}</small>
-                            <label>
-                                <input type="checkbox" class="checkbox" onclick="applyVoucher('${voucher.voucherCode}', '${voucher.discountType}', '${voucher.discountValue}')">
-                            </label>
-                        </div>
-                    </div>
-                </li>
-            `).join(""); // Nối tất cả HTML thành một chuỗi
-        })
-        .catch(error => {
-            console.error("Lỗi khi lấy dữ liệu:", error);
-            voucherList.innerHTML = "<p>Lỗi khi tải danh sách.</p>";
-        });
-}
 
 // Hàm đóng modal
 function closeVoucherModal() {
@@ -159,7 +118,12 @@ let voucherCodelet=null;
 async function applyVoucher(voucherCode, type, price) {
     const currentCheckbox = document.querySelector(`input[onclick="applyVoucher('${voucherCode}', '${type}', '${price}')"]`);
     const isChecked = currentCheckbox.checked;
-
+    let style;
+    if(type === "FREESHIP")
+        style = "shipping"
+    else style = "shop-voucher"
+    console.log(type)
+    console.log(style)
     // Nếu checkbox được chọn, bỏ chọn tất cả checkbox khác
     if (isChecked) {
         document.querySelectorAll('.checkbox').forEach(checkbox => {
@@ -167,10 +131,84 @@ async function applyVoucher(voucherCode, type, price) {
                 checkbox.checked = false; // Bỏ chọn các checkbox khác
             }
         });
-        updateVoucher(type,price);
+        updateVoucher(type, price);
+        // Thay đổi nút "Chọn voucher" thành nút "X"
+        const voucherOption = document.querySelector(`#${style}VoucherOption`); // Sử dụng querySelector với id kiểu #shopVoucherOption hoặc #shippingVoucherOption
+        if (voucherOption) {
+            const button = voucherOption.querySelector("button");
+            if (button) {
+                button.innerHTML = "X";  // Đổi nội dung nút thành "X"
+                button.setAttribute("onclick", `cancelVoucher('${voucherCode}', '${style}')`);  // Cập nhật sự kiện onclick
+            } else {
+                console.error("Không tìm thấy nút button trong voucher option");
+            }
+        } else {
+            console.error(`Không tìm thấy phần tử với id ${style}VoucherOption`);
+        }
     }
     voucherCodelet = voucherCode;
 }
+
+function cancelVoucher(voucherCode, type) {
+    // Khôi phục lại nút "Chọn voucher"
+    const voucherOption = document.querySelector(`#${type}VoucherOption`);
+    if (voucherOption) {
+        const button = voucherOption.querySelector("button");
+        if (button) {
+            button.innerHTML = "Chọn voucher";  // Đổi nội dung nút về "Chọn voucher"
+            button.setAttribute("onclick", `openVoucherModal('${type}')`);  // Khôi phục sự kiện onclick
+        } else {
+            console.error("Không tìm thấy nút button trong voucher option");
+        }
+    } else {
+        console.error(`Không tìm thấy phần tử với id ${type} VoucherOption`);
+    }
+    fetch('/api/payment/cancelvoucher', {
+        method: 'GET', // Hoặc 'POST' nếu yêu cầu sử dụng phương thức POST
+        headers: {
+            'Content-Type': 'application/json' // Cài đặt header (nếu cần thiết)
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Không thể hủy voucher');
+            }
+            console.log('Voucher đã được hủy thành công');
+        })
+        .catch(error => {
+            console.error('Lỗi khi hủy voucher:', error);
+        });
+    // Bỏ chọn tất cả các checkbox
+    const checkboxes = document.querySelectorAll('.checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // Gọi hàm hủy voucher (nếu có)
+    // Có thể thêm logic hủy voucher tại đây nếu cần
+    resetVoucherValue(type);  // Giả sử gọi updateVoucher để cập nhật khi hủy voucher
+}
+function resetVoucherValue(type) {
+    const vouchershipElement = document.getElementById('voucher-ship');
+    const vouchershopElement = document.getElementById('voucher-shop');
+    console.log(type)
+    // Kiểm tra kiểu voucher và gán giá trị 0 cho phần tử tương ứng
+    if (type === "shipping") {
+        vouchershipElement.textContent = "0₫";
+        appliedVouchers.ship = 0;
+    } else  {
+        vouchershopElement.textContent = "0₫";
+        appliedVouchers.shop = 0;
+    }
+    // Cập nhật lại tổng giá trị sau khi reset voucher
+    const summary = document.getElementById('summary-summary');
+    const totalValue = summarynb - 30000 - (appliedVouchers.ship || 0) - (appliedVouchers.shop || 0);
+    summary.textContent = totalValue.toLocaleString('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    });
+}
+
 const appliedVouchers = {
     ship: 0,
     shop: 0
@@ -187,7 +225,6 @@ function updateVoucher(type, price) {
         style: 'currency',
         currency: 'VND'
     });
-
     if (type === "FREESHIP") {
         const vouchershipElement = document.getElementById('voucher-ship');
         if (vouchershipElement) {
@@ -290,3 +327,150 @@ window.onload = restoreVoucherSelection;
 
 // Cập nhật tổng khi trang tải
 document.addEventListener('DOMContentLoaded', updateSubtotal);
+
+// Lấy các phần tử modal và nút thay đổi địa chỉ
+const changeAddressButton = document.querySelector(".change-address");
+const modal = document.getElementById("addressModal");
+const addressForm = document.getElementById("addressForm");
+const newAddressInput = document.getElementById("new-address");
+const customerAddress = document.querySelector(".customer-address");
+
+// Hàm mở modal
+function openModal() {
+    modal.style.display = "flex";  // Hiển thị modal
+    newAddressInput.value = customerAddress.textContent;  // Điền địa chỉ hiện tại vào modal
+}
+
+// Hàm đóng modal
+function closeModal() {
+    modal.style.display = "none";  // Ẩn modal
+}
+
+// Hàm xử lý form khi người dùng thay đổi địa chỉ
+addressForm.addEventListener("submit", function(event) {
+    event.preventDefault();  // Ngừng gửi form
+
+    const newAddress = newAddressInput.value.trim();
+    if (newAddress) {
+        // Cập nhật địa chỉ trên giao diện
+        customerAddress.textContent = newAddress;
+        closeModal();  // Đóng modal sau khi lưu
+        console.log("Địa chỉ đã được cập nhật:", newAddress);  // In ra địa chỉ mới (thực hiện hành động khác nếu cần)
+    }
+});
+
+// Lắng nghe sự kiện click vào nút thay đổi địa chỉ
+changeAddressButton.addEventListener("click", openModal);
+// Hàm tìm kiếm voucher theo mã voucher
+// Hàm tìm kiếm voucher theo mã voucher
+function searchVoucher() {
+    const searchQuery = document.getElementById("voucherSearch").value.trim(); // Lấy giá trị từ input
+    const voucherList = document.getElementById("voucher-list");
+
+    // Ẩn danh sách voucher trước khi tìm kiếm
+    voucherList.style.display = "none";
+
+    if (searchQuery === "") {
+        alert("Vui lòng nhập mã voucher!");
+        return;
+    }
+
+    // Gọi API để tìm kiếm voucher theo mã
+    fetch(`http://localhost:8080/api/vouchers/search?voucherCode=${searchQuery}`)
+        .then(response => response.json())
+        .then(vouchers => {
+            // Kiểm tra nếu không có voucher nào
+            if (vouchers.length === 0) {
+                voucherList.innerHTML = "<p>Không có voucher nào với mã bạn tìm kiếm.</p>";
+            } else {
+                // Cập nhật nội dung voucherList
+                voucherList.innerHTML = vouchers.map(voucher => `
+                    <li>
+                        <div class="coupon-left">
+                            <span>${voucher.discountType === "FREESHIP" ? "FREE SHIP" : "GIẢM GIÁ"}</span>
+                            <small>${voucher.discountType === "FREESHIP" ? "Mã vận chuyển" : "Mã giảm giá"}</small>
+                        </div>
+                        <div class="coupon-right">
+                            <div class="info-voucher">
+                                <span class="voucher-id">${voucher.voucherCode}</span>
+                                <small class="title-voucher">${voucher.title}</small>
+                                <span class="voucher-date">${voucher.endDate}</span>
+                            </div>
+                            <div class="voucher-price">
+                                <small class="voucher-quantity">X${voucher.maxUsage - voucher.usageCount}</small>
+                                <label>
+                                    <input type="checkbox" class="checkbox" onclick="applyVoucher('${voucher.voucherCode}', '${voucher.discountType}', '${voucher.discountValue}')">
+                                </label>
+                            </div>
+                        </div>
+                    </li>
+                `).join(""); // Nối tất cả HTML thành một chuỗi
+            }
+
+            // Hiển thị lại danh sách voucher
+            voucherList.style.display = "block";
+
+            // Chọn checkbox đầu tiên nếu có voucher
+            const firstCheckbox = voucherList.querySelector("input[type='checkbox']");
+            if (firstCheckbox) {
+                firstCheckbox.checked = true;
+                const firstVoucher = vouchers[0]; // Lấy thông tin voucher đầu tiên
+                applyVoucher(firstVoucher.voucherCode, firstVoucher.discountType, firstVoucher.discountValue);
+            }
+        })
+        .catch(error => {
+            console.error("Lỗi khi lấy dữ liệu:", error);
+            voucherList.innerHTML = "<p>Lỗi khi tải danh sách.</p>";
+            voucherList.style.display = "block"; // Hiển thị lại nếu có lỗi
+        });
+}
+function openVoucherModal(type) {
+    const modal = document.getElementById("voucherModal");
+    const voucherList = document.getElementById("voucher-list");
+    const voucherSearchContainer = document.getElementById("voucher-search");
+    // Hiển thị modal
+    modal.style.display = "flex";
+    voucherSearchContainer.style.display = "none";
+    // Gọi API lấy danh sách voucher
+    fetch(`http://localhost:8080/api/vouchers?type=${type}`)
+        .then(response => response.json())
+        .then(vouchers => {
+            if (vouchers.length === 0) {
+                voucherList.innerHTML = "<p>Không có voucher nào.</p>";
+                return;
+            }
+            // Cập nhật nội dung voucherList
+            voucherList.innerHTML = vouchers.map(voucher => `
+                <li>
+                    <div class="coupon-left">
+                        <span>${voucher.discountType === "FREESHIP" ? "FREE SHIP" : "GIẢM GIÁ"}</span>
+                        <small>${voucher.discountType === "FREESHIP" ? "Mã vận chuyển" : "Mã giảm giá"}</small>
+                    </div>
+                    <div class="coupon-right">
+                        <div class="info-voucher">
+                            <span class="voucher-id">${voucher.voucherCode}</span>
+                            <small class="title-voucher">${voucher.title}</small>
+                            <span class="voucher-date">${voucher.endDate}</span>
+                        </div>
+                        <div class="voucher-price">
+                            <small class="voucher-quantity">X${voucher.maxUsage - voucher.usageCount}</small>
+                            <label>
+                                <input type="checkbox" class="checkbox" onclick="applyVoucher('${voucher.voucherCode}', '${voucher.discountType}', '${voucher.discountValue}')">
+                            </label>
+                        </div>
+                    </div>
+                </li>
+            `).join(""); // Nối tất cả HTML thành một chuỗi
+
+            const firstCheckbox = voucherList.querySelector("input[type='checkbox']");
+            if (firstCheckbox) {
+                firstCheckbox.checked = true;
+                const firstVoucher = vouchers[0]; // Lấy thông tin voucher đầu tiên
+                applyVoucher(firstVoucher.voucherCode, firstVoucher.discountType, firstVoucher.discountValue);
+            }
+        })
+        .catch(error => {
+            console.error("Lỗi khi lấy dữ liệu:", error);
+            voucherList.innerHTML = "<p>Lỗi khi tải danh sách.</p>";
+        });
+}

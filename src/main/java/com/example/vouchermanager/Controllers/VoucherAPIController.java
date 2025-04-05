@@ -43,4 +43,20 @@ public class VoucherAPIController {
         };
         return vouchers;
     }
+    @GetMapping("/search")
+    public List<VoucherDTO> searchVouchersByCode(@RequestParam String voucherCode, HttpSession session) {
+        List<CartDTO> cartDTOS =(List<CartDTO>) session.getAttribute("cartpayment");
+        List<Integer> list = new ArrayList<>();
+        BigDecimal total = BigDecimal.valueOf(0.0);
+        for (CartDTO cartDTO : cartDTOS) {
+            list.add(cartDTO.getId());
+            total=total.add(cartDTO.getProduct().getPrice().multiply(BigDecimal.valueOf(cartDTO.getQuantity())))  ;
+        }
+        List<VoucherDTO> vouchers = new ArrayList<>();
+        for (Voucher voucher: voucherService.getVoucherShopByVoucherCode(voucherCode,list,total))
+                vouchers.add( VoucherDTO.fromEntity(voucher));
+        for (Voucher voucher: voucherService.getVoucherShipByVoucherCode(voucherCode,list,total))
+            vouchers.add( VoucherDTO.fromEntity(voucher));
+        return vouchers;
+    }
 }

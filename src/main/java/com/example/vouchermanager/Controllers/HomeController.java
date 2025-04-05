@@ -1,5 +1,6 @@
 package com.example.vouchermanager.Controllers;
 
+import com.example.vouchermanager.Model.DTO.ApplyVoucher;
 import com.example.vouchermanager.Model.DTO.CartDTO;
 import com.example.vouchermanager.Model.Entity.Product;
 import com.example.vouchermanager.Service.UserService;
@@ -136,9 +137,11 @@ public class HomeController {
                 carts.add(cartDTO); // Add to list
             }
         }
-        List<String> vouchers = (List<String>) session.getAttribute("voucher");
+        List<ApplyVoucher> vouchers = (List<ApplyVoucher>) session.getAttribute("voucher");
         if (vouchers == null) {
             vouchers = new ArrayList<>(); // Khởi tạo danh sách rỗng
+            vouchers.add( new ApplyVoucher(null, "ship"));
+            vouchers.add( new ApplyVoucher(null, "shop"));
             session.setAttribute("voucher", vouchers);
         }
         vouchers = new ArrayList<>(); // Khởi tạo danh sách rỗng

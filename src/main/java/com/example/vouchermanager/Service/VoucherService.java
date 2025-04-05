@@ -57,4 +57,9 @@ public interface VoucherService {
 
     List<Voucher> getSortedFreeShipVouchers(List<Integer> productIds, BigDecimal orderTotal);
 
+
+
+    List<Voucher> getVoucherShopByVoucherCode(String voucherCode, List<Integer> productIds, BigDecimal orderTotal);
+
+    List<Voucher>getVoucherShipByVoucherCode(String voucherCode, List<Integer> productIds, BigDecimal orderTotal);
 }

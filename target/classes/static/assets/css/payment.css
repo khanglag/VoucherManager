@@ -501,3 +501,57 @@ label {
         margin-top: 10px;
     }
 }
+
+/* Modal Đổi Địa Chỉ */
+.address-modal {
+    display: none; /* Ẩn modal mặc định */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Nền tối cho modal */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Đảm bảo modal hiển thị trên cùng */
+}
+
+/* Nội dung của modal đổi địa chỉ */
+.address-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Style cho form nhập địa chỉ */
+#addressForm input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Nút trong modal */
+#addressForm button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Nút đóng */
+button[type="button"] {
+    background-color: #f44336;
+}
+
+/* Hiệu ứng khi hover vào nút */
+button:hover {
+    opacity: 0.8;
+}

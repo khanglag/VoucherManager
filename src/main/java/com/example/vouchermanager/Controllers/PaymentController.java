@@ -1,9 +1,13 @@
 package com.example.vouchermanager.Controllers;
 
+import com.example.vouchermanager.Model.DTO.ApplyVoucher;
 import com.example.vouchermanager.Model.DTO.CartDTO;
 import com.example.vouchermanager.Model.DTO.UpdateQuantityRequestDTO;
 import com.example.vouchermanager.Model.Entity.Product;
+import com.example.vouchermanager.Model.Enum.DiscountType;
+import com.example.vouchermanager.Service.VoucherService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +21,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Controller
 @RequestMapping("/api/payment")
 public class PaymentController {
+    @Autowired
+    VoucherService voucherService;
     @PostMapping("/update")
     public ResponseEntity<?> updateCartItem(@RequestBody UpdateQuantityRequestDTO request,
                                             HttpSession session) {
@@ -88,16 +94,31 @@ public class PaymentController {
     public ResponseEntity<String> applyVoucher(@RequestBody Map<String, String> payload, HttpSession session) {
         try {
             String voucherCode = payload.get("voucherCode"); // Lấy voucherCode từ body
-            List<String> vouchers = (List<String>) session.getAttribute("voucher");
-            vouchers.add(voucherCode);
-            if (vouchers.size() > 2) {
-                vouchers.remove(0); // Xóa phần tử đầu tiên nếu danh sách >= 2
-            }
+            List<ApplyVoucher> vouchers = (List<ApplyVoucher>) session.getAttribute("voucher");
+            if(voucherService.getById(voucherCode).get().getDiscountType()== DiscountType.FREESHIP){
+                for (ApplyVoucher applyVoucher : vouchers) {
+                    if(applyVoucher.getVoucherstyle()=="ship")
+                        applyVoucher.setVoucherCode(voucherCode);
+                    else  applyVoucher.setVoucherCode(voucherCode);
+                }
+            };
             session.setAttribute("voucher", vouchers);
-            System.out.println(voucherCode+"HEHEHHEHEHEHHE DAYA NE");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error applying voucher: " + e.getMessage());
         }
         return null;
+    }
+    @GetMapping("/cancelvoucher")
+    public ResponseEntity<String> cancelVoucher(HttpSession session) {
+        try {
+            List<ApplyVoucher> applyVouchers =(List<ApplyVoucher>) session.getAttribute("voucher");
+
+            System.out.println("Voucher đã được hủy thành công");
+
+            return ResponseEntity.ok("Voucher đã được hủy thành công");
+        } catch (Exception e) {
+            // Nếu có lỗi, trả về mã lỗi HTTP 500 (Internal Server Error)
+            return ResponseEntity.status(500).body("Đã xảy ra lỗi khi hủy voucher");
+        }
     }
 }

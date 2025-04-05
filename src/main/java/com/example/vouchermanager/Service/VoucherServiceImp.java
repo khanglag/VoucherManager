@@ -642,5 +642,24 @@ public class VoucherServiceImp implements VoucherService {
         }
         return BigDecimal.ZERO; // Nếu không phải loại giảm giá hợp lệ, trả về 0
     }
-
+    @Override
+    public List<Voucher> getVoucherShopByVoucherCode(String voucherCode, List<Integer> productIds, BigDecimal orderTotal){
+        List<Voucher> temp = new ArrayList<>();
+        for(Voucher voucher:  getSortedDiscountVouchers(productIds, orderTotal)){
+            if(voucher.getVoucherCode().equals(voucherCode)){
+                temp.add(voucher);
+            }
+        }
+        return temp;
+    }
+    @Override
+    public List<Voucher>getVoucherShipByVoucherCode(String voucherCode, List<Integer> productIds, BigDecimal orderTotal){
+        List<Voucher> temp = new ArrayList<>();
+        for(Voucher voucher:  getSortedFreeShipVouchers(productIds, orderTotal)){
+            if(voucher.getVoucherCode().equals(voucherCode) ){
+                temp.add(voucher);
+            }
+        }
+        return temp;
+    }
 }

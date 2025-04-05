@@ -1,5 +1,6 @@
 package com.example.vouchermanager.Controllers;
 
+import com.example.vouchermanager.Model.DTO.ApplyVoucher;
 import com.example.vouchermanager.Model.DTO.CartDTO;
 import com.example.vouchermanager.Model.DTO.PurchaseRequestDTO;
 import com.example.vouchermanager.Model.Entity.Orderdetail;
@@ -48,11 +49,16 @@ public class PurchaseController {
         }
 
         // Lấy voucher từ session (giả sử voucher là danh sách String mã voucher)
-        List<String> voucherCodes = (List<String>) session.getAttribute("voucher");
-        if (voucherCodes == null) {
-            voucherCodes = new ArrayList<>(); // Nếu không có voucher thì khởi tạo danh sách rỗng
+        List<ApplyVoucher> voucherCode = (List<ApplyVoucher>) session.getAttribute("voucher");
+        if (voucherCode == null) {
+            voucherCode = new ArrayList<>(); // Nếu không có voucher thì khởi tạo danh sách rỗng
         }
+        List<String> voucherCodes = new ArrayList<>();
+        for (ApplyVoucher voucher : voucherCode) {
+            if (voucher.getVoucherCode()!=null)
+                voucherCodes.add(voucher.getVoucherCode());
 
+        }
         List<Orderdetail> orderdetails = new ArrayList<>();
 
         for (CartDTO cartDTO : cartDTOS) {
