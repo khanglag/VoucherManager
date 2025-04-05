@@ -58,6 +58,7 @@ public class OrderdetailServiceImp implements OrderdetailService {
                 )).orElse(null);
     }
 
+<<<<<<< HEAD
 //    @Override
 //    public List<OrderDetailDTO> findByOrderId(int id) {
 //        return orderdetailRepository.findByOrderID_Id(id).stream()
@@ -71,6 +72,21 @@ public class OrderdetailServiceImp implements OrderdetailService {
 //                ))
 //                .collect(Collectors.toList());
 //    }
+=======
+    @Override
+    public List<OrderDetailDTO> findByOrderId(int id) {
+        return orderdetailRepository.findByOrderID_Id(id).stream()
+                .map(orderdetail -> new OrderDetailDTO(
+                        orderdetail.getId(),
+                        orderdetail.getOrderID().getId(),
+                        orderdetail.getProductID().getId(),
+                        orderdetail.getQuantity(),
+                        orderdetail.getUnitPrice(),
+                        orderdetail.getTotalPrice()
+                ))
+                .collect(Collectors.toList());
+    }
+>>>>>>> main
 
     @Override
     public Page<OrderDetailDTO> findByOrderId(int id, Pageable pageable) {

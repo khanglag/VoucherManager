@@ -44,15 +44,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+<<<<<<< HEAD
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth", "/", "/index", "/static/**", "/assets/**", "/templates/**",
                                 "/user/**", "/vouchers", "/store", "/brands")
+=======
+                // .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**","/store/**","/individual/**","/individual/personal_infomation/**","/individual/vouchersmanager/**","/admin/**","/api/payment/**","/api/vouchers/**","/api/purchase/create"))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth", "/", "/index", "/static/**", "/assets/**", "/templates/**",
+                                "/user/**", "/vouchers", "/store", "/brands","/contact", "/register", "/auth/register",
+                                "/order-details/**","reset-password","confirm-OTP","verify-OTP", "resend-OTP")
+>>>>>>> main
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/auth") // Chỉ định trang đăng nhập
                         .permitAll()
                         .successHandler(customAuthenticationSuccessHandler)
+<<<<<<< HEAD
 
                         .failureUrl("/auth?error")
 
@@ -67,6 +77,19 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/auth")
+=======
+                        .failureUrl("/auth?error")
+                        .failureHandler(authenticationFailureHandler())
+                        .loginProcessingUrl("/j_spring_security_check"))
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/auth") // Trang đăng nhập tùy chỉnh
+                        .successHandler(customOAuth2SuccessHandler)
+                        .failureUrl("/auth?error") // Trang đích khi đăng nhập thất bại
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+>>>>>>> main
                         .permitAll()
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)

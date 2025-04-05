@@ -18,6 +18,19 @@ public class VoucherapplicableproductId implements java.io.Serializable {
 
     @Column(name = "ProductID", nullable = false)
     private Integer productID;
+<<<<<<< HEAD
+=======
+
+    public VoucherapplicableproductId(String voucherCode, Long productId) {
+        this.voucherCode = voucherCode;
+        this.productID = Math.toIntExact(productId);
+    }
+
+    public VoucherapplicableproductId() {
+
+    }
+
+>>>>>>> main
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

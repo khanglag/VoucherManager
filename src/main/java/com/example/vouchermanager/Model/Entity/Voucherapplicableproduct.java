@@ -26,4 +26,16 @@ public class Voucherapplicableproduct {
     @JoinColumn(name = "ProductID", nullable = false)
     private Product productID;
 
+<<<<<<< HEAD
+=======
+    public Voucherapplicableproduct(VoucherapplicableproductId id, Voucher voucher, Product product) {
+        this.id = id;
+        this.voucherCode = voucher;
+        this.productID = product;
+    }
+
+    public Voucherapplicableproduct() {
+
+    }
+>>>>>>> main
 }

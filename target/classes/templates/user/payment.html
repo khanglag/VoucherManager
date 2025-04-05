@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Hệ thống quản lý voucher</title>
+  <!-- Bootstrap CSS -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet"
+  />
+  <!-- Font Awesome -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <!-- css -->
+  <link rel="stylesheet" th:href="@{/assets/css/index.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/payment.css}">
+  <link rel="stylesheet" th:href="@{/assets/css/global.css}" />
+</head>
+<body>
+<nav th:replace="index :: Navbar"></nav>
+<div id="canvas-container"></div>
+<div class="parent container mt-3">
+  <div class="div1">
+    <div class="cart-container">
+      <h4>Giỏ hàng của bạn</h4>
+      <ul class="cart-list">
+        <th:block th:if="${carts != null and not carts.isEmpty()}">
+          <li th:each="cartItem : ${carts}" class="cart-item"
+              th:data-id="${cartItem.id}"
+              th:data-price="${cartItem.product.price}">
+
+            <!-- Ảnh sản phẩm -->
+            <img th:src="${cartItem.product.imageUrl}" alt="Ảnh sản phẩm" class="item-img">
+
+            <!-- Thông tin sản phẩm -->
+            <div class="cart-item-info">
+              <h5 th:text="${cartItem.product.productName}"></h5>
+              <!-- Nút tăng/giảm số lượng -->
+              <div class="quantity-controls">
+                <button class="quantity-btn" th:onclick="'updateQuantity(\'' + ${cartItem.id} + '\', -1)'">−</button>
+                <span class="item-quantity" th:data-item-id="${cartItem.id}" th:text="${cartItem.quantity ?: 1}">1</span>
+                <button class="quantity-btn" th:onclick="'updateQuantity(\'' + ${cartItem.id} + '\', 1)'">+</button>
+              </div>
+            </div>
+            <!-- Tổng số tiền cho món hàng -->
+            <div class="price-box">
+              <div class="price">
+                <span>Giá:</span>
+                <span th:text="${#numbers.formatDecimal(cartItem.product.price, 0, 'COMMA', 0, 'POINT')} + '₫'"
+                      style="color: #4a5568; font-size: 14px;"></span>
+              </div>
+              <div class="price">
+                <span>Tổng cộng:</span>
+                <span class="item-total"
+                      th:text="${#numbers.formatDecimal(cartItem.product.price * (cartItem.quantity ?: 1), 0, 'COMMA', 0, 'POINT')} + '₫'"
+                      style="color: #4a5568; font-size: 14px;"></span>
+              </div>
+            </div>
+            <!-- Nút xóa -->
+            <button class="remove-btn" th:onclick="'removeItem(\'' + ${cartItem.id} + '\')'">
+              <i class="fa fa-trash"></i>
+            </button>
+          </li>
+        </th:block>
+
+        <!-- Nếu giỏ hàng trống -->
+        <th:block th:if="${carts == null or carts.isEmpty()}">
+          <p class="empty-cart-msg">Giỏ hàng của bạn đang trống!</p>
+        </th:block>
+      </ul>
+    </div>
+  </div>
+  <div class="div2">
+    <div class="order-container">
+      <div class="order-summary">
+        <h4>Tóm tắt đơn hàng</h4>
+        <div class="order-total">
+          <div class="shipping-info">
+            <div class="shipping-header">
+              <i class="fa-solid fa-location-dot"></i>
+              <h5>Địa chỉ nhận hàng</h5>
+            </div>
+
+            <div class="shipping-details">
+              <span class="customer-name">Lê Duy Khang</span>
+              <span class="customer-phone">(+84) 358808913</span>
+              <p class="customer-address">340 Đường Nguyễn Trãi, Phường 7, Quận 5...</p>
+            </div>
+            <button class="change-address">Thay đổi</button>
+          </div>
+
+          <!-- Subtotal -->
+          <div class="subtotal-row">
+            <span>Tổng cộng :</span>
+            <span class="bold" id="subtotal">$15.00</span>
+          </div>
+          <!-- Shop Voucher Section -->
+          <div class="voucher-row">
+            <div class="voucher-option">
+              <span><i class="fa-solid fa-ticket"></i> Shop Voucher</span>
+              <button onclick="openVoucherModal('shop-voucher')">Chọn voucher</button>
+            </div>
+            <div class="voucher-option">
+              <span><i class="fas fa-motorcycle"></i> Shop Voucher</span>
+              <button onclick="openVoucherModal('shipping')">Chọn voucher</button>
+            </div>
+            <div class="voucher-option">
+              <input type="text" class="voucher-input" placeholder="Nhập mã voucher">
+              <button class="voucher-btn">Áp dụng</button>
+            </div>
+          </div>
+          <div class="total-summary">
+            <div class="item">
+              <span class="label">Tổng tiền hàng:</span>
+              <span id ="summary" class="value">₫254.000</span>
+            </div>
+            <div class="item">
+              <span class="label">Tổng tiền phí vận chuyển:</span>
+              <span class="value">₫30.000</span>
+            </div>
+
+            <div class="item">
+              <span class="label">Giảm giá sản phẩm:</span>
+              <span id ="voucher-shop" class="value">0₫</span>
+            </div>
+            <div class="item">
+              <span class="label">Giảm giá ship:</span>
+              <span id ="voucher-ship" class="value">0₫</span>
+            </div>
+
+            <div class="item">
+              <span class="total">Tổng thanh toán:</span>
+              <span  id="summary-summary" class="value">₫286.700</span>
+            </div>
+          </div>
+        </div>
+        <!-- Checkout Button -->
+        <button class="checkout-btn" onclick="createPurchaseRequest()">Mua</button>
+      </div>
+    </div>
+  </div>
+  <div id="voucherModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>CHỌN VOUCHER</span>
+        <span class="close" onclick="closeVoucherModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="search-container">
+          <input type="text" placeholder=" Mã Voucher" />
+          <button>Áp dụng</button>
+        </div>
+        <span>Danh sách voucher</span>
+      <div class="voucher-result">
+        <ul id="voucher-list">
+        </ul>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeVoucherModal()">Trở lại</button>
+        <button id="btn-ok" class="btn-ok" onclick="submitVoucher()">OK</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer th:replace="index :: Footer"></footer>
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script th:src="@{/assets/js/payment.js}"></script>
+<script th:src="@{/assets/js/store.js}"></script>
+<script th:src="@{/assets/js/helpers.js}"></script>
+
+</body>
+</html>

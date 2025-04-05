@@ -37,8 +37,12 @@ public class User {
     private String phoneNumber;
 
     @ManyToOne(fetch = FetchType.EAGER)
+<<<<<<< HEAD
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "RoleID")
+=======
+    @JoinColumn(name = "RoleID", referencedColumnName = "RoleID")
+>>>>>>> main
     private Role roleID;
 
     @ColumnDefault("1")
@@ -59,4 +63,8 @@ public class User {
                 ", status=" + status +
                 '}';
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 }

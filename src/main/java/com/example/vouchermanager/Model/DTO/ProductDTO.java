@@ -13,6 +13,10 @@ public class ProductDTO {
     private int productId;
     private String productName;
     private BigDecimal price;
+<<<<<<< HEAD
+=======
+    private String imageUrl;
+>>>>>>> main
     private boolean status;
 
     @Override
@@ -21,6 +25,10 @@ public class ProductDTO {
                 "productId=" + productId +
                 ", productName='" + productName + '\'' +
                 ", price=" + price +
+<<<<<<< HEAD
+=======
+                ", imageUrl=" + imageUrl +
+>>>>>>> main
                 ", status=" + status +
                 '}';
     }

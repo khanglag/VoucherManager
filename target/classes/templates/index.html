@@ -18,15 +18,25 @@
     />
     <!-- css -->
     <link rel="stylesheet" th:href="@{/assets/css/index.css}" />
+<<<<<<< HEAD
+=======
+    <link rel="stylesheet" th:href="@{/assets/css/global.css}" />
+>>>>>>> main
 </head>
 <body>
 <!-- Three.js Canvas Container -->
 <div id="canvas-container"></div>
 
 <!-- Navbar -->
+<<<<<<< HEAD
 <nav th:fragment="Navbar" class="navbar navbar-expand-lg navbar-light fixed-top">
     <div class="container">
         <a class="navbar-brand" th:href="@{/}"
+=======
+<nav th:fragment="Navbar" class="navbar navbar-expand-lg navbar-light ">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/index}"
+>>>>>>> main
         ><img th:src="@{/assets/images/logo2.png}" alt="lottemart"  style="width: 100px;"/></a
         >
         <button
@@ -43,7 +53,11 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
+<<<<<<< HEAD
                     <a class="nav-link" th:href="@{/}">Trang chủ</a>
+=======
+                    <a class="nav-link" th:href="@{/index}">Trang chủ</a>
+>>>>>>> main
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/brands}">Đối tác thương hiệu</a>
@@ -55,7 +69,11 @@
                     <a class="nav-link"  th:href="@{/store}">Mua sắm</a>
                 </li>
                 <li class="nav-item">
+<<<<<<< HEAD
                     <a class="nav-link" href="#contact">Liên hệ</a>
+=======
+                    <a class="nav-link" th:href="@{/contact}">Liên hệ</a>
+>>>>>>> main
                 </li>
 
                 <li class="nav-item ms-lg-3">
@@ -72,8 +90,16 @@
                                     </span>
                                 </button>
                                 <div class="dropdown-menu">
+<<<<<<< HEAD
                                     <a href="#" class="dropdown-item">Hồ sơ cá nhân</a>
                                     <a  href="#"  class="dropdown-item" onclick="document.getElementById('logout-form').submit(); return false;">Đăng xuất</a>
+=======
+                                    <a th:href="@{/individual}" class="dropdown-item">Hồ sơ cá nhân</a>
+<!--                                    <a  href="#"  class="dropdown-item" onclick="document.getElementById('logout-form').submit(); return false;">Đăng xuất</a>-->
+                                    <a href="#" class="dropdown-item" onclick="logout()">Đăng xuất</a>
+
+
+>>>>>>> main
                                 </div>
                                 <form id="logout-form" th:action="@{/logout}" method="POST" style="display: none;">
                                     <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
@@ -82,11 +108,77 @@
                         </div>
                     </div>
                 </li>
+<<<<<<< HEAD
+=======
+                <li class="nav-item">
+                    <div class="cart-icon" id="cartIcon">
+                        <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                        >
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path
+                                    d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+                            ></path>
+                        </svg>
+                        <span class="cart-count" id="cartCount" >0</span>
+                    </div>
+                </li>
+>>>>>>> main
             </ul>
         </div>
     </div>
 </nav>
 
+<<<<<<< HEAD
+=======
+<!--Cart-->
+<div class="overlay" id="overlay"></div>
+<div class="cart-modal" id="cartModal">
+    <div class="cart-header">
+        <h2>Giỏ Hàng</h2>
+        <button class="close-cart" id="closeCart">&times;</button>
+    </div>
+
+    <div class="cart-items" id="cartItems">
+        <th:block th:if="${cart != null and not cart.isEmpty()}">
+            <div th:each="producta : ${cart}" class="cart-item"
+                 th:attr="data-price=${producta.price}, data-quantity=1">
+                <img th:src="${producta.imageUrl}" alt="Ảnh sản phẩm" class="cart-item-img">
+                <div class="cart-item-info">
+                    <h4 th:text="${producta.productName}"></h4>
+                    <p>
+        <span th:text="${#numbers.formatDecimal(producta.price, 0, 'COMMA', 0, 'POINT')} + '₫'"
+              style="color: #e74c3c; font-weight: bold">
+        </span>
+                    </p>
+                </div>
+            </div>
+        </th:block>
+        <th:block th:if="${cart == null or cart.isEmpty()}">
+            <p class="empty-cart-msg">Giỏ hàng của bạn đang trống!</p>
+        </th:block>
+    </div>
+
+    <div class="cart-total">
+        <div class="total-price">
+            <span>Tổng cộng:</span>
+            <span id="totalPrice">0₫</span>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn">
+            <a class="nav-link" th:href="@{/payment}">Thanh toán</a>
+        </button>
+    </div>
+</div>
+>>>>>>> main
 <!-- Hero Section -->
 <section id="home" class="hero">
     <div class="container">
@@ -201,8 +293,12 @@
         <div class="voucher-list">
             <div class="voucher-card">
             <span class="voucher-status-badge voucher-status-active"
+<<<<<<< HEAD
             >Đang hoạt động</span
             >
+=======
+            >Đang hoạt động</span>
+>>>>>>> main
                 <div class="voucher-title">Ưu đãi khách hàng mới</div>
                 <div class="voucher-discount">Giảm 20%</div>
                 <div class="voucher-code-container">
@@ -486,6 +582,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <!-- Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<<<<<<< HEAD
 <script th:src="@{/assets/js/index.js}"></script>
+=======
+
+<script th:src="@{/assets/js/index.js}"></script>
+<script th:src="@{/assets/js/helpers.js}"></script>
+>>>>>>> main
 </body>
 </html>

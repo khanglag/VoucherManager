@@ -19,6 +19,14 @@ import java.util.List;
 public class OrderTest {
     @Autowired
     OrderServiceImp orderService;
+    @Autowired
+    private OrderServiceImp orderServiceImp;
+
+//    @Test
+//    public void test() {
+//        List<OrderDTO> orders = orderService.findAll();
+//        orders.forEach(order -> System.out.println(order));
+//    }
 
 //    @Test
 //    public void test() {
@@ -73,11 +81,24 @@ public class OrderTest {
 
     @Test
     public void testUpdateOrder(){
+<<<<<<< HEAD
         Order order = new Order();
         order.setOrderDate(Instant.now());
         order.setOrderStatus(OrderStatus.CANCELLED);
         order.setFinalAmount(new BigDecimal(100));
 
         Order order1 = orderService.updateOrder(9,order);
+=======
+//        Order order = new Order();
+//        order.setOrderDate(Instant.now());
+//        order.setOrderStatus(OrderStatus.CANCELLED);
+//        order.setFinalAmount(new BigDecimal(100));
+//
+//        Order order1 = orderService.updateOrder(9,order);
+//        System.out.println("------------------");
+//        System.out.println(orderServiceImp.getTotalDiscountAmount());
+
+
+>>>>>>> main
     }
 }

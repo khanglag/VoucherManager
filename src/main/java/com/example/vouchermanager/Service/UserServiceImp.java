@@ -28,6 +28,12 @@ public class UserServiceImp implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+<<<<<<< HEAD
+=======
+    @Autowired
+    private RoleService roleService;
+
+>>>>>>> main
 //    @Override
 //    public List<UserDTO> findAll() {
 //        return userRepository.findAll().stream()
@@ -43,10 +49,18 @@ public class UserServiceImp implements UserService {
 //                ))
 //                .collect(Collectors.toList());
 //    }
+<<<<<<< HEAD
 //    @Override
 //    public List<User> findAll(){
 //        return userRepository.findAll();
 //    }
+=======
+
+    @Override
+    public List<User> findAll(){
+        return userRepository.findAll();
+    }
+>>>>>>> main
     @Override
     public Page<UserDTO> findAll(Pageable pageable){
         return userRepository.findAll(pageable)
@@ -118,6 +132,15 @@ public class UserServiceImp implements UserService {
         }
         return null;
     }
+<<<<<<< HEAD
+=======
+    @Transactional
+    public User forgetPassword(int id, String newPassword) {
+        User user = userRepository.findById(id);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return userRepository.save(user);
+    }
+>>>>>>> main
 
     @Transactional
     public User updateUser(int id, User user) {
@@ -148,4 +171,29 @@ public class UserServiceImp implements UserService {
 
         return userRepository.save(userExists);
     }
+<<<<<<< HEAD
+=======
+
+    // Lấy tất cả nhân viên có RoleID = 2 mà không phân trang
+    public List<User> getAllUsersByRoleId(Integer roleId) {
+        // Tạo một Role đối tượng với roleId được cung cấp
+        Role role = new Role();
+        role.setId(roleId);
+
+        // Lấy tất cả người dùng có RoleID = roleId
+        List<User> users = userRepository.findByRoleID(role);
+
+        // In thông tin nhân viên
+        users.forEach(user -> {
+            System.out.println("User ID: " + user.getId() +
+                    ", Full Name: " + user.getFullName() +
+                    ", Username: " + user.getUsername() +
+                    ", Email: " + user.getEmail() +
+                    ", Phone: " + user.getPhoneNumber());
+        });
+
+        // Trả về danh sách người dùng
+        return users;
+    }
+>>>>>>> main
 }

@@ -1,6 +1,12 @@
 package com.example.vouchermanager.Model.Entity;
 
+<<<<<<< HEAD
 import com.example.vouchermanager.Model.Enum.VoucherStatus;
+=======
+import com.example.vouchermanager.Model.Enum.DiscountType;
+import com.example.vouchermanager.Model.Enum.VoucherStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+>>>>>>> main
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,9 +31,19 @@ public class Voucher {
     @Column(name = "VoucherCode", nullable = false, length = 50)
     private String voucherCode;
 
+    @Column(name = "Title")
+    private String title;
+
+    @Column(name = "LogoUrl")
+    private String logoUrl;
+
+    @Column(name = "Description")
+    private String description;
+
+    @Enumerated(EnumType.STRING)
     @Lob
     @Column(name = "DiscountType", nullable = false)
-    private String discountType;
+    private DiscountType discountType;
 
     @Column(name = "DiscountValue", nullable = false, precision = 10, scale = 2)
     private BigDecimal discountValue;
@@ -68,4 +84,27 @@ public class Voucher {
     @Column(name = "ApplicableForAllProducts", nullable = false)
     private Boolean applicableForAllProducts = false;
 
+<<<<<<< HEAD
+=======
+    @Override
+    public String toString() {
+        return "Voucher{" +
+                "voucherCode='" + voucherCode + '\'' +
+                ", title='" + title + '\'' +
+                ", logoUrl='" + logoUrl + '\'' +
+                ", description='" + description + '\'' +
+                ", discountType=" + discountType +
+                ", discountValue=" + discountValue +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", minimumOrderValue=" + minimumOrderValue +
+                ", status=" + status +
+                ", createdBy=" + createdBy +
+                ", usageCount=" + usageCount +
+                ", maxUsage=" + maxUsage +
+                ", createdDate=" + createdDate +
+                ", applicableForAllProducts=" + applicableForAllProducts +
+                '}';
+    }
+>>>>>>> main
 }

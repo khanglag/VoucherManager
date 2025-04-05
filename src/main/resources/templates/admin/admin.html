@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"
+        name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title> Hệ thống quản lý voucher</title>
+
+  <!-- Bootstrap CSS -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet"
+  />
+  <!-- Font Awesome -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <!-- css -->
+  <link rel="stylesheet" th:href="@{/assets/css/admin.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/vouchers_managerment.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/users_managerment.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/products_managerment.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/orders_managerment.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/statistic.css}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+</head>
+<body>
+
+<div id="sidebar">
+  <div id="sidebar-toggle" onclick="toggleSidebar()">
+    <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+    >
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </div>
+  <div id="sidebar-content">
+    <ul id="sidebar-nav" style="padding-left: 0">
+      <li onclick="changePage('vouchers', this)" class="active">
+        <i class=" icon fa-solid fa-ticket" style="color: #f77269;"></i> <span class="text" style="font-weight: bold">Quản lý vouchers</span>
+      </li>
+      <li onclick="changePage('users', this)">
+        <i class="icon fa-solid fa-users" style="color: #f77269;"></i> <span class="text" style="font-weight: bold">Quản lý người dùng</span>
+      </li>
+      <li onclick="changePage('products', this)">
+        <i class="icon fa-solid fa-store" style="color: #f77269;"></i><span class="text" style="font-weight: bold">Quản lý sản phẩm</span>
+      </li>
+      <li onclick="changePage('order', this)">
+        <i class="icon fa-solid fa-cart-shopping" style="color: #f77269;"></i><span class="text" style="font-weight: bold">Quản lý đơn hàng</span>
+      </li>
+      <li onclick="changePage('statistics', this)">
+        <i class="icon fa-solid fa-chart-line" style="color: #f77269;"></i><span class="text" style="font-weight: bold">Thống Kê</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div id="main-content">
+  <div id="header">
+    <div id="login-section">
+      <div th:if="${user != null}">
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <span class="username">
+                                        Xin chào <span th:text="${name}" class="nameOfUser"></span>
+                                    </span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="#" class="dropdown-item">Hồ sơ cá nhân</a>
+            <!--                                    <a  href="#"  class="dropdown-item" onclick="document.getElementById('logout-form').submit(); return false;">Đăng xuất</a>-->
+            <a href="#" class="dropdown-item" onclick="logout()">Đăng xuất</a>
+
+
+          </div>
+          <form id="logout-form" th:action="@{/logout}" method="POST" style="display: none;">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="content-area">
+    <div id="vouchers" class="page">
+      <div th:replace="~{admin/vouchersmanager :: VouchersManagerment}"></div>
+
+    </div>
+    <div id="users" class="page" style="display: none">
+      <div th:replace="~{admin/usersmanager :: UsersManagerment}"></div>
+    </div>
+    <div id="products" class="page" style="display: none">
+      <div th:replace="~{admin/productsmanager :: ProductsManager}"></div>
+    </div>
+    <div id="order" class="page" style="display: none">
+      <div th:replace="~{admin/ordersmanager :: OrdersManager}"></div>
+    </div>
+    <div id="statistics" class="page" style="display: none;">
+      <div th:replace="~{admin/statistic :: Statistic(performanceList=${performanceList}, performanceListByAdmin=${performanceListByAdmin})}" style="width: 100%;"></div>
+    </div>
+  </div>
+</div>
+
+<script th:inline="javascript">
+  const months = /*[[${months}]]*/ [];
+  const issuedCounts = /*[[${issuedCounts}]]*/ [];
+  const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const fullIssuedCounts = new Array(12).fill(0);
+  months.forEach((month, index) => {
+    const monthIndex = allMonths.indexOf(month);
+    if (monthIndex !== -1) {
+      fullIssuedCounts[monthIndex] = issuedCounts[index];
+    }
+  });
+  const data = {
+    labels: allMonths,
+    datasets: [
+      {
+        label: "Thống kê voucher đã tạo trong năm 2025",
+        data: fullIssuedCounts,
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const config = {
+    type: "line",
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "top",
+        },
+        tooltip: {
+          enabled: true,
+        },
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Tháng",
+          },
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+          },
+          title: {
+            display: true,
+            text: "Số lượng",
+          },
+        },
+      },
+    },
+  };
+
+  const ctx = document.getElementById("voucherChart").getContext("2d");
+  new Chart(ctx, config);
+
+//   Biểu đồ thống kê hiệu suất
+  const performanceData = /*[[${performanceMap}]]*/ {};
+  const vouchers = Object.keys(performanceData);
+  const performances = Object.values(performanceData);
+
+  const maxVouchersToShow = 100;
+  const limitedVouchers = vouchers.slice(0, maxVouchersToShow);
+  const limitedPerformances = performances.slice(0, maxVouchersToShow);
+
+  // Thiết lập dữ liệu cho biểu đồ
+  const dataPerformanceChart = {
+    labels: limitedVouchers,
+    datasets: [{
+      label: 'Hiệu suất sử dụng của các voucher',
+      data: limitedPerformances,
+      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      borderColor: 'rgba(75, 192, 192, 1)',
+      borderWidth: 1
+    }]
+  };
+
+  // Cấu hình biểu đồ tối ưu hóa hiệu suất
+  const configPerformanceChart = {
+    type: 'bar',
+    data: dataPerformanceChart,
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      animation: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        tooltip: {
+          enabled: true,
+        },
+        datalabels: {
+          display: function(context) {
+            return context.dataset.data[context.dataIndex] > 0.5; // Chỉ hiển thị nhãn nếu giá trị > 10
+          },
+          color: 'black',
+          anchor: 'end',
+          align: 'top'
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Voucher"
+          },
+          ticks: {
+            maxRotation: 45,
+            minRotation: 30,
+            font: {
+              size: 10
+            }
+          },
+          barPercentage: 0.7,
+          categoryPercentage: 0.8,
+        },
+        y: {
+          beginAtZero: true,
+          max: 100,
+          ticks: {
+            callback: function(value) {
+              return value + '%';
+            }
+          },
+          title: {
+            display: true,
+            text: "Hiệu suất (%)"
+          }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  };
+
+  // Tăng hiệu suất bằng cách điều chỉnh canvas
+  const performanceCanvas = document.getElementById('performanceStatistics');
+  performanceCanvas.width = 800;
+  performanceCanvas.height = 400;
+
+  // Khởi tạo biểu đồ
+  const performanceChart = new Chart(performanceCanvas.getContext('2d'), configPerformanceChart);
+</script>
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!--xuất pdf-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script th:src="@{/assets/js/base64.js}"></script>
+<script th:src="@{/assets/js/admin.js}"></script>
+<script th:src="@{/assets/js/vouchers_managerment.js}"></script>
+<script th:src="@{/assets/js/users_managerment.js}"></script>
+<script th:src="@{/assets/js/products_managerment.js}"></script>
+<script th:src="@{/assets/js/orders_managerment.js}"></script>
+<script th:src="@{/assets/js/statistic.js}"></script>
+</body>
+</html>

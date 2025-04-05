@@ -182,4 +182,42 @@ canvas {
 .social-btn:hover {
     transform: translateY(-3px);
     background: rgba(255, 255, 255, 0.2);
+<<<<<<< HEAD
 }
+=======
+}
+.alert {
+    position: fixed;
+    top: 20px;
+    right: -350px; /* Ẩn ngoài màn hình */
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    transition: right 0.4s ease-in-out, opacity 0.1s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-size: 16px;
+    min-width: 280px;
+    max-width: 400px;
+    text-align: center;
+    opacity: 0;
+}
+
+.alert.error {
+    background-color: #f44336;
+}
+
+.alert.show {
+    right: 50%;
+    transform: translateX(50%);
+    opacity: 1;
+}
+
+.alert .close-btn {
+    margin-left: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    float: right;
+    font-size: 18px;
+}
+>>>>>>> main

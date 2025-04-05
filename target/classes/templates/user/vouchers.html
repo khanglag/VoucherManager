@@ -16,10 +16,15 @@
   <!-- css -->
   <link rel="stylesheet" th:href="@{/assets/css/index.css}" />
     <link rel="stylesheet" th:href="@{/assets/css/vouchers.css}" />
+<<<<<<< HEAD
+=======
+    <link rel="stylesheet" th:href="@{/assets/css/global.css}" />
+>>>>>>> main
 </head>
 <body>
 <nav th:replace="~{index :: Navbar}"></nav>
 <div id="canvas-container"></div>
+<<<<<<< HEAD
 <div class="container" style="margin-top: 100px">
     <h1>Bộ lọc tìm kiếm voucher</h1>
     <form id="voucher-filter-form">
@@ -145,6 +150,235 @@
         </div>
     </div>
 </section>
+=======
+<div class="voucher-banner">
+    <div class="banner-content">
+        <h1 class="banner-title">
+            <span style="--i:1">S</span>
+            <span style="--i:2">U</span>
+            <span style="--i:3">P</span>
+            <span style="--i:4">E</span>
+            <span style="--i:5">R</span>
+            <span style="--i:6">&nbsp;</span>
+            <span style="--i:7">V</span>
+            <span style="--i:8">O</span>
+            <span style="--i:9">U</span>
+            <span style="--i:10">C</span>
+            <span style="--i:11">H</span>
+            <span style="--i:12">E</span>
+            <span style="--i:13">R</span>
+            <span style="--i:14">S</span>
+        </h1>
+        <p class="tagline">Tiết kiệm nhiều hơn với ưu đãi độc quyền</p>
+    </div>
+
+    <div class="discount-badge">
+        <div class="discount-text">GIẢM ĐẾN 50%</div>
+    </div>
+
+    <div class="decoration decoration-1"></div>
+    <div class="decoration decoration-2"></div>
+    <div class="decoration decoration-3"></div>
+
+    <div class="shine-effect"></div>
+</div>
+<div class="parent  mt-3">
+    <div class="div1">
+        <div class="container" >
+            <h1 class="elegant-heading">Bộ lọc tìm kiếm voucher</h1>
+            <form id="voucher-filter-form">
+                <div class="form-group full-width">
+                    <input
+                            type="text"
+                            name="voucherCode"
+                            placeholder="Nhập mã voucher..."
+                    />
+                </div>
+
+                <div class="form-group">
+                    <select name="discountType">
+                        <option value="">Chọn loại giảm giá</option>
+                        <option value="PERCENTAGE">Giảm theo %</option>
+                        <option value="FIXED">Giảm số tiền cố định</option>
+                        <option value="FREESHIP">Freeship</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <select name="status">
+                        <option value="">Chọn trạng thái</option>
+                        <option value="ACTIVE">Đang hoạt động</option>
+                        <option value="EXPIRED">Hết hạn</option>
+                        <option value="UPCOMING">Sắp diễn ra</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <div class="range-slider">
+                        <div class="range-slider-header">
+                            <span class="label">Giá trị đơn hàng từ:</span>
+                            <span class="value" id="minOrderValueDisplay">0₫</span>
+                        </div>
+                        <div class="range-slider-container">
+                            <div class="range-slider-track"></div>
+                            <div class="range-slider-progress" id="rangeProgress"></div>
+                            <input
+                                    type="range"
+                                    name="minOrderValue"
+                                    id="minOrderValue"
+                                    min="0"
+                                    max="20000000"
+                                    step="100000"
+                                    value="0"
+                            />
+                        </div>
+                        <div class="range-slider-ticks">
+                            <span>0₫</span>
+                            <span>5tr</span>
+                            <span>10tr</span>
+                            <span>15tr</span>
+                            <span>20tr</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group checkbox-wrapper">
+                    <input
+                            type="checkbox"
+                            id="applicableForAllProducts"
+                            name="applicableForAllProducts"
+                    />
+                    <label for="applicableForAllProducts"
+                    >Áp dụng cho tất cả sản phẩm</label
+                    >
+                </div>
+
+                <button type="submit">Lọc</button>
+            </form>
+        </div>
+    </div>
+    <div class="div2">
+        <section class="vouchers-section ">
+            <div class="app-container">
+                <div class="voucher-list mt-0">
+                    <div class="voucher-card" th:each="voucher : ${vouchers}">
+            <span class="voucher-status-badge voucher-status-active" th:text="${voucher.status}"
+            ></span>
+                        <div class="voucher-title" th:text="${voucher.title}"  >Ưu đãi khách hàng mới</div>
+                        <!--                <div class="voucher-discount" >Giảm <span th:text="${voucher.logoUrl}"></span></div>-->
+                        <div class="voucher-code-container">
+                            <div class="voucher-code" th:text="${voucher.voucherCode}"></div>
+                            <button class="voucher-copy-btn" th:attr="data-code=${voucher.voucherCode}">
+                                Copy
+                            </button>
+                        </div>
+                        <div class="voucher-info-grid">
+                            <div class="voucher-info-item">
+                                <span class="voucher-info-label">Loại giảm giá</span>
+                                <span class="voucher-info-value">
+                            <th:block th:if="${voucher.discountType.name() == 'FIXED'}">Cố định</th:block>
+                            <th:block th:if="${voucher.discountType.name() == 'PERCENTAGE'}">Phần trăm</th:block>
+                            <th:block th:if="${voucher.discountType.name() == 'FREESHIP'}">Freeship</th:block>
+                            <th:block th:unless="${voucher.discountType.name() == 'FIXED' or voucher.discountType.name() == 'PERCENTAGE'
+                            or voucher.discountType.name() == 'FREESHIP'}">
+                                Không xác định
+                            </th:block>
+                        </span>
+                            </div>
+                            <div class="voucher-info-item">
+                                <span class="voucher-info-label">Giá trị</span>
+                                <span class="voucher-info-value">
+                            <th:block th:if="${voucher.discountType.name() == 'FIXED'}"
+                                      th:text="${voucher.discountValue != null ? #numbers.formatInteger(voucher.discountValue, 0, 'COMMA') : '0'}">
+                            </th:block>
+                             <th:block th:if="${voucher.discountType.name() == 'FREESHIP'}"
+                                       th:text="${voucher.discountValue != null ? #numbers.formatInteger(voucher.discountValue, 0, 'COMMA') : '0'}">
+                            </th:block>
+                            <th:block th:if="${voucher.discountType.name() == 'PERCENTAGE'}"
+                                      th:text="${voucher.discountValue != null ? #numbers.formatInteger(voucher.discountValue, 0) : '0'}">
+                            </th:block>
+                            <th:block th:unless="${voucher.discountType.name() == 'FIXED' or voucher.discountType.name() == 'PERCENTAGE' or voucher.discountType.name() == 'FREESHIP'}">
+                                N/A
+                            </th:block>
+                         </span>
+                            </div>
+                            <div class="voucher-info-item">
+                                <span class="voucher-info-label">Ngày bắt đầu</span>
+                                <span class="voucher-info-value" th:text="${voucher.startDate}"></span>
+                            </div>
+                            <div class="voucher-info-item">
+                                <span class="voucher-info-label">Ngày kết thúc</span>
+                                <span class="voucher-info-value" th:text="${voucher.endDate}"></span>
+                            </div>
+                        </div>
+                        <div class="voucher-conditions" th:text="${voucher.description}">
+
+                        </div>
+                        <div class="voucher-conditions">
+                            Áp dụng cho đơn hàng tối thiểu
+                            <span th:text="${voucher.minimumOrderValue != null ? #numbers.formatInteger(voucher.minimumOrderValue, 0, 'COMMA') : '0'}"></span>
+                        </div>
+                        <div class="voucher-conditions">
+                            <span th:text="${voucher.applicableForAllProducts} ? 'Áp dụng cho tất cả các sản phẩm' : 'Chỉ áp dụng cho sản phẩm được chỉ định'"></span>
+                        </div>
+                        <div class="voucher-usage-progress">
+                            <div class="voucher-progress-bar">
+                                <div class="voucher-progress-fill"
+                                     th:style="'width: ' + (${voucher.usageCount} * 100 / ${voucher.maxUsage}) + '%'">
+                                </div>
+                            </div>
+                            <div class="voucher-progress-text">
+                                <span>Đã dùng: <span th:text="${voucher.usageCount}"></span></span>
+                                <span>Tối đa: <span th:text="${voucher.maxUsage}"></span></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="cart-modal" id="cartModal">
+    <div class="cart-header">
+        <h2>Giỏ Hàng</h2>
+        <button class="close-cart" id="closeCart">&times;</button>
+    </div>
+
+    <div class="cart-items" id="cartItems">
+        <th:block th:if="${cart != null and not cart.isEmpty()}">
+            <div th:each="producta : ${cart}" class="cart-item"
+                 th:attr="data-price=${producta.price}, data-quantity=1">
+                <img th:src="${producta.imageUrl}" alt="Ảnh sản phẩm" class="cart-item-img">
+                <div class="cart-item-info">
+                    <h4 th:text="${producta.productName}"></h4>
+                    <p>
+        <span th:text="${#numbers.formatDecimal(producta.price, 0, 'COMMA', 0, 'POINT')} + '₫'"
+              style="color: #e74c3c; font-weight: bold">
+        </span>
+                    </p>
+                </div>
+            </div>
+        </th:block>
+        <th:block th:if="${cart == null or cart.isEmpty()}">
+            <p class="empty-cart-msg">Giỏ hàng của bạn đang trống!</p>
+        </th:block>
+    </div>
+
+    <div class="cart-total">
+        <div class="total-price">
+            <span>Tổng cộng:</span>
+            <span id="totalPrice">0₫</span>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn">
+            <a class="nav-link" th:href="@{/payment}">Thanh toán</a>
+        </button>
+    </div>
+</div>
+
+>>>>>>> main
 
 <footer th:replace="~{index :: Footer}"></footer>
 <!-- Bootstrap JS -->
@@ -152,5 +386,10 @@
 <!-- Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script th:src="@{/assets/js/vouchers.js}"></script>
+<<<<<<< HEAD
+=======
+<script th:src="@{/assets/js/helpers.js}"></script>
+
+>>>>>>> main
 </body>
 </html>

@@ -16,11 +16,16 @@
   <!-- css -->
   <link rel="stylesheet" th:href="@{/assets/css/index.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/brand_collaborations.css}" />
+<<<<<<< HEAD
+=======
+  <link rel="stylesheet" th:href="@{/assets/css/global.css}" />
+>>>>>>> main
 </head>
 <body>
 <nav th:replace="index :: Navbar"></nav>
   <div id="canvas-container"></div>
 
+<<<<<<< HEAD
   <header>
     <div class="header-content">
       <div class="logo">VoucherManager</div>
@@ -29,6 +34,30 @@
       </div>
     </div>
   </header>
+=======
+<div class="banner-container">
+  <div class="banner-background">
+    <div class="banner-glow glow1"></div>
+    <div class="banner-glow glow2"></div>
+    <div class="banner-glow glow3"></div>
+    <div class="emblem emblem-left"></div>
+    <div class="emblem emblem-right"></div>
+    <div class="connect-lines">
+      <svg preserveAspectRatio="none">
+        <!-- Lines will be added with JavaScript -->
+      </svg>
+    </div>
+    <div class="particles-container" id="particles"></div>
+  </div>
+  <div class="banner-header">
+    <h1 class="title">ĐỐI TÁC THƯƠNG HIỆU</h1>
+    <p class="subtitle">Kết nối · Đồng hành · Phát triển</p>
+    <div class="shine-overlay"></div>
+  </div>
+  <div class="accent-bar"></div>
+</div>
+
+>>>>>>> main
 
   <div class="container mb-5">
     <section class="partners-section">
@@ -195,6 +224,46 @@
       <button class="button">Đăng ký ngay</button>
     </section>
   </div>
+<<<<<<< HEAD
+=======
+<div class="overlay" id="overlay"></div>
+<div class="cart-modal" id="cartModal">
+  <div class="cart-header">
+    <h2>Giỏ Hàng</h2>
+    <button class="close-cart" id="closeCart">&times;</button>
+  </div>
+
+  <div class="cart-items" id="cartItems">
+    <th:block th:if="${cart != null and not cart.isEmpty()}">
+      <div th:each="producta : ${cart}" class="cart-item"
+           th:attr="data-price=${producta.price}, data-quantity=1">
+        <img th:src="${producta.imageUrl}" alt="Ảnh sản phẩm" class="cart-item-img">
+        <div class="cart-item-info">
+          <h4 th:text="${producta.productName}"></h4>
+          <p>
+        <span th:text="${#numbers.formatDecimal(producta.price, 0, 'COMMA', 0, 'POINT')} + '₫'"
+              style="color: #e74c3c; font-weight: bold">
+        </span>
+          </p>
+        </div>
+      </div>
+    </th:block>
+    <th:block th:if="${cart == null or cart.isEmpty()}">
+      <p class="empty-cart-msg">Giỏ hàng của bạn đang trống!</p>
+    </th:block>
+  </div>
+
+  <div class="cart-total">
+    <div class="total-price">
+      <span>Tổng cộng:</span>
+      <span id="totalPrice">0₫</span>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn">
+      <a class="nav-link" th:href="@{/payment}">Thanh toán</a>
+    </button>
+  </div>
+</div>
+>>>>>>> main
 <footer th:replace="index :: Footer" ></footer>
 
 <!-- Bootstrap JS -->
@@ -202,5 +271,10 @@
 <!-- Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script th:src="@{/assets/js/brand_collaborations.js}"></script>
+<<<<<<< HEAD
+=======
+<script th:src="@{/assets/js/helpers.js}"></script>
+
+>>>>>>> main
 </body>
 </html>

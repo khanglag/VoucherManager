@@ -25,6 +25,7 @@
     <link rel="stylesheet" th:href="@{/assets/css/auth.css}" />
 </head>
 <body>
+<<<<<<< HEAD
 
 <!--<div class="signin-container d-flex align-items-center justify-content-center">-->
 <!--    <div class="signin-form bg-light p-4 rounded shadow-lg" style="background-color: transparent !important;">-->
@@ -83,13 +84,20 @@
 
 
 
+=======
+>>>>>>> main
 <canvas id="bg-canvas"></canvas>
 
 <div class="container">
     <div class="form-container" id="form-container">
         <div class="tab-control">
+<<<<<<< HEAD
             <button class="tab-btn active" data-tab="login">Đăng nhập</button>
             <button class="tab-btn" data-tab="register">Đăng ký</button>
+=======
+            <button class="tab-btn active btn" data-tab="login">Đăng nhập</button>
+            <button class="tab-btn btn" data-tab="register">Đăng ký</button>
+>>>>>>> main
         </div>
 
         <div class="form-section active" id="login">
@@ -122,6 +130,7 @@
 
                 <button type="submit" class="form-btn">Đăng nhập</button>
             </form>
+<<<<<<< HEAD
 
 
                 <div th:if="${param.error}" class="alert alert-danger text-center">
@@ -137,6 +146,15 @@
                 </div>
 
 
+=======
+                <div th:if="${param.error}" class="alert alert-danger text-center mt-3">
+                    Tên đăng nhập hoặc mật khẩu không đúng!
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                    <a th:href="@{/reset-password}" class="text-decoration-none"  style="color: #b8daff !important;">Quên mật khẩu</a>
+                </div>
+
+>>>>>>> main
             <div class="social-login">
                 <button class="social-btn">
                     <a href="/oauth2/authorization/google" class="btn btn-danger btn-lg  w-100">
@@ -157,6 +175,7 @@
             </div>
         </div>
 
+<<<<<<< HEAD
         <div class="form-section" id="register">
             <form id="register-form" method="POST" action="/register">
                 <div class="input-group">
@@ -214,6 +233,83 @@
                 </div>
 
                 <button type="submit" class="form-btn">Đăng ký</button>
+=======
+        <div class="form-section" id="register" >
+            <form id="register-form" method="POST" action="/register">
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group">
+                            <label for="register-username">Username</label>
+                            <input
+                                    type="text"
+                                    id="register-username"
+                                    name="register-username"
+                                    placeholder="Nhập username"
+                                    required
+                            />
+                        </div>
+                        <div class="input-group">
+                            <label for="fullName">Họ và tên</label>
+                            <input
+                                    type="text"
+                                    id="fullName"
+                                    name="fullName"
+                                    placeholder="Nhập họ và tên"
+                                    required
+                            />
+                        </div>
+
+                        <div class="input-group">
+                            <label for="email">Email</label>
+                            <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="Nhập email của bạn"
+                                    required
+                            />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group">
+                            <label for="password">Mật khẩu</label>
+                            <input
+                                    type="password"
+                                    id="pass"
+                                    name="pass"
+                                    placeholder="Mật khẩu"
+                                    required
+                            />
+                        </div>
+
+                        <div class="input-group">
+                            <label for="repass">Xác nhận mật khẩu</label>
+                            <input
+                                    type="password"
+                                    id="repass"
+                                    name="repass"
+                                    placeholder="Xác nhận mật khẩu"
+                                    required
+                            />
+                        </div>
+                        <div class="input-group">
+                            <label for="phoneNumber">Nhập số điện thoại</label>
+                            <input
+                                    type="text"
+                                    id="phoneNumber"
+                                    name="phoneNumber"
+                                    placeholder="Số điện thoại"
+                                    required
+                            />
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <button type="submit" class="form-btn" id="btnSubmit">Đăng ký</button>
+>>>>>>> main
             </form>
 
             <div class="form-footer">
@@ -221,6 +317,14 @@
                 <a href="#" class="tab-link" data-tab="login">Đăng nhập</a>
             </div>
         </div>
+<<<<<<< HEAD
+=======
+
+
+        <div id="alert-box" class="alert hidden">
+            <span id="alert-message"></span>
+        </div>
+>>>>>>> main
     </div>
 </div>
 <!-- Bootstrap JS -->

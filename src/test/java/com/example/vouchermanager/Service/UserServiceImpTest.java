@@ -44,12 +44,17 @@ public class UserServiceImpTest {
 
     @Test
     public void testUpdateUser(){
+<<<<<<< HEAD
         User user = new User();
         user.setFullName("Nguyen Ke Cuong");
 
         int id = 2;
 
         userServiceImp.updateUser(id, user);
+=======
+
+        userServiceImp.getAllUsersByRoleId(2);
+>>>>>>> main
     }
 
     @Test

@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Entity
 @Table(name = "products")
-public class Product {
+public class    Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ProductID", nullable = false)
@@ -27,8 +27,24 @@ public class Product {
     @Column(name = "Price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    @Column(name = "ImageUrl")
+    private String imageUrl;
+
     @ColumnDefault("1")
     @Column(name = "Status", nullable = false)
     private Boolean status = false;
+<<<<<<< HEAD
 
+=======
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", productName='" + productName + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", status=" + status +
+                '}';
+    }
+>>>>>>> main
 }

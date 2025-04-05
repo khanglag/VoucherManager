@@ -36,7 +36,10 @@ public class EmailService {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setTo(to);
+<<<<<<< HEAD
         helper.setFrom("bookingcare6868@gmail.com");
+=======
+>>>>>>> main
         helper.setSubject("Your New Password");
         helper.setText(emailContent, true);
         mailSender.send(mimeMessage);
@@ -51,7 +54,10 @@ public class EmailService {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setTo(to);
+<<<<<<< HEAD
         helper.setFrom("bookingcare6868@gmail.com");
+=======
+>>>>>>> main
         helper.setSubject("OTP");
         helper.setText(emailContent, true);
         mailSender.send(mimeMessage);

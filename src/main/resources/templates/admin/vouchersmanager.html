@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Hệ thống quản lý voucher</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+            rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <!-- css -->
+      <link rel="stylesheet" th:href="@{/assets/css/vouchers_managerment.css}" />
+
+</head>
+<body>
+    <div th:fragment="VouchersManagerment">
+        <div class="container">
+            <!-- Thống Kê Tổng Quan -->
+            <section class="section">
+                <div class="section-title">
+                    <h2>Thống Kê Voucher</h2>
+                </div>
+                <div class="statistics-grid">
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-ticket-alt"></i></div>
+                        <div class="number" th:text="${#numbers.formatInteger(totalVouchers, 0, 'COMMA')}" >1,234</div>
+                        <div class="label">Tổng Voucher</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="number" th:text="${#numbers.formatInteger(totalVouchersActive, 0, 'COMMA')}" >1,234</div>
+                        <div class="label">Voucher Đang Hoạt Động</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-tags"></i></div>
+                        <div class="number" th:text="${#numbers.formatInteger(totalVouchersUsage, 0, 'COMMA')}">1,234</div>
+
+                        <div class="label">Voucher Đã Sử Dụng</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-clock"></i></div>
+                        <div class="number" th:text="${#numbers.formatInteger(totalVouchersExpired, 0, 'COMMA')}" >1,234</div>
+
+                        <div class="label">Voucher Hết Hạn</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon"><i class="fa-solid fa-x"></i></div>
+                        <div class="number" th:text="${#numbers.formatInteger(totalVouchersCancelled,0, 'COMMA')}" >1,234</div>
+
+                        <div class="label">Voucher đã hủy</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tạo Voucher Mới -->
+            <div class="parent">
+                <div class="div1">
+                    <section class="section">
+                        <div class="section-title">
+                            <h2>Tạo Voucher Mới</h2>
+                        </div>
+                        <form class="voucher-form" method="POST" action="/addVoucher">
+                            <div class="form-group">
+                                <label for="title">Tiêu đề</label>
+                                <input type="text" id="title" name="title"   placeholder="Tiêu đề" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="voucherCode">Mã Voucher</label>
+                                <input type="text" id="voucherCode" name="voucherCode"   placeholder="Mã voucher" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="discountType">Loại Voucher</label>
+                                <select id="discountType" name="discountType" style="height: 47px" required>
+                                    <option value="">Chọn Loại Voucher</option>
+                                    <option value="PERCENTAGE">Giảm Theo Phần Trăm</option>
+                                    <option value="FIXED">Giảm Số Tiền Cố Định</option>
+                                    <option value="FREESHIP">Freeship</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="discountValue">Giá Trị Giảm</label>
+                                <input
+                                        type="number"
+                                        id="discountValue"
+                                        name="discountValue"
+                                        placeholder="Giá trị giảm"
+                                        required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="minimumOrderValue">Giá trị đơn hàng tối thiểu</label>
+                                <input
+                                        type="number"
+                                        id="minimumOrderValue"
+                                        name="minimumOrderValue"
+                                        placeholder="Giá trị đơn hàng tối thiểu"
+                                />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="maxUsage">Số lượt sử dụng tối đa</label>
+                                <input
+                                        type="number"
+                                        id="maxUsage"
+                                        name="maxUsage"
+                                        placeholder="Số lượt sử dụng tối đa"
+                                        required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="startDate">Ngày Bắt Đầu</label>
+                                <input type="date" id="startDate" name="startDate" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">Ngày Kết Thúc</label>
+                                <input type="date" id="endDate" name="endDate" required />
+                            </div>
+
+                            <div class="form-group" style="grid-column: 1 / -1">
+                                <label for="description">Mô Tả</label>
+                                <textarea id="description" name="description" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="applicableForAllProducts" name="applicableForAllProducts" required/>
+                                    <span class="checkmark"></span>
+                                    Áp dụng cho tất cả các sản phẩm
+                                </label>
+                            </div>
+                            <div class="form-actions" style="grid-column: 1 / -1">
+                                <button type="reset" class="btn btn-secondary">Hủy</button>
+                                <button type="submit" class="btn btn-primary" onclick="submitAddVoucher(event)">Tạo Voucher</button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+                <div class="div2">
+                    <div class="section-title" style="padding-top: 20px">
+                        <h2>Voucher mẫu</h2>
+                    </div>
+                    <img th:src="@{/assets/images/tutorioVoucher.png}" alt="starbucks" style="width: 100%;" />
+                </div>
+            </div>
+            <div id="notification">
+
+            </div>
+
+            <!-- Danh Sách Voucher -->
+            <section class="section table-container">
+                <div class="section-title">
+                    <h2>Danh Sách Voucher</h2>
+                    <div class="filter-container" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                        <input type="text" id="filterCode" placeholder="🔍 Mã voucher" style="padding: 5px; width: 150px;">
+
+                        <select id="filterType" style="padding: 5px; width: 160px;">
+                            <option value="">📌 Loại</option>
+                            <option value="Giảm Phần Trăm">Giảm Phần Trăm</option>
+                            <option value="Giảm Tiền Cố Định">Giảm Tiền Cố Định</option>
+                            <option value="Miễn Phí Vận Chuyển">Miễn Phí Vận Chuyển</option>
+                        </select>
+
+                        <select id="filterStatus" style="padding: 5px; width: 150px;">
+                            <option value="">⚡ Trạng thái</option>
+                            <option value="ACTIVE">ACTIVE</option>
+                            <option value="EXPIRED">EXPIRED</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                        </select>
+
+                        <input type="date" id="filterStartDate" style="padding: 5px;">
+                        <input type="date" id="filterEndDate" style="padding: 5px;">
+
+                        <input type="number" id="filterEfficiencyMin" placeholder="Hiệu suất từ %" style="padding: 5px; width: 150px;">
+
+                        <button id="applyFilter" class="action-btn btn-edit">🔍 Lọc</button>
+                        <button id="resetFilter" class="action-btn btn-edit">♻ Đặt lại</button>
+                    </div>
+                </div>
+                <table class="voucher-table">
+                    <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Tiêu đề</th>
+                        <th style="display: none">Mô tả</th>
+                        <th>Loại</th>
+                        <th>Giá trị</th>
+                        <th>Giá trị đơn hàng tối thiểu</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Đã dùng</th>
+                        <th>Tổng số lượt</th>
+                        <th>Hiệu suất</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody >
+                    <tr th:each="voucher : ${vouchers}">
+                        <td th:text="${voucher.voucherCode}"></td>
+                        <td th:text="${voucher.title}"></td>
+                        <td th:text="${voucher.description}" style="display: none"></td>
+                        <td th:text="${voucher.discountType.name() == 'PERCENTAGE' ? 'Giảm Phần Trăm'
+                    : (voucher.discountType.name() == 'FIXED' ? 'Giảm Tiền Cố Định'
+                    : 'Miễn Phí Vận Chuyển')}">
+                        </td>
+                        <td th:text="${voucher.discountType.name() == 'PERCENTAGE' ? voucher.discountValue + '%'
+        : (voucher.discountType.name() == 'FIXED' ? #numbers.formatDecimal(voucher.discountValue, 0, 'COMMA', 0, 'POINT') + 'đ'
+        : (voucher.discountType.name() == 'FREESHIP' ? #numbers.formatDecimal(voucher.discountValue, 0, 'COMMA', 0, 'POINT') + 'đ' : 'N/A'))}">
+                        </td>
+                        <td th:text="${#numbers.formatDecimal(voucher.minimumOrderValue, 0, 'COMMA', 0, 'POINT') + 'đ'}"></td>
+                        <td th:text="${#temporals.format(voucher.startDate, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${#temporals.format(voucher.endDate, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${voucher.usageCount}"></td>
+                        <td th:text="${voucher.maxUsage}"></td>
+                        <td th:text="${voucher.maxUsage > 0
+        ? (voucher.usageCount >= voucher.maxUsage
+            ? '100%'
+            : #numbers.formatDecimal((voucher.usageCount * 100.0 / voucher.maxUsage), 1, 'POINT', 2, 'COMMA') + '%')
+        : '0%'}"></td>
+                        <td>
+                             <span  th:classappend="${voucher.status.name() == 'ACTIVE' ? 'status-active'
+                                    : (voucher.status.name() == 'EXPIRED' ? 'status-expired'
+                                    : 'status-disabled')}"
+                                     th:text="${voucher.status.name() == 'ACTIVE' ? 'ACTIVE'
+                                    : (voucher.status.name() == 'EXPIRED' ? 'EXPIRED'
+                                    : 'CANCELLED')}">
+                             </span>
+                        </td>
+                        <td style="width: 14%;">
+                            <button  onclick="editVoucher(this)" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                    style="border-radius: 8px; padding: 10px 16px; font-size: 16px; font-weight: 600; transition: all 0.3s ease-in-out;
+               box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15); border: none; background-color: #28a745;"
+                                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='3px 6px 15px rgba(0, 0, 0, 0.25)';
+                     this.style.backgroundColor='#218838';"
+                                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='2px 4px 10px rgba(0, 0, 0, 0.15)';
+                    this.style.backgroundColor='#28a745';">
+                                Sửa
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </section>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" >
+                <div class="modal-dialog modal-dialog-centered" style="max-width: 1000px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa Voucher</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="voucherForm">
+                                <div class="row">
+                                    <!-- Cột trái -->
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="model_voucherCode" class="form-label">Mã voucher</label>
+                                            <input type="text" class="form-control" id="model_voucherCode" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="model_title" class="form-label">Tiêu đề</label>
+                                            <input type="text" class="form-control" id="model_title">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="model_description" class="form-label">Mô tả</label>
+                                            <input type="text" class="form-control" id="model_description">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="model_startDate" class="form-label">Ngày bắt đầu</label>
+                                            <input type="date" class="form-control" id="model_startDate">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="model_endDate" class="form-label">Ngày kết thúc</label>
+                                            <input type="date" class="form-control" id="model_endDate">
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Cột phải -->
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="model_discountType" class="form-label">Loại giảm giá</label>
+                                            <select class="form-select" id="model_discountType">
+                                                <option value="PERCENTAGE">Giảm Phần Trăm</option>
+                                                <option value="FIXED">Giảm Tiền Cố Định</option>
+                                                <option value="FREESHIP">Miễn Phí Vận Chuyển</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="model_discountValue" class="form-label">Giá trị giảm</label>
+                                            <input type="number" class="form-control" id="model_discountValue">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="model_minimumOrderValue" class="form-label">Giá trị đơn hàng tối thiểu</label>
+                                            <input type="number" class="form-control" id="model_minimumOrderValue">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="model_maxUsage" class="form-label">Tổng số lượt</label>
+                                            <input type="number" class="form-control" id="model_maxUsage">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="model_status" class="form-label">Trạng thái</label>
+                                            <select class="form-select" id="model_status">
+                                                <option value="ACTIVE">Hoạt động</option>
+                                                <option value="EXPIRED">Hết hạn</option>
+                                                <option value="CANCELLED">Bị khóa</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="model_productId" class="form-label">Áp dụng cho sản phẩm cố định</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="model_productId" placeholder="Nhập ID sản phẩm">
+                                                <button type="button" class="btn btn-primary" onclick="applyProduct()">Áp dụng</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="model_appliedProducts" class="form-label">Danh sách sản phẩm áp dụng</label>
+                                            <textarea class="form-control" id="model_appliedProducts" rows="3" disabled></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Đóng</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="fetchEditVoucher()">Lưu thay đổi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- Three.js -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>-->
+<script th:src="@{/assets/js/vouchers_managerment.js}"></script>
+
+</body>
+</html>

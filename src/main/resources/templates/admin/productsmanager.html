@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"
+        name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title> Hệ thống quản lý voucher</title>
+
+  <!-- Bootstrap CSS -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet"
+  />
+  <!-- Font Awesome -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <!-- css -->
+  <link rel="stylesheet" th:href="@{/assets/css/products_managerment.css}" />
+
+</head>
+<body>
+  <div th:fragment="ProductsManager">
+    <main class="products_main">
+      <div class="products_dashboard">
+        <div class="products_panel" id="products_form_panel">
+          <h2 class="products_panel_title">Thêm Sản Phẩm</h2>
+          <form id="products_form" class="products_form">
+            <div class="products_form_group">
+              <label for="products_productName" class="products_label"
+              >Tên Sản Phẩm</label
+              >
+              <input
+                      type="text"
+                      id="products_productName"
+                      name="productName"
+                      class="products_input"
+                      required
+              />
+            </div>
+            <div class="products_form_group">
+              <label for="products_price" class="products_label"
+              >Giá (VND)</label
+              >
+              <input
+                      type="number"
+                      id="products_price"
+                      name="price"
+                      min="0"
+                      class="products_input"
+                      required
+              />
+            </div>
+            <div class="products_form_group">
+              <label for="products_imageUrl" class="products_label"
+              >URL Hình Ảnh</label
+              >
+              <input
+                      type="text"
+                      id="products_imageUrl"
+                      name="imageUrl"
+                      class="products_input"
+                      required
+              />
+              <div
+                      class="products_image_preview products_image_preview_empty"
+                      id="products_image_preview"
+              >
+                Xem trước hình ảnh
+              </div>
+            </div>
+            <div class="products_form_group">
+              <label for="products_status" class="products_label"
+              >Trạng Thái</label
+              >
+              <select
+                      id="products_status"
+                      name="status"
+                      class="products_select"
+                      required
+              >
+                <option value="Hoạt động">Hoạt động</option>
+                <option value="Khóa">Khóa</option>
+              </select>
+            </div>
+            <div class="products_buttons">
+              <button
+                      type="submit"
+                      class="products_btn products_btn_primary"
+                      id="products_save_btn"
+
+              >
+                Thêm Sản Phẩm
+              </button>
+              <button
+                      type="reset"
+                      class="products_btn products_btn_secondary"
+                      id="products_reset_btn"
+              >
+                Làm Mới
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="products_panel" id="products_list_panel">
+          <h2 class="products_panel_title">Danh Sách Sản Phẩm</h2>
+          <div class="products_filter_controls" id="products_filter_controls">
+            <div class="products_filter_group">
+              <label for="products_search" class="products_label">Tìm kiếm theo ID hoặc tên sản phẩm</label>
+              <input
+                      type="text"
+                      id="products_search"
+                      class="products_input"
+                      placeholder="Nhập tên hoặc ID sản phẩm..."
+              />
+            </div>
+            <div class="products_filter_group">
+              <label for="products_price_filter" class="products_label">Lọc theo giá (VND)</label>
+              <div class="products_price_range">
+                <span class="products_range_value" id="products_min_price">0</span>
+                <input
+                        type="range"
+                        id="products_price_filter"
+                        class="products_range"
+                        min="0"
+                        max="50000000"
+                        step="100000"
+                        value="50000000"
+                />
+                <span class="products_range_value" id="products_max_price">50,000,000</span>
+              </div>
+            </div>
+<!--            <div class="products_filter_group">-->
+<!--              <label for="products_status_filter" class="products_label">Lọc theo trạng thái</label>-->
+<!--              <select id="products_status_filter" class="products_select">-->
+<!--                <option value="all">Tất cả</option>-->
+<!--                <option value="1">Hoạt động</option>-->
+<!--                <option value="0">Khóa</option>-->
+<!--              </select>-->
+<!--            </div>-->
+          </div>
+          <div class="products_table_container">
+             <table class="products_table" id="products_table">
+                <thead class="products_thead">
+                <tr class="products_header_row">
+                  <th class="products_th">Mã sản phẩm</th>
+                  <th class="products_th">Tên sản phẩm</th>
+                  <th class="products_th">Giá sản phẩm</th>
+                  <th class="products_th">Ảnh sản phẩm</th>
+                  <th class="products_th">Trạng Thái</th>
+                  <th class="products_th">Thao Tác</th>
+                </tr>
+                </thead>
+                <tbody id="products_list" class="products_tbody">
+                    <tr th:each="product : ${products}" class="products_row">
+                        <td class="products_td" th:text="${product.productId}"></td>
+                        <td class="products_td" th:text="${product.productName}"></td>
+                        <td class="products_td" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+                        <td class="products_td">
+                            <img th:src="${product.imageUrl}" alt="Ảnh sản phẩm" class="products_image" width="50">
+                        </td>
+                      <td class="products_td" th:attr="data-status=${product.status ? 1 : 0}">
+                        <span th:text="${product.status ? 'Hoạt động' : 'Khóa'}"></span>
+                      </td>
+                        <td class="products_td" style="width: 24%;">
+                            <button class="products_btn products_btn_edit" th:data-id="${product.productId}">
+                              <i class="fas fa-pencil-alt products_btn_edit" title="Chỉnh sửa"></i>
+                            </button>
+                            <button class="products_btn products_btn_delete" th:data-id="${product.productId}">
+                              <i class="fas fa-lock products_btn_delete" title="Khóa"></i>
+                            </button>
+                        </td>
+                  </tr>
+                </tbody>
+            </table>
+            <div class="products_pagination">
+              <button id="prevProductPage" class="pagination_btn">Trước</button>
+              <span id="productPageInfo">Trang 1 / 1</span>
+              <button id="nextProductPage" class="pagination_btn">Sau</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--    thông báo xử lý-->
+      <div id="products_notification">
+
+      </div>
+      <!-- Modal Sửa Sản Phẩm -->
+      <div class="modal fade" id="products_edit_modal" tabindex="-1" aria-labelledby="products_edit_modal_label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Căn giữa và mở rộng modal -->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="products_edit_modal_label" style="color: #4a47a3; font-weight: bold">Sửa Sản Phẩm</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="products_edit_form">
+                <input type="hidden" id="products_edit_id">
+
+                <div class="row">
+                  <!-- Cột trái -->
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="products_edit_name" class="form-label">Tên sản phẩm</label>
+                      <input type="text" class="form-control" id="products_edit_name" required>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="products_edit_price" class="form-label">Giá sản phẩm (VND)</label>
+                      <input type="number" class="form-control" id="products_edit_price" min="0" required>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="products_edit_status" class="form-label">Trạng thái</label>
+                      <select class="form-select" id="products_edit_status">
+                        <option value="1">Hoạt động</option>
+                        <option value="0">Khóa</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Cột phải -->
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="products_edit_image" class="form-label">URL ảnh</label>
+                      <input type="text" class="form-control" id="products_edit_image" required oninput="previewImage()">
+                    </div>
+
+                    <!-- Xem trước ảnh -->
+                    <div class="mb-3 text-center">
+                      <img id="products_preview_image" src="" class="img-thumbnail" style="width: 65%; height: auto; display: none;">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                  <button type="submit"  class="btn btn-primary" id="editProduct" data-bs-dismiss="modal">Lưu thay đổi</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Modal Xác Nhận Xóa -->
+      <div class="modal fade" id="products_delete_modal" tabindex="-1" aria-labelledby="products_delete_modal_label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="products_delete_modal_label">Xác nhận khóa</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+              <p>Bạn có chắc muốn khóa sản phẩm <strong id="products_delete_name"></strong>?</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-danger" id="products_confirm_delete">Khóa</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script th:src="@{/assets/js/products_managerment.js}"></script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+</body>
+</html>

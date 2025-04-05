@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hệ thống quản lý voucher</title>
+
+    <!-- font awesome -->
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+            integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <!-- css -->
+    <link rel="stylesheet" th:href="@{/assets/css/confirm_OTP.css}" />
+    <script th:src="@{/assets/js/confirm_OTP.js}"></script>
+
+
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div th:if="${error}" class="alert alert-danger error">
+    <span th:text="${error}"></span>
+</div>
+<div th:if="${message}" class="alert alert-success">
+    <span th:text="${message}"></span>
+</div>
+<div class="container">
+
+
+    <div class="form-container" id="form-container">
+
+        <div class="form-section active" id="reset-password">
+            <form id="confirm-OTP-form"  method="POST" th:action="@{/verify-OTP}">
+                <div class="input-group">
+                    <h2>Nhập OTP</h2>
+                    <div>
+                        <input type="text" class="otp-input" maxlength="1" id="otp1" autofocus>
+                        <input type="text" class="otp-input" maxlength="1" id="otp2">
+                        <input type="text" class="otp-input" maxlength="1" id="otp3">
+                        <input type="text" class="otp-input" maxlength="1" id="otp4">
+                        <input type="text" class="otp-input" maxlength="1" id="otp5">
+                        <input type="text" class="otp-input" maxlength="1" id="otp6">
+                    </div>
+                </div>
+                <input type="hidden" name="otp" id="otp-hidden">
+                <div class = "btn-group">
+                    <button type="submit" class="btn">Xác nhận OTP</button>
+                    <button class="btn" id="resend-otp" style="display: none" >Gửi lại OTP</button>
+                </div>
+            </form>
+
+
+        </div>
+
+    </div>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</body>
+</html>

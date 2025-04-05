@@ -21,11 +21,25 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
+<<<<<<< HEAD
             throw new UsernameNotFoundException("User not found!");
+=======
+            user = userRepository.findByEmail(username);
+            if (user == null) {
+                throw new UsernameNotFoundException("User not found!");
+            }
+>>>>>>> main
         }
         if (!user.getStatus()) {
             throw new DisabledException("Tài khoản đã bị khóa!");
         }
+<<<<<<< HEAD
+=======
+        System.out.println("===================");
+        System.out.println(user.getUsername());
+        System.out.println(user.getPassword());
+        System.out.println(user.getRoleID().getRoleName());
+>>>>>>> main
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())

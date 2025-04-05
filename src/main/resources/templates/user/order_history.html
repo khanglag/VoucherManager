@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hệ thống quản lý voucher</title>
+    <!-- Bootstrap CSS -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+            rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <!-- css -->
+    <link rel="stylesheet" th:href="@{/assets/css/index.css}" />
+
+    <link rel="stylesheet" th:href="@{/assets/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/individual.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/order_history.css}" />
+
+</head>
+<body>
+<div >
+    <nav th:replace="index :: Navbar"></nav>
+    <div class="container-fluid mt-5 mb-5">
+        <div class="row mt-5">
+            <div class="col-3" th:replace="~{user/individual :: menu}"></div>
+            <div class="col-9" style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);background-color: #f8f9fa">
+                <h2 class="form_infomation_user_heading">Lịch sử đơn hàng của bạn</h2>
+                <div class="filter-container">
+                    <label for="statusFilter">Lọc theo trạng thái: </label>
+                    <select id="statusFilter" onchange="filterOrders()">
+                        <option value="ALL">Tất cả</option>
+                        <option value="PENDING">Chờ xử lý</option>
+                        <option value="COMPLETED">Hoàn thành</option>
+                        <option value="CANCELLED">Đã hủy</option>
+                    </select>
+                </div>
+                <div th:each="order : ${orders}" class="orderDetail_show-card">
+                    <div class="orderDetail_show-summary">
+                        <h3 class="orderDetail_show-heading">Đơn hàng #<span th:text="${order.orderId}"></span></h3>
+                        <p class="orderDetail_show-date">Ngày đặt: <span th:text="${#temporals.format(order.orderDate.minusHours(7), 'dd/MM/yyyy HH:mm:ss')}"></span></p>
+                        <p class="orderDetail_show-totalAmount">Tổng tiền: <span  th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')}"></span></p>
+                        <p class="orderDetail_show-finalAmount">Thanh toán: <span th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')}"></span></p>
+                        <p class="orderDetail_show-status">Trạng thái: <span  th:text="${order.orderStatus.toString()}"
+                                                                              th:classappend="${order.orderStatus.toString() == 'PENDING' ? 'order_status-pending' :
+                            (order.orderStatus.toString() == 'COMPLETED' ? 'order_status-confirmed' :
+                            (order.orderStatus.toString() == 'CANCELLED' ? 'order_status-cancelled' : ''))}"></span></p>
+                    </div>
+
+                    <button class="orderDetail_show-toggleButton" onclick="toggleDetails(this)">Xem chi tiết</button>
+
+                    <div class="orderDetail_show-details" style="display: none;">
+                        <table class="orderDetail_show-table">
+                            <thead>
+                            <tr>
+                                <th>Tên sản phẩm</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
+                                <th>Hình ảnh</th>
+                            </tr>
+                            </thead>
+                            <tbody th:each="detail, iterStat : ${orderDetailsMap[order.orderId]}">
+                            <tr>
+                                <td th:text="${productDetailsMap[order.orderId].get(iterStat.index).productName}"></td>
+                                <td th:text="${detail.quantity}"></td>
+                                <td th:text="${#numbers.formatDecimal(detail.unitPrice, 0, 'COMMA', 0, 'POINT')}" ></td>
+                                <td th:text="${#numbers.formatDecimal(detail.totalPrice, 0, 'COMMA', 0, 'POINT')}" ></td>
+                                <td><img th:src="@{${productDetailsMap[order.orderId].get(iterStat.index).imageUrl}}" alt="Product Image" width="50" height="50"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <p id="noResultMessage" class="orderDetail_show-noResult" style="display: none;">Không tìm thấy đơn hàng phù hợp.</p>
+
+            </div>
+        </div>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h2>Giỏ Hàng</h2>
+            <button class="close-cart" id="closeCart">&times;</button>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+            <th:block th:if="${cart != null and not cart.isEmpty()}">
+                <div th:each="producta : ${cart}" class="cart-item"
+                     th:attr="data-price=${producta.price}, data-quantity=1">
+                    <img th:src="${producta.imageUrl}" alt="Ảnh sản phẩm" class="cart-item-img">
+                    <div class="cart-item-info">
+                        <h4 th:text="${producta.productName}"></h4>
+                        <p>
+            <span th:text="${#numbers.formatDecimal(producta.price, 0, 'COMMA', 0, 'POINT')} + '₫'"
+                  style="color: #e74c3c; font-weight: bold">
+            </span>
+                        </p>
+                    </div>
+                </div>
+            </th:block>
+            <th:block th:if="${cart == null or cart.isEmpty()}">
+                <p class="empty-cart-msg">Giỏ hàng của bạn đang trống!</p>
+            </th:block>
+        </div>
+
+        <div class="cart-total">
+            <div class="total-price">
+                <span>Tổng cộng:</span>
+                <span id="totalPrice">0₫</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">
+                <a class="nav-link" th:href="@{/payment}">Thanh toán</a>
+            </button>
+        </div>
+    </div>
+    <footer th:replace="index :: Footer"></footer>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!--<script th:src="@{/assets/js/store.js}"></script>-->
+<script th:src="@{/assets/js/helpers.js}"></script>
+<!--<script th:src="@{/assets/js/individual.js}"></script>-->
+<script th:src="@{/assets/js/order_history.js}"></script>
+</body>
+</html>

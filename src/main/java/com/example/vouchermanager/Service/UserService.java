@@ -12,7 +12,11 @@ import java.util.List;
 @Service
 public interface UserService {
 //    List<UserDTO> findAll();
+<<<<<<< HEAD
 //    List<User> findAll();
+=======
+   List<User> findAll();
+>>>>>>> main
     Page<UserDTO> findAll(Pageable pageable);
     User findByUsername(String username);
     User findByEmail(String email);

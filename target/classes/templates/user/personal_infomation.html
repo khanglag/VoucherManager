@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="_csrf" content="${_csrf.token}"/>
+  <meta name="_csrf_header" content="${_csrf.headerName}"/>
+  <title>Hệ thống quản lý voucher</title>
+  <!-- Bootstrap CSS -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet"
+  />
+  <!-- Font Awesome -->
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <!-- css -->
+  <link rel="stylesheet" th:href="@{/assets/css/index.css}" />
+
+  <link rel="stylesheet" th:href="@{/assets/css/global.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/individual.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/personal_infomation.css}" />
+</head>
+<body>
+<div >
+  <nav th:replace="index :: Navbar"></nav>
+
+  <div class="container-fluid mt-5 mb-5">
+    <div class="row mt-5">
+      <div class="col-3" th:replace="~{user/individual :: menu}"></div>
+      <div class="col-9" style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);background-color: #f8f9fa">
+        <h1 class="form_infomation_user_heading">Thông Tin Cá Nhân</h1>
+
+        <form id="form_infomation_user_personalInfoForm" th:object="${infoUser}" method="post">
+          <div class="form_infomation_user_row">
+            <div class="form_infomation_user_group" style="display: none">
+              <label for="form_infomation_user_userID">ID người dùng</label>
+              <input
+                      type="text"
+                      id="form_infomation_user_userID"
+                      name="id"
+                      th:field="*{id}"
+              />
+            </div>
+            <div class="form_infomation_user_group" style="display: none">
+              <label for="form_infomation_user_roleId">RoleId</label>
+              <input
+                      type="text"
+                      id="form_infomation_user_roleId"
+                      name="roleID"
+                      th:field="*{roleID}"
+              />
+            </div>
+            <div class="form_infomation_user_group" style="display: none">
+              <label for="form_infomation_user_username">Tên đăng nhập</label>
+              <input
+                      type="text"
+                      id="form_infomation_user_username"
+                      name="username"
+                      th:field="*{username}"
+              />
+            </div>
+          </div>
+
+          <div class="form_infomation_user_group" style="display: none">
+            <label for="form_infomation_user_password">Password</label>
+            <input
+                    type="password"
+                    id="form_infomation_user_password"
+                    name="password"
+                    th:field="*{password}"
+            />
+          </div>
+
+          <div class="form_infomation_user_group">
+            <label for="form_infomation_user_fullName">Họ và tên</label>
+            <input
+                    type="text"
+                    id="form_infomation_user_fullName"
+                    name="fullName"
+                    th:field="*{fullName}"
+                    required
+            />
+          </div>
+
+          <div class="form_infomation_user_group">
+            <label for="form_infomation_user_email">Địa chỉ email</label>
+            <input
+                    type="email"
+                    id="form_infomation_user_email"
+                    name="email"
+                    th:field="*{email}"
+                    required
+            />
+          </div>
+
+          <div class="form_infomation_user_group">
+            <label for="form_infomation_user_phoneNumber">Số điện thoại</label>
+            <input
+                    type="tel"
+                    id="form_infomation_user_phoneNumber"
+                    name="phoneNumber"
+                    th:field="*{phoneNumber}"
+                    required
+            />
+          </div>
+
+          <div class="form_infomation_user_group">
+            <button type="submit" class="form_infomation_user_button">
+              Submit
+            </button>
+          </div>
+
+          <div class="form_infomation_user_loading">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+
+          <div class="form_infomation_user_message form_infomation_user_success">
+            Cập nhật thông tin thành công!
+          </div>
+          <div class="form_infomation_user_message form_infomation_user_error">
+            Cập nhật thông tin thất bại
+          </div>
+        </form>
+        <form id="form_change_password">
+          <input type="password" id="changePassword_oldPassword" placeholder="Mật khẩu cũ" required />
+          <input type="password" id="changePassword_newPassword" placeholder="Mật khẩu mới" required />
+          <input type="password" id="changePassword_confirmPassword" placeholder="Xác nhận mật khẩu mới" required />
+
+          <div class="changePassword_loading" style="display: none;">Đang xử lý...</div>
+          <div class="changePassword_success changePassword_message"></div>
+          <div class="changePassword_error changePassword_message"></div>
+
+          <button class="changePassword_submit">Đổi mật khẩu</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-header">
+      <h2>Giỏ Hàng</h2>
+      <button class="close-cart" id="closeCart">&times;</button>
+    </div>
+
+    <div class="cart-items" id="cartItems">
+      <th:block th:if="${cart != null and not cart.isEmpty()}">
+        <div th:each="producta : ${cart}" class="cart-item"
+             th:attr="data-price=${producta.price}, data-quantity=1">
+          <img th:src="${producta.imageUrl}" alt="Ảnh sản phẩm" class="cart-item-img">
+          <div class="cart-item-info">
+            <h4 th:text="${producta.productName}"></h4>
+            <p>
+            <span th:text="${#numbers.formatDecimal(producta.price, 0, 'COMMA', 0, 'POINT')} + '₫'"
+                  style="color: #e74c3c; font-weight: bold">
+            </span>
+            </p>
+          </div>
+        </div>
+      </th:block>
+      <th:block th:if="${cart == null or cart.isEmpty()}">
+        <p class="empty-cart-msg">Giỏ hàng của bạn đang trống!</p>
+      </th:block>
+    </div>
+
+    <div class="cart-total">
+      <div class="total-price">
+        <span>Tổng cộng:</span>
+        <span id="totalPrice">0₫</span>
+      </div>
+      <button class="checkout-btn" id="checkoutBtn">
+        <a class="nav-link" th:href="@{/payment}">Thanh toán</a>
+      </button>
+    </div>
+  </div>
+  <footer th:replace="index :: Footer"></footer>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!--<script th:src="@{/assets/js/store.js}"></script>-->
+<script th:src="@{/assets/js/helpers.js}"></script>
+<!--<script th:src="@{/assets/js/individual.js}"></script>-->
+<script th:src="@{/assets/js/personal_infomation.js}"></script>
+</body>
+</html>
