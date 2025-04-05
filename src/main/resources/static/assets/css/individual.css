@@ -1,0 +1,58 @@
+/* Menu chung */
+.menu {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Danh sách menu */
+.custom-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+/* Mỗi mục menu */
+.custom-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 18px;
+    border-radius: 5px; /* Bo góc cho mỗi mục */
+    transition: background-color 0.3s ease; /* Hiệu ứng đổi màu nền */
+}
+
+/* Icon bên trái */
+.custom-list li i {
+    margin-right: 10px;
+    color: #007bff;
+    font-size: 20px;
+}
+
+/* Liên kết trong menu */
+.custom-list li a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease;
+    padding: 10px 15px; /* Thêm khoảng cách để liên kết rộng hơn */
+    display: block; /* Để a chiếm toàn bộ chiều rộng */
+    border-radius: 5px; /* Bo góc cho các liên kết */
+}
+
+/* Màu nền khi hover */
+.custom-list li:hover {
+    background-color: #e9ecef;
+}
+
+
+
+/* Màu hover cho liên kết */
+.custom-list li a:hover {
+    color: #007bff;
+    background-color: #e9ecef;
+}
+
+/* Đặt khoảng cách giữa các mục menu */
+.custom-list li + li {
+    margin-top: 10px;
+}

@@ -1,5 +1,6 @@
 package com.example.vouchermanager.Service;
 
+import com.example.vouchermanager.Model.DTO.MonthlyRevenueDTO;
 import com.example.vouchermanager.Model.DTO.OrderDTO;
 import com.example.vouchermanager.Model.DTO.UserDTO;
 import com.example.vouchermanager.Model.Entity.Order;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,19 +26,19 @@ public class OrderServiceImp implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-//    @Override
-//    public List<OrderDTO> findAll() {
-//        return orderRepository.findAll().stream()
-//                .map(order -> new OrderDTO(
-//                        order.getId(),
-//                        order.getUserID() != null ? order.getUserID().getId() : 0, // Kiểm tra null tránh lỗi
-//                        order.getOrderDate() != null ? order.getOrderDate().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null,
-//                        order.getTotalAmount(),
-//                        order.getFinalAmount(),
-//                        order.getOrderStatus()
-//                ))
-//                .collect(Collectors.toList());
-//    }
+    @Transactional
+    @Override
+    public List<OrderDTO> findAllByUserId(int userId) {
+        List<Order> orders = orderRepository.findByUserID_Id(userId);
+        return orders.stream().map(order -> new OrderDTO(
+                order.getId(),
+                order.getUserID().getId(),
+                order.getOrderDate().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime(),
+                order.getTotalAmount(),
+                order.getFinalAmount(),
+                order.getOrderStatus()
+        )).collect(Collectors.toList());
+    }
 @Override
 public Page<OrderDTO> findAll(Pageable pageable) {
     return orderRepository.findAll(pageable)
@@ -196,6 +198,17 @@ public Page<OrderDTO> findAll(Pageable pageable) {
     public BigDecimal getTotalFinalAmountForMonth(int month, int year) {
         return orderRepository.getTotalFinalAmountByMonthAndYear(month, year);
     }
+    public List<MonthlyRevenueDTO> getMonthlyRevenue(int year) {
+        List<Object[]> results = orderRepository.getMonthlyRevenue(year);
+        List<MonthlyRevenueDTO> revenueList = new ArrayList<>();
 
+        for (Object[] result : results) {
+            int month = (int) result[0];
+            BigDecimal totalAmount = (BigDecimal) result[1];
+            revenueList.add(new MonthlyRevenueDTO(month, totalAmount));
+        }
+
+        return revenueList;
+    }
 
 }

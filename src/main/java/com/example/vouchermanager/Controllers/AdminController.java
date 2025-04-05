@@ -627,4 +627,11 @@ public class AdminController {
         }
         return ResponseEntity.notFound().build();
     }
+
+//    thống kê doanh thu theo tháng
+        @GetMapping("/admin/revenue-data")
+        @ResponseBody
+        public List<MonthlyRevenueDTO> getMonthlyRevenueData(@RequestParam int year) {
+            return orderServiceImp.getMonthlyRevenue(year);
+        }
 }

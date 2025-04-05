@@ -110,7 +110,7 @@ body {
 .form-group textarea {
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: var(--border-radius);
+    border-radius: 20px;
     outline: none;
     transition: all 0.3s ease;
 }
@@ -136,7 +136,7 @@ body {
 .btn {
     padding: 12px 20px;
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: 20px;
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s ease;
@@ -210,8 +210,6 @@ body {
 
 /* Voucher Table */
 .voucher-table thead{
-    /*width: 100%;*/
-    /*border-collapse: collapse;*/
     position: sticky;
     top: 0;
     background-color: #f8f9fa; /* Màu nền giúp tiêu đề rõ ràng */

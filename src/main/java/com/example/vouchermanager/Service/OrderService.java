@@ -19,4 +19,5 @@ public interface OrderService {
     Page<OrderDTO> getOrdersByDateRange(Instant startDate, Instant endDate, Pageable pageable);
     Page<OrderDTO> findByStatus(String status, Pageable pageable);
     BigDecimal getTotalFinalAmountForMonth(int month, int year);
+    List<OrderDTO> findAllByUserId(int userId);
 }

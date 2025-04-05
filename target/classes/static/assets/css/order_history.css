@@ -1,0 +1,143 @@
+.form_infomation_user_heading {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 22px;
+    position: relative;
+}
+.form_infomation_user_heading::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
+}
+
+
+.orderDetail_show-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.orderDetail_show-summary {
+    margin-bottom: 15px;
+}
+
+.orderDetail_show-heading {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.orderDetail_show-date,
+.orderDetail_show-totalAmount,
+.orderDetail_show-finalAmount,
+.orderDetail_show-status {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+
+
+.orderDetail_show-status.COMPLETED {
+    background-color: #28a745;
+}
+
+.orderDetail_show-status.CANCELLED {
+    background-color: #dc3545;
+}
+
+.orderDetail_show-status.PENDING {
+    background-color: #ffc107;
+}
+
+
+.orderDetail_show-toggleButton {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.orderDetail_show-toggleButton:hover {
+    background-color: #0056b3;
+}
+
+
+.orderDetail_show-details {
+    margin-top: 20px;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+    display: none;
+}
+
+.orderDetail_show-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.orderDetail_show-table th,
+.orderDetail_show-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.orderDetail_show-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.orderDetail_show-table img {
+    border-radius: 5px;
+}
+
+
+.orderDetail_show-noResult {
+    text-align: center;
+    font-size: 16px;
+    color: #888;
+    display: none;
+}
+.order_status-pending {
+    background-color: #fff8e1;
+    color: #ffa000;
+}
+
+.order_status-confirmed {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+.order_status-cancelled {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+/*lọc*/
+.filter-container {
+
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+
+}
+
+#statusFilter {
+    padding: 5px;
+    font-size: 16px;
+    margin-left: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}

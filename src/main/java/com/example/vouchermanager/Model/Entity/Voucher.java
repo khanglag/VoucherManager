@@ -80,4 +80,24 @@ public class Voucher {
     @Column(name = "ApplicableForAllProducts", nullable = false)
     private Boolean applicableForAllProducts = false;
 
+    @Override
+    public String toString() {
+        return "Voucher{" +
+                "voucherCode='" + voucherCode + '\'' +
+                ", title='" + title + '\'' +
+                ", logoUrl='" + logoUrl + '\'' +
+                ", description='" + description + '\'' +
+                ", discountType=" + discountType +
+                ", discountValue=" + discountValue +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", minimumOrderValue=" + minimumOrderValue +
+                ", status=" + status +
+                ", createdBy=" + createdBy +
+                ", usageCount=" + usageCount +
+                ", maxUsage=" + maxUsage +
+                ", createdDate=" + createdDate +
+                ", applicableForAllProducts=" + applicableForAllProducts +
+                '}';
+    }
 }

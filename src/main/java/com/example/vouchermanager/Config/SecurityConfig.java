@@ -45,7 +45,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // .csrf(csrf -> csrf.disable())
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**","/store/**","/admin/**","/api/payment/**","/api/vouchers/**","/api/purchase/create"))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**","/store/**","/individual/**","/individual/personal_infomation/**","/individual/vouchersmanager/**","/admin/**","/api/payment/**","/api/vouchers/**","/api/purchase/create"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth", "/", "/index", "/static/**", "/assets/**", "/templates/**",
                                 "/user/**", "/vouchers", "/store", "/brands","/contact", "/register", "/auth/register",

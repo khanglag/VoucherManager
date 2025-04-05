@@ -47,6 +47,23 @@ public class HomeController {
         return "user/contact";
     }
 
+    @RequestMapping("/individual")
+    public String individual() {
+        return "user/individual";
+    }
+
+    @RequestMapping("/individual/personal_infomation")
+    public String personal_infomation() {
+        return "user/personal_infomation";
+    }
+    @RequestMapping("/individual/order_history")
+    public String order_history_customer() {
+        return "user/order_history";
+    }
+    @RequestMapping("/individual/vouchersmanager")
+    public String vouchers_manager_by_staff() {
+        return "user/vouchersmanager";
+    }
     @RequestMapping("/auth")
     public String login() {
         return "auth";
@@ -76,6 +93,9 @@ public class HomeController {
         model.addAttribute("cart", cart);
         return "index";
     }
+
+
+
 
     @GetMapping("/brands")
     public String checkLoginBrandsPage(Model model, Authentication authentication, HttpSession session) {
