@@ -24,48 +24,6 @@
 <div th:fragment="OrdersManager">
   <div class="order_container">
     <div class=" mb-3 d-flex" style="justify-content: space-around">
-<!--      <div class="statistic_totalAmount">-->
-<!--        <div class="title_statistic_totalAmount">Chọn tháng để xem thống kê</div>-->
-<!--        <form method="get" action="/admin" class="form_statistic_totalAmount" id="statisticForm">-->
-<!--          <select name="month" class="month_statistic_totalAmount">-->
-<!--            <option th:each="m : ${#numbers.sequence(1, 12)}"-->
-<!--                    th:value="${m}"-->
-<!--                    th:text="${'Tháng ' + m}"-->
-<!--                    th:selected="${m == selectedMonth}">-->
-<!--            </option>-->
-<!--          </select>-->
-<!--          <select name="year" class="year_statistic_totalAmount">-->
-<!--            <option th:each="y : ${#numbers.sequence(2020, 2030)}"-->
-<!--                    th:value="${y}"-->
-<!--                    th:text="${y}"-->
-<!--                    th:selected="${y == selectedYear}">-->
-<!--            </option>-->
-<!--          </select>-->
-<!--          <button type="submit" class="btn_statistic_totalAmount">Xem thống kê</button>-->
-<!--        </form>-->
-<!--        <div class="title_statistic_totalAmount">Tổng số tiền đã giảm giá</div>-->
-<!--        <div class="amount_statistic_totalAmount" th:text="${#numbers.formatInteger(totalDiscount, 3, 'COMMA')} + ' VNĐ'"></div>-->
-<!--      </div>-->
-<!--      <div class="statistic_totalAmount">-->
-<!--          <div class="title_statistic_totalAmount">Chọn tháng để xem thống kê</div>-->
-<!--          <form id="statisticFinalAmountForm" class="form_statistic_totalAmount">-->
-<!--            <select name="month" class="month_statistic_totalAmount">-->
-<!--              <option th:each="m : ${#numbers.sequence(1, 12)}"-->
-<!--                      th:value="${m}"-->
-<!--                      th:text="${'Tháng ' + m}">-->
-<!--              </option>-->
-<!--            </select>-->
-<!--            <select name="year" class="year_statistic_totalAmount">-->
-<!--              <option th:each="y : ${#numbers.sequence(2020, 2030)}"-->
-<!--                      th:value="${y}"-->
-<!--                      th:text="${y}">-->
-<!--              </option>-->
-<!--            </select>-->
-<!--            <button type="submit" class="btn_statistic_totalAmount">Xem thống kê</button>-->
-<!--          </form>-->
-<!--          <div class="title_statistic_totalAmount">Tổng doanh thu thực tế</div>-->
-<!--          <div class="amount_statistic_totalAmount">0 VNĐ</div>-->
-<!--      </div>-->
       <div class="statistic_totalAmount">
         <div class="title_statistic_totalAmount">Chọn tháng để xem thống kê</div>
         <form id="statisticForm" class="form_statistic_totalAmount" method="POST">

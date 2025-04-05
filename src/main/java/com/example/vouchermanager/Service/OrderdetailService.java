@@ -11,7 +11,7 @@ import java.util.List;
 public interface OrderdetailService {
 //    List<OrderDetailDTO> findAll();
     OrderDetailDTO findById(int id);
-//    List<OrderDetailDTO> findByOrderId(int id);
+    List<OrderDetailDTO> findByOrderId(int id);
 //    List<OrderDetailDTO> findByProductId(int id);
     Page<OrderDetailDTO> findAll(Pageable pageable);
     Page<OrderDetailDTO> findByOrderId(int id, Pageable pageable);

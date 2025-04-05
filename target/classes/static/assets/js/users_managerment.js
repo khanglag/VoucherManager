@@ -50,11 +50,10 @@ document.addEventListener("DOMContentLoaded", function () {
         renderTable(filterRows());
     }
 
-    // Xử lý khi ấn nút Đặt lại
     resetBtn.addEventListener("click", function () {
         searchInput.value = "";
         roleFilter.value = "";
-        currentPage = 1; // Quay về trang đầu tiên
+        currentPage = 1;
         updateTable();
     });
 

@@ -23,7 +23,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query("SELECT MAX(o.id) FROM Order o")
     int findMaxOrderId();
-
+    List<Order> findByUserID_Id(int userId);
     Optional<Order> findById(int id);
 
     Page<Order> findByOrderDateBetween(Instant startDate, Instant endDate, Pageable pageable);
@@ -39,5 +39,12 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query("SELECT COALESCE(SUM(o.finalAmount), 0) FROM Order o WHERE o.orderStatus = 'COMPLETED' AND FUNCTION('MONTH', o.orderDate) = :month AND FUNCTION('YEAR', o.orderDate) = :year")
     BigDecimal getTotalFinalAmountByMonthAndYear(int month, int year);
+
+    @Query("SELECT MONTH(o.orderDate) AS month, SUM(o.finalAmount) AS total " +
+            "FROM Order o " +
+            "WHERE YEAR(o.orderDate) = :year AND o.orderStatus = 'COMPLETED' " +
+            "GROUP BY MONTH(o.orderDate) " +
+            "ORDER BY MONTH(o.orderDate)")
+    List<Object[]> getMonthlyRevenue(int year);
 }
 

@@ -20,6 +20,11 @@
     <link rel="stylesheet" th:href="@{/assets/css/statistic.css}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <!-- Thêm thư viện html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- Thêm thư viện jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </head>
 <body>
@@ -29,6 +34,48 @@
             <canvas id="voucherChart" ></canvas>
             <canvas id="performanceStatistics" ></canvas>
         </div>
+        <div class="chart-container" style="max-width: 900px; margin: 50px auto;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <label for="yearSelect">Chọn năm:</label>
+                <select id="yearSelect" onchange="fetchRevenueData()" style="padding: 8px; font-size: 16px;">
+                    <script>
+                        const select = document.getElementById('yearSelect');
+                        const currentYear = new Date().getFullYear();
+                        for (let i = 0; i < 5; i++) {
+                            const year = currentYear - i;
+                            const option = document.createElement('option');
+                            option.value = year;
+                            option.text = year;
+                            select.add(option);
+                        }
+                    </script>
+                </select>
+            </div>
+
+            <canvas id="revenueChart" height="120"></canvas>
+        </div>
+    <div style="text-align: center; margin-top: 20px;">
+        <button onclick="exportHiddenRevenueToPDF()" style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer;">
+            📄 Xuất doanh thu PDF
+        </button>
+    </div>
+        <!-- Bảng doanh thu dùng để export PDF (ẩn đi) -->
+    <div id="hiddenRevenueTableContainer" style="display: none;">
+        <h2 style="text-align: center;">Bảng Doanh Thu Năm <span id="revenueYear">2025</span></h2>
+
+        <table id="hiddenRevenueTable" style="width: 100%; border-collapse: collapse; font-size: 16px;">
+            <thead>
+            <tr style="background-color: #343a40; color: white;">
+                <th style="padding: 10px; border: 1px solid #ddd;">Tháng</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Năm</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Doanh thu (VNĐ)</th>
+            </tr>
+            </thead>
+            <tbody id="hiddenRevenueBody">
+            <!-- JS sẽ tự động thêm dữ liệu vào -->
+            </tbody>
+        </table>
+    </div>
         <div class="mt-4">
             <h1 class="statisticEfficiency_title">Báo cáo hiệu suất Voucher của nhân viên tạo</h1>
             <div class="statisticEfficiency_filter mb-2">
@@ -127,8 +174,13 @@
 </div>
 <!-- Bootstrap JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>-->
 <!-- Three.js -->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>-->
+<!-- Thêm thư viện jsPDF và autoTable -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.28/dist/jspdf.plugin.autotable.min.js"></script>
 <script th:src="@{/assets/js/base64.js}"></script>
 <script th:src="@{/assets/js/statistic.js}"></script>
 

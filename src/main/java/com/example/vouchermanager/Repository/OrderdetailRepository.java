@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface OrderdetailRepository extends JpaRepository<Orderdetail, Integer> {
-//    List<Orderdetail> findByOrderID_Id(int orderId);
+    List<Orderdetail> findByOrderID_Id(int orderId);
 //    List<Orderdetail> findByProductID_Id(int productId);
     Page<Orderdetail> findByOrderID_Id(int orderId, Pageable pageable);
     Page<Orderdetail> findByProductID_Id(int productId, Pageable pageable);

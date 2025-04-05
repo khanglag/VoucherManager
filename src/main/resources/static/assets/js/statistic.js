@@ -193,3 +193,164 @@ function updatePaginationControls(totalPages) {
     };
 }
 document.addEventListener("DOMContentLoaded", paginateTable);
+//thống kê doanh thu theo tháng
+let revenueChart;
+
+function fetchRevenueData() {
+    const year = document.getElementById('yearSelect').value;
+    fetch(`/admin/revenue-data?year=${year}`)
+        .then(response => response.json())
+        .then(data => {
+            const monthlyTotals = Array(12).fill(0);
+
+            data.forEach(item => {
+                const month = item.month - 1;
+                monthlyTotals[month] = item.totalAmount;
+            });
+
+            renderRevenueChart(monthlyTotals, year);
+        })
+        .catch(err => console.error('Lỗi khi lấy dữ liệu doanh thu:', err));
+}
+
+function renderRevenueChart(monthlyTotals, year) {
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+
+    if (revenueChart) {
+        revenueChart.destroy();
+    }
+
+    revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [
+                'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+                'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
+            ],
+            datasets: [{
+                label: `Doanh thu năm ${year}`,
+                data: monthlyTotals,
+                borderColor: '#3e95cd',
+                backgroundColor: 'rgba(62,149,205,0.2)',
+                tension: 0.3,
+                fill: true,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: {
+                duration: 1000,
+                easing: 'easeOutQuart'
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString('vi-VN') + ' đ';
+                        }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) label += ': ';
+                            label += Number(context.raw).toLocaleString('vi-VN') + ' đ';
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+    generateRevenueTableData(monthlyTotals, year);
+}
+// Tạo bảng doanh thu
+function generateRevenueTableData(monthlyTotals, year) {
+    const tbody = document.getElementById("hiddenRevenueBody");
+    const yearLabel = document.getElementById("revenueYear");
+    yearLabel.textContent = year;
+    tbody.innerHTML = "";
+
+    monthlyTotals.forEach((amount, i) => {
+        const row = document.createElement("tr");
+
+        const monthCell = document.createElement("td");
+        monthCell.style.padding = "10px";
+        monthCell.style.border = "1px solid #ddd";
+        monthCell.textContent = i + 1;
+
+        const yearCell = document.createElement("td");
+        yearCell.style.padding = "10px";
+        yearCell.style.border = "1px solid #ddd";
+        yearCell.textContent = year;
+
+        const revenueCell = document.createElement("td");
+        revenueCell.style.padding = "10px";
+        revenueCell.style.border = "1px solid #ddd";
+        revenueCell.textContent = amount.toLocaleString('vi-VN') + ' đ';
+
+        row.appendChild(monthCell);
+        row.appendChild(yearCell);
+        row.appendChild(revenueCell);
+
+        tbody.appendChild(row);
+    });
+}
+
+// Export PDF từ bảng ẩn
+async function exportHiddenRevenueToPDF() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    const arialBase64 = ArialFont;
+
+    pdf.addFileToVFS('Arial-normal.ttf', arialBase64);
+    pdf.addFont('Arial-normal.ttf', 'Arial', 'normal');
+    pdf.setFont('Arial');
+
+    const container = document.getElementById("hiddenRevenueTableContainer");
+    container.style.display = "block";
+    const year = document.getElementById('revenueYear').textContent;
+    pdf.setFontSize(18);
+    pdf.text(`BẢNG DOANH THU NĂM ${year}`, 15, 20);
+    pdf.autoTable({
+        html: '#hiddenRevenueTable',
+        startY: 30,
+        theme: 'grid',
+        styles: {
+            font: 'Arial',
+            fontSize: 12,
+            cellPadding: 3,
+            valign: 'middle',
+            fontStyle: 'normal'
+        },
+        headStyles: {
+            fillColor: [52, 58, 64],
+            textColor: 255,
+            fontStyle: 'bold',
+            font: 'Arial'
+        },
+        bodyStyles: {
+            font: 'Arial'
+        },
+        columnStyles: {
+            0: { halign: 'center' },
+            1: { halign: 'center' },
+            2: {
+                halign: 'right',
+                fontStyle: 'normal'
+            }
+        }
+    });
+
+    pdf.save(`Bang_DoanhThu_${year}.pdf`);
+    container.style.display = "none";
+}
+
+window.onload = fetchRevenueData;
