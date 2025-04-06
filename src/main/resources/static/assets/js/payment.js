@@ -207,26 +207,53 @@ const appliedVouchers = {
     ship: 0,
     shop: 0
 };
-function summarydiv(){
+function summarydiv() {
     const summary = document.getElementById('summary-summary');
-    if(appliedVouchers.ship===0 && appliedVouchers.shop===0){
-        summary.textContent=( summarynb+30000).toLocaleString('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        });
-    } else if(appliedVouchers.ship!==0 && appliedVouchers.shop!==0){
-        summary.textContent= (summarynb-appliedVouchers.ship-appliedVouchers.shop+30000).toLocaleString('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        });
+    const shipFee = 30000; // Phí ship gốc
+    let productTotal = summarynb; // Tổng tiền hàng (không có phí ship)
+
+
+    let discountShop = 0;
+    if (appliedVouchers.shop) {
+        if (appliedVouchers.shop.percent) {
+            discountShop = productTotal * (appliedVouchers.shop.percent / 100); // Áp dụng giảm giá % chỉ trên tiền hàng
+        } else {
+            discountShop = appliedVouchers.shop;
+        }
     }
-    else  {
-        summary.textContent= (summarynb-appliedVouchers.ship-appliedVouchers.shop+30000).toLocaleString('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        });
-    }
+
+    let discountShip = appliedVouchers.ship || 0;
+    let finalShipFee = Math.max(0, shipFee - discountShip); // Phí ship sau khi giảm
+
+    // --- 3. Tính tổng tiền phải trả ---
+    let total = Math.max(0, (productTotal - discountShop) + finalShipFee); // Tiền hàng sau giảm + phí ship còn lại
+
+    // --- 4. Hiển thị giảm giá chi tiết ---
+    document.getElementById('summary').textContent = productTotal.toLocaleString('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    });
+
+    // Hiển thị giảm giá sản phẩm
+    document.getElementById('voucher-shop').textContent = discountShop.toLocaleString('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    });
+
+    // Hiển thị giảm giá phí ship
+    document.getElementById('voucher-ship').textContent = discountShip.toLocaleString('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    });
+
+    // Hiển thị tổng thanh toán cuối cùng
+    document.getElementById('summary-summary').textContent = total.toLocaleString('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    });
+
 }
+
 function updateVoucher(type, price) {
     const subtotalString = document.getElementById('subtotal').textContent;
 // Loại bỏ dấu chấm và ký tự ₫, sau đó chuyển thành số
