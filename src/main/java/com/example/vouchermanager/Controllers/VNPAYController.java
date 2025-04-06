@@ -35,7 +35,7 @@ public class VNPAYController {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             model.addAttribute("user", userDetails.getUsername());
-            BigDecimal total = orderService.getLastOrder().getTotalAmount();
+            BigDecimal total = orderService.getLastOrder().getFinalAmount();
             model.addAttribute("total", total);
             session.setAttribute("total", total+"");
         }
@@ -98,7 +98,7 @@ public class VNPAYController {
         model.addAttribute("amount", allParams.get("vnp_Amount"));
         model.addAttribute("orderInfo", allParams.get("vnp_OrderInfo"));
 
-        return "vnpay_result"; // Trang kết quả thanh toán (phải có file vnpay_result.html)
+        return "user/order_history"; // Trang kết quả thanh toán (phải có file vnpay_result.html)
     }
 
 }
