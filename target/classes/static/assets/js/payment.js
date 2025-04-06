@@ -212,17 +212,16 @@ function summarydiv() {
     const shipFee = 30000; // Phí ship gốc
     let productTotal = summarynb; // Tổng tiền hàng (không có phí ship)
 
-    // --- 1. Tính giảm giá từ voucher shop ---
+
     let discountShop = 0;
     if (appliedVouchers.shop) {
         if (appliedVouchers.shop.percent) {
             discountShop = productTotal * (appliedVouchers.shop.percent / 100); // Áp dụng giảm giá % chỉ trên tiền hàng
         } else {
-            discountShop = appliedVouchers.shop; // Áp dụng giảm giá cố định
+            discountShop = appliedVouchers.shop;
         }
     }
 
-    // --- 2. Tính giảm từ voucher ship ---
     let discountShip = appliedVouchers.ship || 0;
     let finalShipFee = Math.max(0, shipFee - discountShip); // Phí ship sau khi giảm
 
@@ -255,28 +254,6 @@ function summarydiv() {
 
 }
 
-
-
-// function summarydiv(){
-//     const summary = document.getElementById('summary-summary');
-//     if(appliedVouchers.ship===0 && appliedVouchers.shop===0){
-//         summary.textContent=( summarynb+30000).toLocaleString('vi-VN', {
-//             style: 'currency',
-//             currency: 'VND'
-//         });
-//     } else if(appliedVouchers.ship!==0 && appliedVouchers.shop!==0){
-//         summary.textContent= (summarynb-appliedVouchers.ship-appliedVouchers.shop+30000).toLocaleString('vi-VN', {
-//             style: 'currency',
-//             currency: 'VND'
-//         });
-//     }
-//     else  {
-//         summary.textContent= (summarynb-appliedVouchers.ship-appliedVouchers.shop+30000).toLocaleString('vi-VN', {
-//             style: 'currency',
-//             currency: 'VND'
-//         });
-//     }
-// }
 function updateVoucher(type, price) {
     const subtotalString = document.getElementById('subtotal').textContent;
 // Loại bỏ dấu chấm và ký tự ₫, sau đó chuyển thành số
@@ -350,28 +327,28 @@ function restoreVoucherSelection() {
     }
 }
 
-async function createPurchaseRequest() {
-    try {
-        const response = await fetch('/api/purchase/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            // Chuyển hướng sau khi xử lý xong
-            window.location.href = "/createOrder";
-        } else {
-            const errorText = await response.text();
-            console.error("Lỗi từ server:", errorText);
-            alert("Gặp lỗi khi xử lý đơn hàng!");
-        }
-    } catch (error) {
-        console.error('Lỗi:', error);
-        alert('Đã có lỗi xảy ra!');
-    }
-}
+// async function createPurchaseRequest() {
+//     try {
+//         const response = await fetch('/api/purchase/create', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             }
+//         });
+//
+//         if (response.ok) {
+//             // Chuyển hướng sau khi xử lý xong
+//             window.location.href = "/createOrderVNpay";
+//         } else {
+//             const errorText = await response.text();
+//             console.error("Lỗi từ server:", errorText);
+//             alert("Gặp lỗi khi xử lý đơn hàng!");
+//         }
+//     } catch (error) {
+//         console.error('Lỗi:', error);
+//         alert('Đã có lỗi xảy ra!');
+//     }
+// }
 
 window.onload = restoreVoucherSelection;
 

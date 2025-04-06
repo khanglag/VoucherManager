@@ -327,28 +327,28 @@ function restoreVoucherSelection() {
     }
 }
 
-async function createPurchaseRequest() {
-    try {
-        const response = await fetch('/api/purchase/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            // Chuyển hướng sau khi xử lý xong
-            window.location.href = "/createOrder";
-        } else {
-            const errorText = await response.text();
-            console.error("Lỗi từ server:", errorText);
-            alert("Gặp lỗi khi xử lý đơn hàng!");
-        }
-    } catch (error) {
-        console.error('Lỗi:', error);
-        alert('Đã có lỗi xảy ra!');
-    }
-}
+// async function createPurchaseRequest() {
+//     try {
+//         const response = await fetch('/api/purchase/create', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             }
+//         });
+//
+//         if (response.ok) {
+//             // Chuyển hướng sau khi xử lý xong
+//             window.location.href = "/createOrderVNpay";
+//         } else {
+//             const errorText = await response.text();
+//             console.error("Lỗi từ server:", errorText);
+//             alert("Gặp lỗi khi xử lý đơn hàng!");
+//         }
+//     } catch (error) {
+//         console.error('Lỗi:', error);
+//         alert('Đã có lỗi xảy ra!');
+//     }
+// }
 
 window.onload = restoreVoucherSelection;
 

@@ -4,6 +4,7 @@ import com.example.vouchermanager.Model.DTO.ApplyVoucher;
 import com.example.vouchermanager.Model.DTO.CartDTO;
 import com.example.vouchermanager.Model.DTO.UpdateQuantityRequestDTO;
 import com.example.vouchermanager.Model.Entity.Product;
+import com.example.vouchermanager.Model.Entity.Voucher;
 import com.example.vouchermanager.Model.Enum.DiscountType;
 import com.example.vouchermanager.Service.VoucherService;
 import jakarta.servlet.http.HttpSession;
@@ -12,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Controller
@@ -93,21 +91,38 @@ public class PaymentController {
     @ResponseBody
     public ResponseEntity<String> applyVoucher(@RequestBody Map<String, String> payload, HttpSession session) {
         try {
-            String voucherCode = payload.get("voucherCode"); // Lấy voucherCode từ body
+            String voucherCode = payload.get("voucherCode"); // Lấy mã voucher
+            Optional<Voucher> optionalVoucher = voucherService.getById(voucherCode);
+
+            if (!optionalVoucher.isPresent()) {
+                return ResponseEntity.status(404).body("Voucher không tồn tại.");
+            }
+            Voucher voucher = optionalVoucher.get();
             List<ApplyVoucher> vouchers = (List<ApplyVoucher>) session.getAttribute("voucher");
-            if(voucherService.getById(voucherCode).get().getDiscountType()== DiscountType.FREESHIP){
+            if (voucher.getDiscountType() == DiscountType.FREESHIP) {
                 for (ApplyVoucher applyVoucher : vouchers) {
-                    if(applyVoucher.getVoucherstyle()=="ship")
+                    if ("ship".equals(applyVoucher.getVoucherstyle())) {
                         applyVoucher.setVoucherCode(voucherCode);
-                    else  applyVoucher.setVoucherCode(voucherCode);
+                    }
                 }
-            };
+            }else {
+                for (ApplyVoucher applyVoucher : vouchers) {
+                    if ("shop".equals(applyVoucher.getVoucherstyle())) {
+                        applyVoucher.setVoucherCode(voucherCode);
+                    }
+                }
+            }
+            System.out.println("Duy Khang");
+            for (ApplyVoucher applyVoucher : vouchers) {
+                System.out.println(applyVoucher.getVoucherCode()+applyVoucher.getVoucherstyle());
+            }
             session.setAttribute("voucher", vouchers);
+            return ResponseEntity.ok("Voucher applied successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error applying voucher: " + e.getMessage());
         }
-        return null;
     }
+
     @GetMapping("/cancelvoucher")
     public ResponseEntity<String> cancelVoucher(HttpSession session) {
         try {

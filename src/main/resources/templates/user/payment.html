@@ -155,8 +155,13 @@
           </div>
         </div>
         <!-- Checkout Button -->
-        <button class="checkout-btn" onclick="createPurchaseRequest()">Mua</button>
-      </div>
+      <form th:action="@{/createOrderVNPay}" method="get">
+        <button type="submit" class="checkout-btn">Thanh toán VNPay</button>
+      </form>
+      <form th:action="@{/api/purchase/create}" method="post">
+        <button type="submit" class="checkout-btn">Thanh toán khi nhận hàng</button>
+      </form>
+    </div>
     </div>
   </div>
   <div id="voucherModal" class="modal">
