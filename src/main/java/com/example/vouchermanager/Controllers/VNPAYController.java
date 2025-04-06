@@ -98,7 +98,7 @@ public class VNPAYController {
         model.addAttribute("amount", allParams.get("vnp_Amount"));
         model.addAttribute("orderInfo", allParams.get("vnp_OrderInfo"));
 
-        return "vnpay_result"; // Trang kết quả thanh toán (phải có file vnpay_result.html)
+        return "user/order_history"; // Trang kết quả thanh toán (phải có file vnpay_result.html)
     }
 
 }
