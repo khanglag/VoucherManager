@@ -55,6 +55,7 @@
   <div class="shine"></div>
 </div>
 <main>
+
   <div class="products" id="products">
     <div th:each="product : ${products}" class="product">
       <img th:src="${product.imageUrl}" alt="Ảnh sản phẩm">
@@ -65,6 +66,8 @@
       </div>
     </div>
   </div>
+
+  <div id="pagination" class="pagination"></div>
 </main>
 
 <div class="overlay" id="overlay"></div>

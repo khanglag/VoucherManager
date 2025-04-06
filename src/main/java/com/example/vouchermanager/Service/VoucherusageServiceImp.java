@@ -2,6 +2,9 @@ package com.example.vouchermanager.Service;
 
 import com.example.vouchermanager.Model.DTO.DailyVoucherUsageDTO;
 import com.example.vouchermanager.Model.DTO.VoucherUsageDTO;
+import com.example.vouchermanager.Model.Entity.Order;
+import com.example.vouchermanager.Model.Entity.Voucherusage;
+import com.example.vouchermanager.Repository.OrderRepository;
 import com.example.vouchermanager.Repository.VoucherusageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,8 @@ public class VoucherusageServiceImp implements VoucherusageService {
     @Autowired
     private VoucherusageRepository voucherusageRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
     @Override
     public List<VoucherUsageDTO> findAll() {
         return voucherusageRepository.findAll().stream()
@@ -61,5 +66,10 @@ public class VoucherusageServiceImp implements VoucherusageService {
                 .collect(Collectors.toList());
     }
 
+    public List<Voucherusage> getVoucherUsagesByOrderId(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order không tồn tại với ID: " + orderId));
+        return voucherusageRepository.findByOrderID(order);
+    }
 
 }

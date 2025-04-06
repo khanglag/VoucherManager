@@ -19,14 +19,23 @@ function filterOrders() {
         noResultMessage.style.display = 'none';
     }
 }
+// function toggleDetails(button) {
+//     const detailDiv = button.nextElementSibling;
+//     if (detailDiv.style.display === "none") {
+//         detailDiv.style.display = "block";
+//         button.textContent = "Ẩn chi tiết";
+//     } else {
+//         detailDiv.style.display = "none";
+//         button.textContent = "Xem chi tiết";
+//     }
+// }
 function toggleDetails(button) {
-    const detailDiv = button.nextElementSibling;
-    if (detailDiv.style.display === "none") {
-        detailDiv.style.display = "block";
+    const details = button.nextElementSibling;
+    if (details.style.display === "none" || !details.style.display) {
+        details.style.display = "block";
         button.textContent = "Ẩn chi tiết";
     } else {
-        detailDiv.style.display = "none";
+        details.style.display = "none";
         button.textContent = "Xem chi tiết";
     }
 }
-

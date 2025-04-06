@@ -73,11 +73,29 @@
                             </tr>
                             </tbody>
                         </table>
+                        <div th:if="${voucherUsageMap[order.orderId] != null and not #lists.isEmpty(voucherUsageMap[order.orderId])}">
+                            <h4 style="margin-top: 1rem;">Voucher đã sử dụng</h4>
+                            <table class="orderDetail_show-table" style="margin-top: 0.5rem;">
+                                <thead>
+                                <tr>
+                                    <th>Mã voucher</th>
+                                    <th>Ngày sử dụng</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="voucher : ${voucherUsageMap[order.orderId]}">
+                                    <td th:text="${voucher.voucherCode.voucherCode}"></td>
+
+                                    <td class="orderDetail_show-date"> <span th:text="${#temporals.format(order.orderDate.minusHours(7), 'dd/MM/yyyy HH:mm:ss')}"></span></td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
-
                 <p id="noResultMessage" class="orderDetail_show-noResult" style="display: none;">Không tìm thấy đơn hàng phù hợp.</p>
-
             </div>
         </div>
     </div>
