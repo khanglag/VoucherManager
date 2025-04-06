@@ -35,7 +35,7 @@ public class VNPAYController {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             model.addAttribute("user", userDetails.getUsername());
-            BigDecimal total = orderService.getLastOrder().getTotalAmount();
+            BigDecimal total = orderService.getLastOrder().getFinalAmount();
             model.addAttribute("total", total);
             session.setAttribute("total", total+"");
         }
