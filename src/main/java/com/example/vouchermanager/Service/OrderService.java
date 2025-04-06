@@ -20,4 +20,6 @@ public interface OrderService {
     Page<OrderDTO> findByStatus(String status, Pageable pageable);
     BigDecimal getTotalFinalAmountForMonth(int month, int year);
     List<OrderDTO> findAllByUserId(int userId);
+
+    Order getLastOrder();
 }

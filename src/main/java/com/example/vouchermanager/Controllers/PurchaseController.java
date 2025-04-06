@@ -41,7 +41,6 @@ public class PurchaseController {
         if (user == null) {
             return ResponseEntity.badRequest().body(null); // Trả về lỗi nếu không có userId trong session
         }
-
         // Lấy cartpayment từ session
         List<CartDTO> cartDTOS = (List<CartDTO>) session.getAttribute("cartpayment");
         if (cartDTOS == null || cartDTOS.isEmpty()) {
@@ -57,10 +56,8 @@ public class PurchaseController {
         for (ApplyVoucher voucher : voucherCode) {
             if (voucher.getVoucherCode()!=null)
                 voucherCodes.add(voucher.getVoucherCode());
-
         }
         List<Orderdetail> orderdetails = new ArrayList<>();
-
         for (CartDTO cartDTO : cartDTOS) {
             Orderdetail orderdetail = new Orderdetail();
             Product product = cartDTO.getProduct();
@@ -74,8 +71,6 @@ public class PurchaseController {
             // Thêm orderdetail vào danh sách
             orderdetails.add(orderdetail);
         }
-
-
         // Tạo PurchaseRequestDTO
         PurchaseRequestDTO purchaseRequestDTO = new PurchaseRequestDTO();
         purchaseRequestDTO.setUserId(Long.valueOf(user.getId()));

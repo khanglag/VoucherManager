@@ -2,14 +2,10 @@ package com.example.vouchermanager.Service;
 
 import com.example.vouchermanager.Model.DTO.MonthlyRevenueDTO;
 import com.example.vouchermanager.Model.DTO.OrderDTO;
-import com.example.vouchermanager.Model.DTO.UserDTO;
 import com.example.vouchermanager.Model.Entity.Order;
-import com.example.vouchermanager.Model.Entity.User;
 import com.example.vouchermanager.Model.Enum.OrderStatus;
 import com.example.vouchermanager.Repository.OrderRepository;
-import com.example.vouchermanager.Repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -210,5 +206,8 @@ public Page<OrderDTO> findAll(Pageable pageable) {
 
         return revenueList;
     }
-
+    @Override
+    public Order getLastOrder() {
+        return orderRepository.findTopByOrderByIdDesc();
+    }
 }

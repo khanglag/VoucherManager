@@ -33,7 +33,6 @@ function updateQuantity(itemId, change) {
                 totalElement.textContent = `${(newQuantity * price).toLocaleString()}₫`;
                 updateSubtotal();
             } else {
-                alert(data.message || "Không thể cập nhật số lượng, vui lòng thử lại!");
             }
         })
         .catch(error => {
@@ -65,7 +64,6 @@ function removeItem(cartItemId) {
                 itemElement.remove();
             }
             updateSubtotal();
-            alert("Đã xóa sản phẩm khỏi giỏ hàng!");
         })
         .catch(error => {
             console.error('Lỗi:', error);
@@ -231,7 +229,6 @@ function summarydiv(){
 }
 function updateVoucher(type, price) {
     const subtotalString = document.getElementById('subtotal').textContent;
-    const summary = document.getElementById('summary-summary');
 // Loại bỏ dấu chấm và ký tự ₫, sau đó chuyển thành số
     const numericValue = parseFloat(subtotalString.replace(/[₫,\.]/g, '').replace('₫', ''));
     // Chuyển price thành số trước khi format
@@ -243,7 +240,7 @@ function updateVoucher(type, price) {
     if (type === "FREESHIP") {
         const vouchershipElement = document.getElementById('voucher-ship');
         if (vouchershipElement) {
-            appliedVouchers.ship=numericPrice;
+            appliedVouchers.ship = numericPrice;
             vouchershipElement.textContent = formattedSubtotal;
             summarydiv();
         } else {
@@ -305,29 +302,26 @@ function restoreVoucherSelection() {
 
 async function createPurchaseRequest() {
     try {
-        // Gửi yêu cầu đến API
         const response = await fetch('/api/purchase/create', {
-            method: 'POST', // Hoặc GET tùy theo API của bạn
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-                // Thêm các header khác nếu cần, ví dụ token
-            },
-            // Nếu cần gửi dữ liệu, thêm body
-            // body: JSON.stringify({ key: 'value' })
+            }
         });
 
-        // Chuyển response thành string
-        const result = await response.text();
-
-        // Xử lý kết quả (hiển thị hoặc làm gì đó với string)
-        console.log('Response từ server:', result);
-        alert('Kết quả: ' + result); // Ví dụ hiển thị lên màn hình
+        if (response.ok) {
+            // Chuyển hướng sau khi xử lý xong
+            window.location.href = "/createOrder";
+        } else {
+            const errorText = await response.text();
+            console.error("Lỗi từ server:", errorText);
+            alert("Gặp lỗi khi xử lý đơn hàng!");
+        }
     } catch (error) {
         console.error('Lỗi:', error);
         alert('Đã có lỗi xảy ra!');
     }
 }
-
 
 window.onload = restoreVoucherSelection;
 

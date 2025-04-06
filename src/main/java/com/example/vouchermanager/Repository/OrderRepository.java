@@ -46,5 +46,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "GROUP BY MONTH(o.orderDate) " +
             "ORDER BY MONTH(o.orderDate)")
     List<Object[]> getMonthlyRevenue(int year);
+    Order findTopByOrderByIdDesc();
 }
 

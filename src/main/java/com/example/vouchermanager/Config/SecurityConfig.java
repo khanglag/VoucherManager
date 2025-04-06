@@ -45,11 +45,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // .csrf(csrf -> csrf.disable())
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**","/store/**","/individual/**","/individual/personal_infomation/**","/individual/vouchersmanager/**","/admin/**","/api/payment/**","/api/vouchers/**","/api/purchase/create"))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**","/store/**","/individual/**","/individual/personal_infomation/**","/individual/vouchersmanager/**","/admin/**","/api/payment/**","/vnpay","/api/vouchers/**","/api/purchase/create"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth", "/", "/index", "/static/**", "/assets/**", "/templates/**",
                                 "/user/**", "/vouchers", "/store", "/brands","/contact", "/register", "/auth/register",
-                                "/order-details/**","reset-password","confirm-OTP","verify-OTP", "resend-OTP")
+                                "/order-details/**","reset-password","/submitOrder","/vnpay-payment-return","confirm-OTP","verify-OTP", "resend-OTP")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form

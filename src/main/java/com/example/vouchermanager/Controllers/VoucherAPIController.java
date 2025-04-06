@@ -50,7 +50,7 @@ public class VoucherAPIController {
         BigDecimal total = BigDecimal.valueOf(0.0);
         for (CartDTO cartDTO : cartDTOS) {
             list.add(cartDTO.getId());
-            total=total.add(cartDTO.getProduct().getPrice().multiply(BigDecimal.valueOf(cartDTO.getQuantity())))  ;
+            total = total.add(cartDTO.getProduct().getPrice().multiply(BigDecimal.valueOf(cartDTO.getQuantity())))  ;
         }
         List<VoucherDTO> vouchers = new ArrayList<>();
         for (Voucher voucher: voucherService.getVoucherShopByVoucherCode(voucherCode,list,total))
