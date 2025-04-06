@@ -528,3 +528,22 @@ function openVoucherModal(type) {
             voucherList.innerHTML = "<p>Lỗi khi tải danh sách.</p>";
         });
 }
+function createPurchaseRequest() {
+    fetch('/api/purchase/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ /* dữ liệu cần thiết */ })
+    })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/individual/order_history';  // Điều hướng khi thành công
+            } else {
+                alert('Error occurred');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}

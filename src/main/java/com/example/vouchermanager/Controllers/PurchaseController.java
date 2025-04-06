@@ -33,18 +33,20 @@ public class PurchaseController {
     private PurchaseService purchaseService;
 
     @PostMapping("/create")
-    public String createPurchaseRequest( Authentication authentication) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-            com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
+    public ResponseEntity<String> createPurchaseRequest(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
+
         // Lấy cartpayment từ session
         List<CartDTO> cartDTOS = (List<CartDTO>) session.getAttribute("cartpayment");
         List<ApplyVoucher> voucherCode = (List<ApplyVoucher>) session.getAttribute("voucher");
         List<String> voucherCodes = new ArrayList<>();
         for (ApplyVoucher voucher : voucherCode) {
-            if (voucher.getVoucherCode()!=null)
+            if (voucher.getVoucherCode() != null)
                 voucherCodes.add(voucher.getVoucherCode());
         }
+
         List<Orderdetail> orderdetails = new ArrayList<>();
         for (CartDTO cartDTO : cartDTOS) {
             Orderdetail orderdetail = new Orderdetail();
@@ -56,15 +58,19 @@ public class PurchaseController {
             orderdetail.setTotalPrice(totalPrice);  // Set tổng giá trị
             orderdetails.add(orderdetail);
         }
+
         // Tạo PurchaseRequestDTO
         PurchaseRequestDTO purchaseRequestDTO = new PurchaseRequestDTO();
         purchaseRequestDTO.setUserId(Long.valueOf(user.getId()));
         purchaseRequestDTO.setOrderdetails(orderdetails);
         purchaseRequestDTO.setVoucherCodes(voucherCodes);
         purchaseService.processPurchase(purchaseRequestDTO);
-        // Trả về response
+
+        // Xóa cart và voucher trong session
         session.setAttribute("voucher", null);
         session.setAttribute("cartpayment", null);
-        return "redirect:/user/order-history";
+
+        // Trả về response để client tự redirect
+        return ResponseEntity.ok("Success");
     }
 }

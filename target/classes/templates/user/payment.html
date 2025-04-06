@@ -158,9 +158,7 @@
       <form th:action="@{/createOrderVNPay}" method="get">
         <button type="submit" class="checkout-btn">Thanh toán VNPay</button>
       </form>
-      <form th:action="@{/api/purchase/create}" method="post">
-        <button type="submit" class="checkout-btn">Thanh toán khi nhận hàng</button>
-      </form>
+        <button type="submit" class="checkout-btn" onclick="createPurchaseRequest()">Thanh toán khi nhận hàng</button>
     </div>
     </div>
   </div>

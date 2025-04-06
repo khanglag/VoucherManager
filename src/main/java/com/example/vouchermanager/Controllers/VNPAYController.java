@@ -183,7 +183,7 @@ public class VNPAYController {
         // Trả về response
         session.setAttribute("voucher", null);
         session.setAttribute("cartpayment", null);
-        return "user/order_history";
+        return "/individual/order_history";
     }
 
 }
