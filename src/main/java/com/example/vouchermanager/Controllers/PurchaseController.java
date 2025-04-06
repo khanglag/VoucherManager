@@ -57,6 +57,8 @@ public class PurchaseController {
             if (voucher.getVoucherCode()!=null)
                 voucherCodes.add(voucher.getVoucherCode());
         }
+        session.setAttribute("voucher", null);
+        session.setAttribute("cartpayment", null);
         List<Orderdetail> orderdetails = new ArrayList<>();
         for (CartDTO cartDTO : cartDTOS) {
             Orderdetail orderdetail = new Orderdetail();
