@@ -212,13 +212,13 @@ function summarydiv() {
     const shipFee = 30000; // Phí ship gốc
     let productTotal = summarynb; // Tổng tiền hàng (không có phí ship)
 
-    // --- 1. Tính giảm giá từ voucher shop ---
+
     let discountShop = 0;
     if (appliedVouchers.shop) {
         if (appliedVouchers.shop.percent) {
             discountShop = productTotal * (appliedVouchers.shop.percent / 100); // Áp dụng giảm giá % chỉ trên tiền hàng
         } else {
-            discountShop = appliedVouchers.shop; // Áp dụng giảm giá cố định
+            discountShop = appliedVouchers.shop;
         }
     }
 
