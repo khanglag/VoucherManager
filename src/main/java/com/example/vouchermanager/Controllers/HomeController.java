@@ -138,13 +138,10 @@ public class HomeController {
             }
         }
         List<ApplyVoucher> vouchers = (List<ApplyVoucher>) session.getAttribute("voucher");
-        if (vouchers == null) {
-            vouchers = new ArrayList<>(); // Khởi tạo danh sách rỗng
-            vouchers.add( new ApplyVoucher(null, "ship"));
-            vouchers.add( new ApplyVoucher(null, "shop"));
-            session.setAttribute("voucher", vouchers);
-        }
         vouchers = new ArrayList<>(); // Khởi tạo danh sách rỗng
+        vouchers.add( new ApplyVoucher(null, "ship"));
+        vouchers.add( new ApplyVoucher(null, "shop"));
+        session.setAttribute("voucher", vouchers);
         session.setAttribute("voucher", vouchers);
         model.addAttribute("carts", carts);
         session.setAttribute("cartpayment", carts);

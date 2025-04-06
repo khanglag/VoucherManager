@@ -32,53 +32,64 @@ public class PurchaseServiceImp implements PurchaseService {
     VoucherusageRepository voucherusageRepository;
     @Override
     public Order processPurchase(PurchaseRequestDTO request) {
-
-        //Lấy User
+        // Lấy User
         User user = userRepository.findById(Math.toIntExact(request.getUserId()));
-        BigDecimal TotalAmount = BigDecimal.ZERO;
-        BigDecimal FinalAmount = BigDecimal.ZERO;
-        for (Orderdetail orderdetail : request.getOrderdetails()) {
-            TotalAmount = TotalAmount.add(orderdetail.getTotalPrice().multiply(BigDecimal.valueOf(orderdetail.getQuantity())));
-        }
-        FinalAmount = TotalAmount;
-        List<Voucher> vouchers = new ArrayList<>();
-        List<String> voucherCodes = request.getVoucherCodes(); // Giả sử đây là danh sách mã voucher
 
-        for (String voucherCode : voucherCodes) {
-            Optional<Voucher> optionalVoucher = voucherRepository.findById(voucherCode);
-            if (optionalVoucher.isPresent()) {
-                Voucher voucher = optionalVoucher.get();
-                vouchers.add(voucher);
+        // Tính tổng tiền đơn hàng
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        for (Orderdetail orderDetail : request.getOrderdetails()) {
+            BigDecimal itemTotal = orderDetail.getTotalPrice()
+                    .multiply(BigDecimal.valueOf(orderDetail.getQuantity()));
+            totalAmount = totalAmount.add(itemTotal);
+        }
+
+        // Tính tổng sau khi áp dụng voucher
+        BigDecimal finalAmount = totalAmount;
+        List<Voucher> vouchers = new ArrayList<>();
+
+        for (String voucherCode : request.getVoucherCodes()) {
+            voucherRepository.findById(voucherCode).ifPresent(vouchers::add);
+        }
+
+        for (Voucher voucher : vouchers) {
+            switch (voucher.getDiscountType()) {
+                case FIXED:
+                case FREESHIP:
+                    finalAmount = finalAmount.subtract(voucher.getDiscountValue());
+                    break;
+                case PERCENTAGE:
+                    BigDecimal discount = totalAmount.multiply(voucher.getDiscountValue())
+                            .divide(BigDecimal.valueOf(100));
+                    finalAmount = finalAmount.subtract(discount);
+                    break;
+                default:
+                    break;
             }
         }
-        for (Voucher voucher : vouchers) {
-            if (voucher.getDiscountType()== DiscountType.FIXED || voucher.getDiscountType()== DiscountType.FREESHIP)
-            {FinalAmount = FinalAmount.subtract(voucher.getDiscountValue());
-                System.out.println("Trừ ship, trừ voucher:" + FinalAmount);}
-
-            else if (voucher.getDiscountType()== DiscountType.PERCENTAGE){
-                FinalAmount = FinalAmount.subtract(TotalAmount.multiply(voucher.getDiscountValue()).divide(BigDecimal.valueOf(100)));
-                System.out.println("Trừ phần trăm:" + FinalAmount);}
-
-        }
+        finalAmount=finalAmount.add(BigDecimal.valueOf(30000));
+        // Tạođơn hàng
         Order order = new Order();
         order.setUserID(user);
         order.setOrderStatus(OrderStatus.COMPLETED);
         order.setOrderDate(Instant.now());
-        order.setTotalAmount(TotalAmount);
-        order.setFinalAmount(FinalAmount);
+        order.setTotalAmount(totalAmount);
+        order.setFinalAmount(finalAmount);
         orderRepository.save(order);
-        for (Orderdetail orderdetail : request.getOrderdetails()) {
-            orderdetail.setOrderID(order);
-            orderdetailRepository.save(orderdetail);
+        // Lưu chi tiết đơn hàng
+        for (Orderdetail orderDetail : request.getOrderdetails()) {
+            orderDetail.setOrderID(order);
+            orderdetailRepository.save(orderDetail);
         }
+        // Lưu thông tin sử dụng voucher
         for (Voucher voucher : vouchers) {
-            Voucherusage voucherUsage = new Voucherusage();
-            voucherUsage.setVoucherCode(voucher);
-            voucherUsage.setOrderID(order);
-            voucherUsage.setUsedDate(Instant.now());
-            voucherusageRepository.save(voucherUsage);
+            Voucherusage usage = new Voucherusage();
+            usage.setVoucherCode(voucher);
+            usage.setOrderID(order);
+            usage.setUsedDate(Instant.now());
+            voucherusageRepository.save(usage);
         }
-        return null;
+
+        return order;
     }
+
 }

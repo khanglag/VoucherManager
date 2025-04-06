@@ -1,13 +1,18 @@
 package com.example.vouchermanager.Controllers;
 
+import com.example.vouchermanager.Model.DTO.ApplyVoucher;
 import com.example.vouchermanager.Model.DTO.CartDTO;
-import com.example.vouchermanager.Service.OrderService;
-import com.example.vouchermanager.Service.VNPAYService;
-import com.example.vouchermanager.Service.VoucherService;
+import com.example.vouchermanager.Model.DTO.PurchaseRequestDTO;
+import com.example.vouchermanager.Model.Entity.Orderdetail;
+import com.example.vouchermanager.Model.Entity.Product;
+import com.example.vouchermanager.Model.Entity.Voucher;
+import com.example.vouchermanager.Repository.VoucherRepository;
+import com.example.vouchermanager.Service.*;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -30,14 +35,67 @@ public class VNPAYController {
     VNPAYService vnpayService;
     @Autowired
     OrderService orderService;
-    @GetMapping("/createOrder")
+    @Autowired
+    VoucherRepository voucherRepository;
+    @Autowired
+    UserService userService;
+    @Autowired
+    PurchaseService purchaseService;
+    @GetMapping("/createOrderVNPay")
     public String createOrderPage(Model model, Authentication authentication, HttpSession session) {
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
             model.addAttribute("user", userDetails.getUsername());
-            BigDecimal total = orderService.getLastOrder().getFinalAmount();
-            model.addAttribute("total", total);
-            session.setAttribute("total", total+"");
+            BigDecimal totalAmount = BigDecimal.ZERO;
+
+// Lấy cartpayment từ session
+            List<CartDTO> cartItems = (List<CartDTO>) session.getAttribute("cartpayment");
+// Tính tổng tiền hàng
+            for (CartDTO item : cartItems) {
+                BigDecimal itemTotal = item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+                totalAmount = totalAmount.add(itemTotal);
+            }
+
+// Lấy danh sách mã voucher đã chọn
+            List<ApplyVoucher> applyVouchers = (List<ApplyVoucher>) session.getAttribute("voucher");
+            List<String> voucherCodes = new ArrayList<>();
+            if (applyVouchers != null) {
+                for (ApplyVoucher applyVoucher : applyVouchers) {
+                    if (applyVoucher.getVoucherCode() != null) {
+                        voucherCodes.add(applyVoucher.getVoucherCode());
+                    }
+                }
+            }
+
+// Lấy thông tin voucher từ database
+            List<Voucher> vouchers = new ArrayList<>();
+            for (String code : voucherCodes) {
+                voucherRepository.findById(code).ifPresent(vouchers::add);
+            }
+
+// Tính tổng sau khi áp dụng voucher
+            BigDecimal finalAmount = totalAmount;
+            for (Voucher voucher : vouchers) {
+                switch (voucher.getDiscountType()) {
+                    case FIXED:
+                    case FREESHIP:
+                        finalAmount = finalAmount.subtract(voucher.getDiscountValue());
+                        break;
+                    case PERCENTAGE:
+                        BigDecimal discount = totalAmount.multiply(voucher.getDiscountValue())
+                                .divide(BigDecimal.valueOf(100));
+                        finalAmount = finalAmount.subtract(discount);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            finalAmount=finalAmount.add(BigDecimal.valueOf(30000));
+// Đảm bảo giá trị không âm
+            if (finalAmount.compareTo(BigDecimal.ZERO) < 0) {
+                finalAmount = BigDecimal.ZERO;
+            }
+            model.addAttribute("total", finalAmount);
+            session.setAttribute("total", finalAmount+"");
         }
             return "createOrder";
     }
@@ -82,23 +140,50 @@ public class VNPAYController {
 
     // Sau khi hoàn tất thanh toán, VNPAY sẽ chuyển hướng trình duyệt về URL này
     @GetMapping("/vnpay-payment-return")
-    public String handleVnpayReturn(@RequestParam Map<String, String> allParams, Model model) {
-        // allParams chứa tất cả các tham số VNPAY trả về (bao gồm vnp_Amount, vnp_OrderInfo, vnp_SecureHash...)
+    public String handleVnpayReturn(@RequestParam Map<String, String> allParams, Model model,Authentication authentication,HttpSession session) {
         System.out.println("VNPAY RETURN PARAMS: " + allParams);
-
-        // Ví dụ kiểm tra mã phản hồi từ VNPAY (kiểm tra vnp_ResponseCode)
         String vnpResponseCode = allParams.get("vnp_ResponseCode");
         if ("00".equals(vnpResponseCode)) {
             model.addAttribute("message", "Thanh toán thành công!");
         } else {
             model.addAttribute("message", "Thanh toán thất bại!");
         }
-
-        // Hiển thị số tiền và thông tin đơn hàng từ các tham số trả về
         model.addAttribute("amount", allParams.get("vnp_Amount"));
         model.addAttribute("orderInfo", allParams.get("vnp_OrderInfo"));
 
-        return "user/order_history"; // Trang kết quả thanh toán (phải có file vnpay_result.html)
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        com.example.vouchermanager.Model.Entity.User user = userService.findByUsername(username);
+
+        // Lấy cartpayment từ session
+        List<CartDTO> cartDTOS = (List<CartDTO>) session.getAttribute("cartpayment");
+        List<ApplyVoucher> voucherCode = (List<ApplyVoucher>) session.getAttribute("voucher");
+        List<String> voucherCodes = new ArrayList<>();
+        for (ApplyVoucher voucher : voucherCode) {
+            if (voucher.getVoucherCode()!=null)
+                voucherCodes.add(voucher.getVoucherCode());
+        }
+        List<Orderdetail> orderdetails = new ArrayList<>();
+        for (CartDTO cartDTO : cartDTOS) {
+            Orderdetail orderdetail = new Orderdetail();
+            Product product = cartDTO.getProduct();
+            orderdetail.setProductID(product);  // Set ID của sản phẩm
+            orderdetail.setQuantity(cartDTO.getQuantity());  // Set số lượng
+            orderdetail.setUnitPrice(product.getPrice());
+            BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(cartDTO.getQuantity()));
+            orderdetail.setTotalPrice(totalPrice);  // Set tổng giá trị
+            orderdetails.add(orderdetail);
+        }
+        // Tạo PurchaseRequestDTO
+        PurchaseRequestDTO purchaseRequestDTO = new PurchaseRequestDTO();
+        purchaseRequestDTO.setUserId(Long.valueOf(user.getId()));
+        purchaseRequestDTO.setOrderdetails(orderdetails);
+        purchaseRequestDTO.setVoucherCodes(voucherCodes);
+        purchaseService.processPurchase(purchaseRequestDTO);
+        // Trả về response
+        session.setAttribute("voucher", null);
+        session.setAttribute("cartpayment", null);
+        return "user/order_history";
     }
 
 }
