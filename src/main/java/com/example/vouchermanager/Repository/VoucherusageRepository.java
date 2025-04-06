@@ -1,5 +1,6 @@
 package com.example.vouchermanager.Repository;
 
+import com.example.vouchermanager.Model.Entity.Order;
 import com.example.vouchermanager.Model.Entity.Product;
 import com.example.vouchermanager.Model.Entity.Voucher;
 import com.example.vouchermanager.Model.Entity.Voucherusage;
@@ -23,4 +24,5 @@ public interface VoucherusageRepository extends JpaRepository<Voucherusage, Inte
 
     @Query("SELECT v FROM Voucherusage v WHERE YEAR(v.usedDate) = :year AND MONTH(v.usedDate) = :month")
     List<Voucherusage> findVouchersByMonthAndYear(int year, int month);
+    List<Voucherusage> findByOrderID(Order order);
 }

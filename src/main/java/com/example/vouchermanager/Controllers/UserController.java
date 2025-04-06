@@ -4,10 +4,7 @@ import com.example.vouchermanager.Model.DTO.OrderDTO;
 import com.example.vouchermanager.Model.DTO.OrderDetailDTO;
 import com.example.vouchermanager.Model.DTO.VoucherCreationResultDTO;
 import com.example.vouchermanager.Model.DTO.VoucherDTO;
-import com.example.vouchermanager.Model.Entity.Product;
-import com.example.vouchermanager.Model.Entity.Role;
-import com.example.vouchermanager.Model.Entity.User;
-import com.example.vouchermanager.Model.Entity.Voucher;
+import com.example.vouchermanager.Model.Entity.*;
 import com.example.vouchermanager.Model.Enum.VoucherStatus;
 import com.example.vouchermanager.Repository.ProductRepository;
 import com.example.vouchermanager.Repository.VoucherRepository;
@@ -56,6 +53,9 @@ public class UserController {
 
     @Autowired
     private VoucherRepository voucherRepository;
+
+    @Autowired
+    private VoucherusageServiceImp voucherusageServiceImp;
 
     @GetMapping("/individual")
     public String checkLoginIndividualPage(Model model, Authentication authentication, HttpSession session) {
@@ -115,25 +115,28 @@ public class UserController {
             List<OrderDTO> orders = orderService.findAllByUserId(userid);
             model.addAttribute("orders", orders);
 
-            // Map chứa chi tiết đơn hàng theo orderId và chi tiết sản phẩm
             Map<Integer, List<OrderDetailDTO>> orderDetailsMap = new HashMap<>();
             Map<Integer, List<Product>> productDetailsMap = new HashMap<>();
+            Map<Integer, List<Voucherusage>> voucherUsageMap = new HashMap<>();
 
             for (OrderDTO order : orders) {
+                Integer orderId = order.getOrderId();
                 List<OrderDetailDTO> details = orderdetailService.findByOrderId(order.getOrderId());
                 orderDetailsMap.put(order.getOrderId(), details);
-
-                // Lấy thông tin sản phẩm cho mỗi chi tiết đơn hàng
                 List<Product> products = new ArrayList<>();
                 for (OrderDetailDTO detail : details) {
                     Optional<Product> product = productService.getProductById(detail.getProductId());
                     product.ifPresent(products::add);
                 }
                 productDetailsMap.put(order.getOrderId(), products);
+                // Voucher Usages
+                List<Voucherusage> voucherUsages = voucherusageServiceImp.getVoucherUsagesByOrderId(orderId);
+                voucherUsageMap.put(orderId, voucherUsages);
             }
 
             model.addAttribute("orderDetailsMap", orderDetailsMap);
             model.addAttribute("productDetailsMap", productDetailsMap);
+            model.addAttribute("voucherUsageMap", voucherUsageMap);
         }
 
         List<Product> cart = (List<Product>) session.getAttribute("cart");

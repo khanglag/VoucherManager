@@ -268,7 +268,6 @@ function renderRevenueChart(monthlyTotals, year) {
             }
         }
     });
-    // Tạo bảng từ dữ liệu chart
     generateRevenueTableData(monthlyTotals, year);
 }
 // Tạo bảng doanh thu
@@ -309,8 +308,7 @@ async function exportHiddenRevenueToPDF() {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF('p', 'mm', 'a4');
 
-    // Thêm font Arial đã mã hóa base64
-    const arialBase64 = ArialFont; // Thay bằng chuỗi base64 của bạn
+    const arialBase64 = ArialFont;
 
     pdf.addFileToVFS('Arial-normal.ttf', arialBase64);
     pdf.addFont('Arial-normal.ttf', 'Arial', 'normal');
@@ -319,12 +317,8 @@ async function exportHiddenRevenueToPDF() {
     const container = document.getElementById("hiddenRevenueTableContainer");
     container.style.display = "block";
     const year = document.getElementById('revenueYear').textContent;
-
-    // Tiêu đề
     pdf.setFontSize(18);
     pdf.text(`BẢNG DOANH THU NĂM ${year}`, 15, 20);
-
-    // Xử lý bảng
     pdf.autoTable({
         html: '#hiddenRevenueTable',
         startY: 30,
@@ -358,5 +352,5 @@ async function exportHiddenRevenueToPDF() {
     pdf.save(`Bang_DoanhThu_${year}.pdf`);
     container.style.display = "none";
 }
-// Gọi lần đầu khi load trang
+
 window.onload = fetchRevenueData;

@@ -191,3 +191,81 @@ function sendCartToServer() {
             console.error("Lỗi khi gửi giỏ hàng:", error);
         });
 }
+//phân trang
+document.addEventListener("DOMContentLoaded", function () {
+    const products = document.querySelectorAll('.product');
+    const productsPerPage = 12;
+    const totalPages = Math.ceil(products.length / productsPerPage);
+    const pagination = document.getElementById('pagination');
+    let currentPage = 1;
+
+    function showPage(page) {
+        const start = (page - 1) * productsPerPage;
+        const end = start + productsPerPage;
+
+        products.forEach((product, index) => {
+            product.style.display = index >= start && index < end ? 'block' : 'none';
+        });
+
+        updatePaginationButtons(page);
+    }
+
+    function updatePaginationButtons(page) {
+        const pageButtons = pagination.querySelectorAll('button.page-btn');
+        pageButtons.forEach((btn, i) => {
+            btn.classList.toggle('active', i + 1 === page);
+        });
+
+        // Ẩn hiện nút Trước/Sau nếu ở trang đầu/cuối
+        document.getElementById('prev-btn').disabled = page === 1;
+        document.getElementById('next-btn').disabled = page === totalPages;
+    }
+
+    function setupPagination() {
+        pagination.innerHTML = '';
+
+        // Nút Trước
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = 'Trước';
+        prevBtn.id = 'prev-btn';
+        prevBtn.classList.add('nav-btn');
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        });
+        pagination.appendChild(prevBtn);
+
+        // Các nút số trang
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.classList.add('page-btn');
+            btn.addEventListener('click', () => {
+                currentPage = i;
+                showPage(currentPage);
+            });
+            pagination.appendChild(btn);
+        }
+
+        // Nút Sau
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = 'Sau';
+        nextBtn.id = 'next-btn';
+        nextBtn.classList.add('nav-btn');
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        });
+        pagination.appendChild(nextBtn);
+
+        showPage(currentPage);
+    }
+
+    setupPagination();
+});
+
+//bộ lọc
