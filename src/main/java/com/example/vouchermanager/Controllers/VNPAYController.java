@@ -184,7 +184,7 @@ public class VNPAYController {
         session.setAttribute("voucher", null);
         session.setAttribute("cartpayment", null);
         session.setAttribute("cart", null);
-        return "/individual/order_history";
+        return "redirect:/individual/order_history";
     }
 
 }
