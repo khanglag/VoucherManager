@@ -68,6 +68,7 @@ public class PurchaseController {
         // Xóa cart và voucher trong session
         session.setAttribute("voucher", null);
         session.setAttribute("cartpayment", null);
+        session.setAttribute("cart", null);
         // Trả về response để client tự redirect
         return ResponseEntity.ok("Success");
     }
