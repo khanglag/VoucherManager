@@ -1,11 +1,11 @@
 function updateQuantity(itemId, change) {
     const quantityElement = document.querySelector(`.item-quantity[data-item-id="${itemId}"]`);
     if (!quantityElement) return;
-
     let currentQuantity = parseInt(quantityElement.textContent, 10) || 1;
     let newQuantity = currentQuantity + change;
+    console.log("Update quatity " +  change)
     if (newQuantity < 1) newQuantity = 1;
-
+    console.log("New quatity " +  newQuantity)
     // Gửi request cập nhật số lượng lên Spring Boot API
     fetch(`/api/payment/update`, {
         method: 'POST',

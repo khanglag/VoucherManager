@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -69,7 +68,6 @@ public class PurchaseController {
         // Xóa cart và voucher trong session
         session.setAttribute("voucher", null);
         session.setAttribute("cartpayment", null);
-
         // Trả về response để client tự redirect
         return ResponseEntity.ok("Success");
     }

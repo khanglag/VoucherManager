@@ -28,7 +28,7 @@ public class PaymentController {
         List<CartDTO>cartDTOS= (List<CartDTO>) session.getAttribute("cartpayment");
         for (CartDTO cartDTO : cartDTOS) {
             if (cartDTO.getId()==(request.getItemId())) {
-                cartDTO.setQuantity(cartDTO.getQuantity() + request.getQuantity());
+                cartDTO.setQuantity(request.getQuantity());
                 success.set(true);
                 session.setAttribute("cartpayment", cartDTOS);
                 break;

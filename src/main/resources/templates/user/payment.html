@@ -39,9 +39,9 @@
               <h5 th:text="${cartItem.product.productName}"></h5>
               <!-- Nút tăng/giảm số lượng -->
               <div class="quantity-controls">
-                <button class="quantity-btn" th:onclick="'updateQuantity(\'' + ${cartItem.id} + '\', -1)'">−</button>
+                <button class="quantity-btn" th:onclick="|updateQuantity('${cartItem.id}', -1)|">−</button>
                 <span class="item-quantity" th:data-item-id="${cartItem.id}" th:text="${cartItem.quantity ?: 1}">1</span>
-                <button class="quantity-btn" th:onclick="'updateQuantity(\'' + ${cartItem.id} + '\', 1)'">+</button>
+                <button class="quantity-btn" th:onclick="|updateQuantity('${cartItem.id}', 1)|">+</button>
               </div>
             </div>
             <!-- Tổng số tiền cho món hàng -->
