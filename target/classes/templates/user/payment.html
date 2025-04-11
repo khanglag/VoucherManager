@@ -155,10 +155,12 @@
           </div>
         </div>
         <!-- Checkout Button -->
+      <div class="pay">
       <form th:action="@{/createOrderVNPay}" method="get">
-        <button type="submit" class="checkout-btn" onclick="removeLocal()">Thanh toán VNPay</button>
+        <button type="submit" class="pay-btn" onclick="removeLocal()">VN Pay</button>
       </form>
-        <button type="submit" class="checkout-btn" onclick="createPurchaseRequest()">Thanh toán khi nhận hàng</button>
+        <button type="submit" class="pay-btn" onclick="createPurchaseRequest()">Cash</button>
+      </div>
     </div>
     </div>
   </div>

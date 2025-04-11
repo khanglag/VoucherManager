@@ -132,9 +132,10 @@
     transition: background-color 0.3s;
 }
 
-.checkout-btn:hover {
+.checkout-btn:hover, .pay-btn:hover {
     background-color: #27ae60;
 }
+
 
 .overlay {
     position: fixed;
