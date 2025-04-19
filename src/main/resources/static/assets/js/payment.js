@@ -538,6 +538,7 @@ function createPurchaseRequest() {
     })
         .then(response => {
             if (response.ok) {
+                localStorage.removeItem('cart');
                 window.location.href = '/individual/order_history';  // Điều hướng khi thành công
             } else {
                 alert('Error occurred');
@@ -546,4 +547,7 @@ function createPurchaseRequest() {
         .catch(error => {
             console.error('Error:', error);
         });
+}
+function removeLocal(){
+    localStorage.removeItem('cart');
 }

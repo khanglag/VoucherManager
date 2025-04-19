@@ -38,8 +38,7 @@ public class PurchaseServiceImp implements PurchaseService {
         // Tính tổng tiền đơn hàng
         BigDecimal totalAmount = BigDecimal.ZERO;
         for (Orderdetail orderDetail : request.getOrderdetails()) {
-            BigDecimal itemTotal = orderDetail.getTotalPrice()
-                    .multiply(BigDecimal.valueOf(orderDetail.getQuantity()));
+            BigDecimal itemTotal = orderDetail.getTotalPrice();
             totalAmount = totalAmount.add(itemTotal);
         }
 
